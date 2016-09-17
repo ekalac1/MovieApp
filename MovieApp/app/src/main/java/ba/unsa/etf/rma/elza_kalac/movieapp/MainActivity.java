@@ -1,15 +1,26 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp;
 
+import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.GridView;
+import android.widget.Toast;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToogle;
+    private final static String API_KEY = "";
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +33,43 @@ public class MainActivity extends AppCompatActivity {
         mDrawerLayout.addDrawerListener(mToogle);
         mToogle.syncState();
 
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
+
+
+
+        if (API_KEY.isEmpty()) {
+            Toast.makeText(getApplicationContext(), "Please obtain your API KEY first from themoviedb.org", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        ApiInterface apiService =
+                ApiClient.getClient().create(ApiInterface.class);
+
+        Call<MovieResponse> call = apiService.getTopRatedMovies(API_KEY);
+        call.enqueue(new Callback<MovieResponse>() {
+            @Override
+            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
+                List<Movie> movies = response.body().getResults();
+                /*final ListView list = (ListView) findViewById(R.id.listView);*/
+                final MyAdapter adapter = new MyAdapter(getApplicationContext(), R.layout.element_liste, movies);
+               /* list.setAdapter(adapter);*/
+                final GridView grid = (GridView) findViewById(R.id.gridView3);
+                grid.setAdapter(adapter);
+
+            }
+
+            @Override
+            public void onFailure(Call<MovieResponse> call, Throwable t) {
+                // Log error here since request failed
+                Log.e(TAG, t.toString());
+            }
+        });
+
+
 
 
 
