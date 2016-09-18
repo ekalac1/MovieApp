@@ -1,12 +1,20 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp;
 
+import android.app.SearchManager;
+import android.app.TabActivity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.Menu;
 import android.widget.GridView;
+import android.widget.SearchView;
+import android.widget.TabHost;
 import android.widget.Toast;
 
 import java.util.List;
@@ -15,11 +23,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToogle;
-    private final static String API_KEY = "";
+    private final static String API_KEY = "14f1ed2b33d9c95e73a70d058755a031";
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
@@ -27,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDrawerLayout = (DrawerLayout)findViewById(R.id.drawerLayout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mToogle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name);
 
         mDrawerLayout.addDrawerListener(mToogle);
@@ -35,8 +44,6 @@ public class MainActivity extends AppCompatActivity {
 
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
 
 
 
@@ -54,35 +61,35 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
                 List<Movie> movies = response.body().getResults();
-                /*final ListView list = (ListView) findViewById(R.id.listView);*/
                 final MyAdapter adapter = new MyAdapter(getApplicationContext(), R.layout.element_liste, movies);
-               /* list.setAdapter(adapter);*/
-                final GridView grid = (GridView) findViewById(R.id.gridView3);
+                final GridView grid = (GridView) findViewById(R.id.gridView2);
                 grid.setAdapter(adapter);
-
             }
 
             @Override
             public void onFailure(Call<MovieResponse> call, Throwable t) {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
+                return;
             }
         });
 
 
-
-
-
     }
 
+
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        if (mToogle.onOptionsItemSelected(item))
-        {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (mToogle.onOptionsItemSelected(item)) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
 }

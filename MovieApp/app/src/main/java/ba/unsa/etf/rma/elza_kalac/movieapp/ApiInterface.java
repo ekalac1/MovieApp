@@ -10,9 +10,13 @@ import retrofit2.http.Query;
  */
 public interface ApiInterface {
 
-    @GET("movie/top_rated")
+    //Samo mjenjaj rijec iza "movie/ i dobijas razlicita rjesenja, npr za filmove
+    //top_reted, popular, now_playing, upcoming
+    //npr ovdje stavljaj url sa stranice i dobijas razlicite rezultate
+    //pazi da ne pocinje sa /
+    @GET("movie/popular")
     Call<MovieResponse> getTopRatedMovies(@Query("api_key") String apiKey);
 
-    @GET("movie/{id}")
-    Call<Movie> getMovieDetails(@Path("id") int id, @Query("api_key") String apiKey);
+  //  @GET("movie/{id}")
+   // Call<Movie> getMovieDetails(@Path("id") int id, @Query("api_key") String apiKey);
 }

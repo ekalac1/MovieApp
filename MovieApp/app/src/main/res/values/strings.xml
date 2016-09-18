@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">MovieApp</string>
-    <string name="title_activity_tab1">tab1</string>
+    <string name="search_hint">Search</string>
 </resources>
