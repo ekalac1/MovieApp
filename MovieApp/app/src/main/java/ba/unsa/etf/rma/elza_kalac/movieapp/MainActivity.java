@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToogle;
-    private final static String API_KEY = "14f1ed2b33d9c95e73a70d058755a031";
+    private final static String API_KEY = "";
     private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
