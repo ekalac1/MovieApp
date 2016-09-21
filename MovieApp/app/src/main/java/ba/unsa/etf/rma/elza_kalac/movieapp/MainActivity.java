@@ -1,42 +1,31 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp;
 
-import android.app.SearchManager;
-import android.app.TabActivity;
-import android.content.Context;
-import android.content.Intent;
+import android.graphics.Point;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.MenuInflater;
+import android.view.Display;
 import android.view.MenuItem;
-import android.view.Menu;
-import android.widget.GridView;
-import android.widget.SearchView;
-import android.widget.TabHost;
-import android.widget.Toast;
+import android.widget.Button;
 
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.roughike.bottombar.BottomBar;
+import com.roughike.bottombar.OnTabSelectListener;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mToogle;
-    private final static String API_KEY = "14f1ed2b33d9c95e73a70d058755a031";
-    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mToogle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name);
 
         mDrawerLayout.addDrawerListener(mToogle);
@@ -46,36 +35,51 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_1_name));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_2_name));
+        tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_3_name));
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-
-        if (API_KEY.isEmpty()) {
-            Toast.makeText(getApplicationContext(), "Please obtain your API KEY first from themoviedb.org", Toast.LENGTH_LONG).show();
-            return;
-        }
-
-        ApiInterface apiService =
-                ApiClient.getClient().create(ApiInterface.class);
-
-        Call<MovieResponse> call = apiService.getTopRatedMovies(API_KEY);
-        call.enqueue(new Callback<MovieResponse>() {
+        final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
+        final PagerAdapter adapter = new PagerAdapter
+                (getSupportFragmentManager(), tabLayout.getTabCount());
+        viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
-                List<Movie> movies = response.body().getResults();
-                final MyAdapter adapter = new MyAdapter(getApplicationContext(), R.layout.element_liste, movies);
-                final GridView grid = (GridView) findViewById(R.id.gridView2);
-                grid.setAdapter(adapter);
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
-            public void onFailure(Call<MovieResponse> call, Throwable t) {
-                // Log error here since request failed
-                Log.e(TAG, t.toString());
-                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
-                return;
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
             }
         });
 
 
+       /* Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        int height = size.y; */
+
+        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
+            @Override
+            public void onTabSelected(@IdRes int tabId) {
+                  if (true) {
+                    // The tab with id R.id.tab_favorites was selected,
+                    // change your content accordingly.
+                }
+            }
+        });
     }
 
 
@@ -88,8 +92,5 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-
-
 
 }

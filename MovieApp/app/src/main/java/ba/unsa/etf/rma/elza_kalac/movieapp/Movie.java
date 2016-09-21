@@ -5,9 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by Laptop on 17.09.2016..
- */
+
 public class Movie {
     @SerializedName("poster_path")
     private String posterPath;

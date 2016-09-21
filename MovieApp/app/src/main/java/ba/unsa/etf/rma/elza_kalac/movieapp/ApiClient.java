@@ -3,9 +3,6 @@ package ba.unsa.etf.rma.elza_kalac.movieapp;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by Laptop on 17.09.2016..
- */
 public class ApiClient {
 
     public static final String BASE_URL = "http://api.themoviedb.org/3/";
