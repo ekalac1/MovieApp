@@ -1,11 +1,13 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Fragmenti;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -18,6 +20,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.EndlessScrollListener;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MainActivity;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.MoviesDetails;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MyAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;
@@ -89,6 +92,16 @@ public class TabFragment2 extends Fragment {
 
 
                 return true;
+            }
+        });
+
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent myIntent = new Intent(getActivity(), MoviesDetails.class);
+                myIntent.putExtra("id", movies.get(position).getOriginalTitle());
+                startActivity(myIntent);
+
             }
         });
 
