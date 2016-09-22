@@ -28,7 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class TabFragment1 extends Fragment {
-    private final static String API_KEY = "14f1ed2b33d9c95e73a70d058755a031";
+    private final static String
     private static final String TAG = MainActivity.class.getSimpleName();
     public List<Movie> movies;
     private int pageNum;
@@ -39,14 +39,14 @@ public class TabFragment1 extends Fragment {
         final GridView grid = (GridView) view.findViewById(R.id.gridView1);
         pageNum =1;
 
-        if (API_KEY.isEmpty()) {
+        if (ApiClient.API_KEY.isEmpty()) {
             Toast.makeText(getActivity().getApplicationContext(), "Please obtain your API KEY first from themoviedb.org", Toast.LENGTH_LONG).show();
         }
 
         ApiInterface apiService =
                 ApiClient.getClient().create(ApiInterface.class);
 
-        Call<MovieResponse> call = apiService.getMostPopularMovies(API_KEY, pageNum);
+        Call<MovieResponse> call = apiService.getMostPopularMovies(ApiClient.API_KEY, pageNum);
         call.enqueue(new Callback<MovieResponse>() {
             @Override
             public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
@@ -82,7 +82,7 @@ public class TabFragment1 extends Fragment {
             public boolean onLoadMore(int page, int totalItemsCount) {
                 ApiInterface apiService =
                         ApiClient.getClient().create(ApiInterface.class);
-                Call<MovieResponse> call = apiService.getMostPopularMovies(API_KEY, pageNum);
+                Call<MovieResponse> call = apiService.getMostPopularMovies(ApiClient.API_KEY, pageNum);
                 call.enqueue(new Callback<MovieResponse>() {
                     @Override
                     public void onResponse(Call<MovieResponse> call, Response<MovieResponse> response) {
