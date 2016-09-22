@@ -59,17 +59,13 @@ public class Movie {
     public boolean isAdult() {
         return adult;    }
 
-    public void setAdult(boolean adult) {
-        this.adult = adult;
-    }
+ //   public void setAdult(boolean adult) {this.adult = adult;}
 
     public String getPosterPath() {
         return posterPath;
     }
 
-    public void setPosterPath(String posterPath) {
-        this.posterPath = posterPath;
-    }
+ //   public void setPosterPath(String posterPath) {this.posterPath = posterPath;}
 
     public String getOverview() {
         return overview;

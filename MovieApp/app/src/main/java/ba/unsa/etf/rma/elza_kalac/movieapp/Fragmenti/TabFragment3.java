@@ -20,7 +20,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.EndlessScrollListener;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MainActivity;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieResponse;
-import ba.unsa.etf.rma.elza_kalac.movieapp.MoviesDetails;
+import ba.unsa.etf.rma.elza_kalac.movieapp.MoviesDetailsActivity;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MyAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;
@@ -95,7 +95,7 @@ public class TabFragment3 extends Fragment {
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent myIntent = new Intent(getActivity(), MoviesDetails.class);
+                Intent myIntent = new Intent(getActivity(), MoviesDetailsActivity.class);
                 myIntent.putExtra("id", movies.get(position).getOriginalTitle());
                 startActivity(myIntent);
 
