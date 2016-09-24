@@ -1,20 +1,20 @@
 <tabs>
     <tab
         id="@+id/tab_news"
-        icon="@drawable/feed"
+        icon="@drawable/rssfeedoutline"
         title="News"
-        inActiveColor="#000000"
-        activeColor="#FFFF00"/>
+        inActiveColor="@color/white"
+        activeColor="@color/golden"/>
     <tab
         id="@+id/tab_movies"
-        icon="@drawable/movies"
+        icon="@drawable/videocamera"
         title="Movies"
-        inActiveColor="#000000"
-        activeColor="#FFFF00"/>
+        inActiveColor="@color/white"
+        activeColor="@color/golden"/>
     <tab
         id="@+id/tab_tvshows"
-        icon="@drawable/tvshows"
+        icon="@drawable/television"
         title="TV Shows"
-        inActiveColor="#000000"
-        activeColor="#FFFF00"/>
+        inActiveColor="@color/white"
+        activeColor="@color/golden"/>
 </tabs>
