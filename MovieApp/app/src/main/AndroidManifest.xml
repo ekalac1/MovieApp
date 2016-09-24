@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ba.unsa.etf.rma.elza_kalac.movieapp" >
+    package="ba.unsa.etf.rma.elza_kalac.movieapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- Permission to write to external storage -->
@@ -11,18 +11,22 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar" >
-        <activity android:name=".MainActivity" >
+        android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar">
+
+        <activity android:name=".Activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
-
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".SearchResults"/>
+
+
+
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!--
@@ -34,6 +38,19 @@
                     android:pathPrefix="/main"
                     android:scheme="http" />
             </intent-filter>
+        </activity>
+        <activity android:name=".Activities.MoviesDetailsActivity" />
+        <activity
+            android:name=".Activities.SearchResultsActivity"
+            android:parentActivityName=".Activities.MainActivity">
+
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable" />
+            <meta-data
+                android:name="android.app.default_searchable"
+                android:value=".SearchResults"/>
         </activity>
     </application>
 

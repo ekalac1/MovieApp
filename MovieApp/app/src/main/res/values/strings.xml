@@ -6,4 +6,6 @@
     <string name="tab_1_name">most popular</string>
     <string name="tab_2_name">latest</string>
     <string name="tab_3_name">Highest-rated</string>
+    <string name="api_key_missing">Please obtain your API KEY first from themoviedb.org</string>
+    <string name="on_failure">Failed</string>
 </resources>
