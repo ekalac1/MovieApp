@@ -7,7 +7,7 @@ import java.util.List;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 
 
-public class MoviesListResponse {
+public class ActorsListResponse { /*
 
     @SerializedName("page")
     private int page;
@@ -48,5 +48,5 @@ public class MoviesListResponse {
 
     public void setTotalPages(int totalPages) {
         this.totalPages = totalPages;
-    }
+    } */
 }

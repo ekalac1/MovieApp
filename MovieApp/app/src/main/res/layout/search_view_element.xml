@@ -39,5 +39,12 @@
             android:layout_alignStart="@+id/relaseYear"
             android:textColor="@color/lightgrey"/>
 
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:background="@color/lightgrey"
+            android:layout_below="@+id/imageView2"
+            android:layout_marginTop="5dp"/>
+
 
 </RelativeLayout>

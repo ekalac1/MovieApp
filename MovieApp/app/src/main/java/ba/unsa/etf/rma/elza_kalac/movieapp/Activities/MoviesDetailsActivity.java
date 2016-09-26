@@ -9,11 +9,13 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import org.w3c.dom.Text;
+import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.MovieDeta;
+import ba.unsa.etf.rma.elza_kalac.movieapp.API.GenreResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Genre;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,9 +23,7 @@ import retrofit2.Response;
 
 public class MoviesDetailsActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
-    public MovieDeta movies;
-    public static final String BASE_URL = "http://image.tmdb.org/t/p/";
-    String URLA;
+    public Movie movies;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,26 +31,25 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_movies_details);
         final TextView movieId=(TextView)findViewById(R.id.movies_detalis_title);
         final TextView date = (TextView)findViewById(R.id.movies_detalis_release_date);
-
-
+        final TextView temp = (TextView)findViewById(R.id.movies_detalis_genres);
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<MovieDeta> call = apiService.getMovieDetails(getIntent().getIntExtra("id", 0), ApiClient.API_KEY);
+        Call<Movie> call = apiService.getMovieDetails(getIntent().getIntExtra("id", 0), ApiClient.API_KEY);
 
-        call.enqueue(new Callback<MovieDeta>() {
+        call.enqueue(new Callback<Movie>() {
             @Override
-            public void onResponse(Call<MovieDeta> call, Response<MovieDeta> response) {
+            public void onResponse(Call<Movie> call, Response<Movie> response) {
                 movies = response.body();
                 movieId.setText(movies.getOriginalTitle());
                 date.setText(movies.getReleaseDate());
-                URLA=BASE_URL+"w500"+movies.getPosterPath();
+                temp.setText(movies.getGenres());
                 Glide.with(getApplicationContext())
-                        .load(URLA)
+                        .load(movies.getFullPosterPath())
                         .into((ImageView) findViewById(R.id.movies_detalis_image));
             }
 
             @Override
-            public void onFailure(Call<MovieDeta> call, Throwable t) {
+            public void onFailure(Call<Movie> call, Throwable t) {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
                 Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();

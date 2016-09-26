@@ -1,165 +1,180 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Models;
 
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
+/**
+ * Created by Laptop on 23.09.2016..
+ */
 public class Movie {
-    @SerializedName("poster_path")
-    private String posterPath;
-    @SerializedName("adult")
-    private boolean adult;
-    @SerializedName("overview")
-    private String overview;
-    @SerializedName("release_date")
-    private String releaseDate;
-    @SerializedName("genre_ids")
-    private List<Integer> genreIds = new ArrayList<Integer>();
-    @SerializedName("id")
-    private Integer id;
-    @SerializedName("original_title")
-    private String originalTitle;
-    @SerializedName("original_language")
-    private String originalLanguage;
-    @SerializedName("title")
-    private String title;
     @SerializedName("backdrop_path")
+    @Expose
     private String backdropPath;
+    @SerializedName("budget")
+    @Expose
+    private int budget;
+    @SerializedName("homepage")
+    @Expose
+    private String homepage;
+    @SerializedName("id")
+    @Expose
+    private int id;
+    @SerializedName("imdb_id")
+    @Expose
+    private String imdbId;
+    @SerializedName("original_language")
+    @Expose
+    private String originalLanguage;
+    @SerializedName("original_title")
+    @Expose
+    private String originalTitle;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("overview")
+    @Expose
+    private String overview;
     @SerializedName("popularity")
-    private Double popularity;
-    @SerializedName("vote_count")
-    private Integer voteCount;
-    @SerializedName("video")
-    private Boolean video;
+    @Expose
+    private double popularity;
+    @SerializedName("poster_path")
+    @Expose
+    private String posterPath;
+    @SerializedName("release_date")
+    @Expose
+    private String releaseDate;
+    @SerializedName("first_air_date")
+    @Expose
+    private String firstAirDate;
+    @SerializedName("revenue")
+    @Expose
+    private int revenue;
+    @SerializedName("runtime")
+    @Expose
+    private int runtime;
+    @SerializedName("episode_run_time")
+    @Expose
+    private List<Integer> episodeRuntime = new ArrayList<Integer>();
+    @Expose
+    private String status;
+    @SerializedName("tagline")
+    @Expose
+    private String tagline;
+    @SerializedName("title")
+    @Expose
+    private String title;
     @SerializedName("vote_average")
-    private Double voteAverage;
+    @Expose
+    private double voteAverage;
+
+    @SerializedName("genres")
+    @Expose
+    private List<Genre> genresList=new ArrayList<Genre>();
 
 
-    public Movie(String posterPath, boolean adult, String originalTitle, Integer id, List<Integer> genreIds, String releaseDate,
-                 String overview, String originalLanguage, String title, Integer voteCount, Boolean video, Double voteAverage,
-                 Double popularity, String backdropPath) {
-        this.posterPath = posterPath;
-        this.adult = adult;
-        this.originalTitle = originalTitle;
-        this.id = id;
-        this.genreIds = genreIds;
-        this.releaseDate = releaseDate;
-        this.overview = overview;
-        this.originalLanguage = originalLanguage;
-        this.title = title;
-        this.voteCount = voteCount;
-        this.video = video;
-        this.voteAverage = voteAverage;
-        this.popularity = popularity;
-        this.backdropPath = backdropPath;
-    }
+    @SerializedName("vote_count")
+    @Expose
+    private int voteCount;
 
-    public boolean isAdult() {
-        return adult;    }
+    public List<Genre> getGenresList() {
+        return genresList; }
 
- //   public void setAdult(boolean adult) {this.adult = adult;}
-
-    public String getPosterPath() {
-        return posterPath;
-    }
-
- //   public void setPosterPath(String posterPath) {this.posterPath = posterPath;}
-
-    public String getOverview() {
-        return overview;
-    }
-
-    public void setOverview(String overview) {
-        this.overview = overview;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getReleaseDate() {
-        return releaseDate;
-    }
-
-    public void setReleaseDate(String releaseDate) {
-        this.releaseDate = releaseDate;
-    }
-
-    public List<Integer> getGenreIds() {
-        return genreIds;
-    }
-
-    public void setGenreIds(List<Integer> genreIds) {
-        this.genreIds = genreIds;
-    }
-
-    public String getOriginalTitle() {
-        return originalTitle;
-    }
-
-    public void setOriginalTitle(String originalTitle) {
-        this.originalTitle = originalTitle;
-    }
-
-    public String getOriginalLanguage() {
-        return originalLanguage;
-    }
-
-    public void setOriginalLanguage(String originalLanguage) {
-        this.originalLanguage = originalLanguage;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
+    public String getGenres()
+    {
+        String genres="";
+        for (Genre g:genresList) {
+            genres=genres+g.getGenre()+", ";
+        }
+        genres=genres.substring(0, genres.length()-2);
+        return genres;
     }
 
     public String getBackdropPath() {
         return backdropPath;
     }
 
-    public void setBackdropPath(String backdropPath) {
-        this.backdropPath = backdropPath;
+    public int getBudget() {
+        return budget;
     }
 
-    public Double getPopularity() {
+    public String getHomepage() {
+        return homepage;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getImdbId() {
+        return imdbId;
+    }
+
+    public String getOriginalLanguage() {
+        return originalLanguage;
+    }
+
+    public String getOriginalTitle() {
+        return originalTitle;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getOverview() {
+        return overview;
+    }
+
+    public double getPopularity() {
         return popularity;
     }
 
-    public void setPopularity(Double popularity) {
-        this.popularity = popularity;
+    public String getPosterPath() {
+        return posterPath;
     }
 
-    public Integer getVoteCount() {
-        return voteCount;
+    public String getReleaseDate() {
+        return releaseDate;
     }
 
-    public void setVoteCount(Integer voteCount) {
-        this.voteCount = voteCount;
+    public String getFirstAirDate() {
+        return firstAirDate;
     }
 
-    public Boolean getVideo() {
-        return video;
+    public int getRevenue() {
+        return revenue;
     }
 
-    public void setVideo(Boolean video) {
-        this.video = video;
+    public int getRuntime() {
+        return runtime;
     }
 
-    public Double getVoteAverage() {
-        return voteAverage;
+    public List<Integer> getEpisodeRuntime() {
+        return episodeRuntime;
     }
 
-    public void setVoteAverage(Double voteAverage) {
-        this.voteAverage = voteAverage;
+    public String getStatus() {
+        return status;
     }
+
+    public String getTagline() {
+        return tagline;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public double getVoteAverage() {return voteAverage; }
+
+    public String getFullPosterPath()
+    {
+        return "http://image.tmdb.org/t/p/"+"w500"+getPosterPath();
+    }
+
+
+
 }

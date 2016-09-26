@@ -8,12 +8,17 @@ import android.support.annotation.IdRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toolbar;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -31,7 +36,37 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         searchIntent=new Intent(this, SearchResultsActivity.class);
+
+        ActionBar actionBar = getSupportActionBar();
+
+        actionBar.setTitle(R.string.app_name);
+        ImageView imageView = new ImageView(actionBar.getThemedContext());
+        imageView.setScaleType(ImageView.ScaleType.CENTER);
+        imageView.setImageResource(android.R.drawable.ic_menu_search);
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+        layoutParams.rightMargin = 40;
+        imageView.setLayoutParams(layoutParams);
+        actionBar.setCustomView(imageView);
+       // actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                searchIntent.putExtra("query", "");
+                startActivity(searchIntent);
+
+            }
+        });
+
+       /* ActionBar actionBar = getSupportActionBar();
+        actionBar.setIcon(android.R.drawable.ic_menu_search); */
 
 
 
@@ -72,16 +107,33 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+       final BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar.selectTabWithId(R.id.tab_movies);
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
-                  if (true) {
-                    // The tab with id R.id.tab_favorites was selected,
-                    // change your content accordingly.
+                if (true) {
+                    if (tabId == R.id.tab_news) {
+                        Intent intent = new Intent(getApplicationContext(), NewsFeed.class);
+                        startActivity(intent);
+                    }
+
+                    if (tabId == R.id.tab_tvshows) {
+                        Intent intent = new Intent(getApplicationContext(), TVShows.class);
+                        startActivity(intent);
+                    }
+
                 }
             }
         });
+    }
+
+    @Override
+    public void onResume ()
+    {
+        super.onResume();
+        final BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
+        bottomBar.selectTabWithId(R.id.tab_movies);
     }
 
 
@@ -95,7 +147,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);
@@ -104,31 +156,30 @@ public class MainActivity extends AppCompatActivity {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
 
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        MenuItem item = menu.findItem(R.id.search);
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-
-                searchIntent.putExtra("query", query);
+            public boolean onMenuItemClick(MenuItem item) {
+                searchIntent.putExtra("query", "");
                 startActivity(searchIntent);
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String s) {
-
-                if (s.length() >= 3) {
-                    searchIntent.putExtra("query", s);
-                    startActivity(searchIntent);
-                }
-
 
                 return false;
             }
         });
 
+
+       searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        /*searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                searchIntent.putExtra("query", "");
+                startActivity(searchIntent);
+
+            }
+        });
+
         return true;
-    }
+    } */
 
 
 

@@ -26,8 +26,6 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 public class GridViewAdapter extends ArrayAdapter<Movie> {
 
     int resource;
-    public static final String BASE_URL = "http://image.tmdb.org/t/p/";
-    String URLA;
     Context context;
 
 
@@ -56,10 +54,13 @@ public class GridViewAdapter extends ArrayAdapter<Movie> {
             newView = (LinearLayout) convertView;
         }
         Movie s = getItem(position);
-
         TextView movieName = (TextView)newView.findViewById(R.id.movieName);
         TextView date=(TextView)newView.findViewById(R.id.relaseDate);
-        TextView voteAverage = (TextView)newView.findViewById(R.id.voteAverage);
+        ImageView star_one = (ImageView)newView.findViewById(R.id.star_one);
+        ImageView star_two = (ImageView)newView.findViewById(R.id.star_two);
+        ImageView star_three = (ImageView)newView.findViewById(R.id.star_three);
+        ImageView star_four = (ImageView)newView.findViewById(R.id.star_four);
+        ImageView star_five = (ImageView)newView.findViewById(R.id.star_five);
 
         if (s.getReleaseDate()!=(""))
         {
@@ -83,14 +84,41 @@ public class GridViewAdapter extends ArrayAdapter<Movie> {
             }
 
 
-        if (s.getVoteAverage()!=null)
+        double vote = Double.valueOf(s.getVoteAverage());
+        if (vote<=2)
         {
-            voteAverage.setText("Vote average: " + s.getVoteAverage().toString());
+            star_one.setImageResource(R.drawable.star_filled);
+        }
+        else if (vote<=4)
+        {
+            star_one.setImageResource(R.drawable.star_filled);
+            star_two.setImageResource(R.drawable.star_filled);
+        }
+        else if (vote<=6)
+        {
+            star_one.setImageResource(R.drawable.star_filled);
+            star_two.setImageResource(R.drawable.star_filled);
+            star_three.setImageResource(R.drawable.star_filled);
+        }
+        else if (vote<=8)
+        {
+            star_one.setImageResource(R.drawable.star_filled);
+            star_two.setImageResource(R.drawable.star_filled);
+            star_three.setImageResource(R.drawable.star_filled);
+            star_four.setImageResource(R.drawable.star_filled);
+        }
+        else
+        {
+            star_one.setImageResource(R.drawable.star_filled);
+            star_two.setImageResource(R.drawable.star_filled);
+            star_three.setImageResource(R.drawable.star_filled);
+            star_four.setImageResource(R.drawable.star_filled);
+            star_five.setImageResource(R.drawable.star_filled);
         }
 
         if (!s.getPosterPath().equals(""))
         {
-            URLA=BASE_URL+"w500"+s.getPosterPath();
+
             WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             Display display = wm.getDefaultDisplay();
             Point size = new Point();
@@ -100,12 +128,10 @@ public class GridViewAdapter extends ArrayAdapter<Movie> {
 
 
             Glide.with(context)
-                    .load(URLA)
-                    .override(width/2, 750) //rijesilo je problem pomjeranja slika, ali mislim da je okey samo na mom telefonu
-                            //mislim da ce raditi i na ostalim sirinama
+                    .load(s.getFullPosterPath())
+                    .override(width/2, 750)
                     .into((ImageView) newView.findViewById(R.id.imageView));
-            //za početak ce mi ovdje biti vote average,
-            //jer da bih dobila trajanje filma moram povuci film pojedinacno. to cu promjeniti kada budem uradila onClick na element grida
+
         }
 
 

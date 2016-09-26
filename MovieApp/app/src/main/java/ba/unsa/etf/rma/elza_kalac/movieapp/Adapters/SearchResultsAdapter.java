@@ -1,12 +1,9 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Adapters;
 
 import android.content.Context;
-import android.graphics.Point;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,8 +24,6 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 public class SearchResultsAdapter extends ArrayAdapter<Movie> {
 
     int resource;
-    public static final String BASE_URL = "http://image.tmdb.org/t/p/";
-    String URLA;
     Context context;
 
 
@@ -81,12 +76,10 @@ public class SearchResultsAdapter extends ArrayAdapter<Movie> {
 
         if (s.getPosterPath()!=(""))
         {
-            URLA=BASE_URL+"w500"+s.getPosterPath();
             Glide.with(context)
-                    .load(URLA)
+                    .load(s.getFullPosterPath())
                     .into((ImageView) newView.findViewById(R.id.imageView2));
-            //za početak ce mi ovdje biti vote average,
-            //jer da bih dobila trajanje filma moram povuci film pojedinacno. to cu promjeniti kada budem uradila onClick na element grida
+
         }
 
         return newView;
