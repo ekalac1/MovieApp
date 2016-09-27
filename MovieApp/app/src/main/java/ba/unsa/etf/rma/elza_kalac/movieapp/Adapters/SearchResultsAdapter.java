@@ -60,53 +60,56 @@ public class SearchResultsAdapter extends ArrayAdapter<Movie> {
             newView = (LinearLayout) convertView;
         }
 
-        Movie s = getItem(position);
+        Movie movie = getItem(position);
         TextView titleText = (TextView)newView.findViewById(R.id.title);
         final TextView actors = (TextView)newView.findViewById(R.id.actors);
-        titleText.setText(s.getTitle());
 
-        if (s.getReleaseDate()!=(""))
+
+        if (movie.getReleaseDate()!=(""))
         {
             DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
             Date startDate=new Date();
             try {
-                startDate = df.parse(s.getReleaseDate());
+                startDate = df.parse(movie.getReleaseDate());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            (new SimpleDateFormat("dd/mm/yyyy")).format(startDate);
+            (new SimpleDateFormat("yyyy-mm-dd")).format(startDate);
 
-            String year = s.getReleaseDate();
+            String year = movie.getReleaseDate();
+
+            year=year.substring(0,4);
+
+            titleText.setText(movie.getTitle()+" ( "+year +" )");
 
             TextView date = (TextView)newView.findViewById(R.id.relaseYear);
 
             date.setText((new SimpleDateFormat("dd MMM yyyy")).format(startDate).toString());
         }
 
-        if (s.getPosterPath()!=(""))
+        if (movie.getPosterPath()!=(""))
         {
             Glide.with(context)
-                    .load(s.getFullPosterPath())
+                    .load(movie.getFullPosterPath())
                     .into((ImageView) newView.findViewById(R.id.imageView2));
 
         }
-      /*  ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<List<Actor>> call = apiService.getActors(s.getId(), ApiClient.API_KEY);
-        call.enqueue(new Callback<List<Actor>>() {
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<ActorsListResponse> call = apiService.getActors(movie.getId(), ApiClient.API_KEY);
+        call.enqueue(new Callback<ActorsListResponse>() {
             @Override
-            public void onResponse(Call<List<Actor>> call, Response<List<Actor>> response) {
-                actorsList = response.body();
+            public void onResponse(Call<ActorsListResponse> call, Response<ActorsListResponse> response) {
+                actorsList = response.body().getResults();
 //                actors.setText(actorsList.get(0).getName());
             }
 
             @Override
-            public void onFailure(Call<List<Actor>> call, Throwable t) {
+            public void onFailure(Call<ActorsListResponse> call, Throwable t) {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
                 Toast.makeText(newView.getContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
             }
-        }); */
-
+        });
         return newView;
     }
 

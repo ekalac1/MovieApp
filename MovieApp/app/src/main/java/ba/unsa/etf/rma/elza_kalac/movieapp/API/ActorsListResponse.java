@@ -5,26 +5,23 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Actor;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Crew;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 
 
 public class ActorsListResponse {
 
-    @SerializedName("page")
+    @SerializedName("id")
     private int page;
-    @SerializedName("results")
+    @SerializedName("cast")
     private List<Actor> results;
-    @SerializedName("total_results")
-    private int totalResults;
-    @SerializedName("total_pages")
-    private int totalPages;
+    @SerializedName("crew")
+    private List<Crew> crew;
 
-    public int getPage() {
-        return page;
-    }
-
-    public void setPage(int page) {
+    public ActorsListResponse(int page, List<Actor> results, List<Crew> crew) {
         this.page = page;
+        this.results = results;
+        this.crew = crew;
     }
 
     public List<Actor> getResults() {
@@ -35,19 +32,19 @@ public class ActorsListResponse {
         this.results = results;
     }
 
-    public int getTotalResults() {
-        return totalResults;
+    public int getPage() {
+        return page;
     }
 
-    public void setTotalResults(int totalResults) {
-        this.totalResults = totalResults;
+    public void setPage(int page) {
+        this.page = page;
     }
 
-    public int getTotalPages() {
-        return totalPages;
+    public List<Crew> getCrew() {
+        return crew;
     }
 
-    public void setTotalPages(int totalPages) {
-        this.totalPages = totalPages;
+    public void setCrew(List<Crew> crew) {
+        this.crew = crew;
     }
 }

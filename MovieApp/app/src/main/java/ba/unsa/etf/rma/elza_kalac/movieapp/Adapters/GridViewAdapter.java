@@ -37,13 +37,9 @@ public class GridViewAdapter extends ArrayAdapter<Movie> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-// Kreiranje i inflate-anje view klase
+
         LinearLayout newView;
-
         if (convertView == null) {
-// Ukoliko je ovo prvi put da se pristupa klasi
-
-// Potrebno je kreirati novi objekat i inflate-at ga
             newView = new LinearLayout(getContext());
             String inflater = Context.LAYOUT_INFLATER_SERVICE;
             LayoutInflater li;
@@ -53,7 +49,7 @@ public class GridViewAdapter extends ArrayAdapter<Movie> {
         } else {
             newView = (LinearLayout) convertView;
         }
-        Movie s = getItem(position);
+        Movie movie = getItem(position);
         TextView movieName = (TextView)newView.findViewById(R.id.movieName);
         TextView date=(TextView)newView.findViewById(R.id.relaseDate);
         ImageView star_one = (ImageView)newView.findViewById(R.id.star_one);
@@ -62,29 +58,29 @@ public class GridViewAdapter extends ArrayAdapter<Movie> {
         ImageView star_four = (ImageView)newView.findViewById(R.id.star_four);
         ImageView star_five = (ImageView)newView.findViewById(R.id.star_five);
 
-        if (s.getReleaseDate()!=(""))
+        if (movie.getReleaseDate()!=(""))
         {
             DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
             Date startDate=new Date();
             try {
-                startDate = df.parse(s.getReleaseDate());
+                startDate = df.parse(movie.getReleaseDate());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
             (new SimpleDateFormat("dd/mm/yyyy")).format(startDate);
 
-            String year = s.getReleaseDate();
+            String year = movie.getReleaseDate();
             year=year.substring(0, 4);
-            movieName.setText(s.getTitle().toUpperCase() + " (" + year + ")");
+            movieName.setText(movie.getTitle().toUpperCase() + " (" + year + ")");
             date.setText((new SimpleDateFormat("dd MMM yyyy")).format(startDate).toString());
         }
         else {
                 date.setText("");
-                movieName.setText(s.getOriginalTitle().toUpperCase());
+                movieName.setText(movie.getOriginalTitle().toUpperCase());
             }
 
 
-        double vote = Double.valueOf(s.getVoteAverage());
+        double vote = Double.valueOf(movie.getVoteAverage());
         if (vote<=2)
         {
             star_one.setImageResource(R.drawable.star_filled);
@@ -116,7 +112,7 @@ public class GridViewAdapter extends ArrayAdapter<Movie> {
             star_five.setImageResource(R.drawable.star_filled);
         }
 
-        if (!s.getPosterPath().equals(""))
+        if (!movie.getPosterPath().equals(""))
         {
 
             WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -124,20 +120,11 @@ public class GridViewAdapter extends ArrayAdapter<Movie> {
             Point size = new Point();
             display.getSize(size);
             int width = size.x;
-          //  int height = size.y;
-
-
             Glide.with(context)
-                    .load(s.getFullPosterPath())
+                    .load(movie.getFullPosterPath())
                     .override(width/2, 750)
                     .into((ImageView) newView.findViewById(R.id.imageView));
-
         }
-
-
-
-
-
         return newView;
     }
 

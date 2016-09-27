@@ -8,4 +8,7 @@
     <string name="tab_3_name">Highest-rated</string>
     <string name="api_key_missing">Please obtain your API KEY first from themoviedb.org</string>
     <string name="on_failure">Failed</string>
+    <string name="news">News</string>
+    <string name="movies">Movies</string>
+    <string name="tv_shows">Tv_shows</string>
 </resources>

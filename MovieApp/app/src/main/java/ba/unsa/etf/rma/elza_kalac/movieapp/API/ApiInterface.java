@@ -28,6 +28,6 @@ public interface ApiInterface {
     Call<Movie> getMovieDetails(@Path("id") int id, @Query("api_key") String apiKey);
 
     @GET("movie/{id}/credits")
-    Call<List<Actor>> getActors(@Path("id") int id, @Query("api_key") String apiKey );
+    Call<ActorsListResponse> getActors(@Path("id") int id, @Query("api_key") String apiKey );
 
 }

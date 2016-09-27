@@ -18,7 +18,6 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
@@ -31,15 +30,12 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.http.Query;
 
 public class SearchResultsActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     public List<Movie> searchResultMovies;
-    public List<Movie> cachedMovies;
     public String query;
     public int pageNum;
-    public String lastQuery;
 
 
     @Override
@@ -50,9 +46,8 @@ public class SearchResultsActivity extends AppCompatActivity {
         pageNum=1;
 
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        final String queryOnCreate = sharedPref.getString("idSet", "");
-        query=queryOnCreate;
-        if (queryOnCreate.length()>=3)
+        query=sharedPref.getString("idSet", "");
+        if (query.length()>=3)
         {
             if (ApiClient.API_KEY.isEmpty()) {
                 Toast.makeText(getApplicationContext(), R.string.api_key_missing, Toast.LENGTH_LONG).show();
@@ -80,7 +75,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(getApplicationContext(), MoviesDetailsActivity.class);
-                    intent.putExtra("id", cachedMovies.get(position).getId());
+                    intent.putExtra("id", searchResultMovies.get(position).getId());
                     startActivity(intent);
 
                 }
@@ -101,10 +96,6 @@ public class SearchResultsActivity extends AppCompatActivity {
                             searchResultMovies.addAll(temp);
                                 pageNum++;
                                 ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
-
-
-
-
                     }
 
                     @Override
@@ -130,8 +121,6 @@ public class SearchResultsActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search_menu, menu);
-
-        // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
@@ -140,12 +129,15 @@ public class SearchResultsActivity extends AppCompatActivity {
         searchMenuItem.expandActionView();
         final GridView grid = (GridView) findViewById(R.id.gridView);
 
+        searchView.setQuery(query, false);
+        searchView.setBackgroundResource(R.color.grey);
+
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
+            public boolean onQueryTextSubmit(String query1) {
 
-                searchView.setQuery(query, false);
+                searchView.setQuery(query1, false);
 
                 if (ApiClient.API_KEY.isEmpty()) {
                     Toast.makeText(getApplicationContext(), R.string.api_key_missing, Toast.LENGTH_LONG).show();
@@ -154,7 +146,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                 ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
                 pageNum = 1;
 
-                lastQuery = query;
+                query=query1;
 
 
                 Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, query, pageNum);
@@ -165,8 +157,6 @@ public class SearchResultsActivity extends AppCompatActivity {
                         pageNum++;
                         final SearchResultsAdapter adapter = new SearchResultsAdapter(getApplicationContext(), R.layout.search_view_element, searchResultMovies);
                         grid.setAdapter(adapter);
-
-
                     }
 
                     @Override
@@ -192,10 +182,7 @@ public class SearchResultsActivity extends AppCompatActivity {
 
                     ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
                     pageNum = 1;
-
-                    lastQuery = newText;
                     query=newText;
-
 
                     Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, newText, pageNum);
                     call.enqueue(new Callback<MoviesListResponse>() {
@@ -205,6 +192,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                             pageNum++;
                             final SearchResultsAdapter adapter = new SearchResultsAdapter(getApplicationContext(), R.layout.search_view_element, searchResultMovies);
                             grid.setAdapter(adapter);
+
 
 
                         }
@@ -225,7 +213,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                     public boolean onLoadMore(int page, int totalItemsCount) {
                         ApiInterface apiService =
                                 ApiClient.getClient().create(ApiInterface.class);
-                        Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, query, pageNum);
+                        Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, query, page);
                         call.enqueue(new Callback<MoviesListResponse>() {
                             @Override
                             public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
@@ -254,8 +242,6 @@ public class SearchResultsActivity extends AppCompatActivity {
                 return false;
             }
         });
-
-
         return true;
     }
 
@@ -272,13 +258,13 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onDestroy()
+    public void onPause()
     {
-        super.onDestroy();
+        super.onPause();
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
-        editor.putString("idSet", lastQuery);
+        editor.putString("idSet", query);
         editor.commit();
     }
 

@@ -59,7 +59,6 @@
             android:textSize="10sp"
             android:layout_gravity="bottom"
             android:textColor="@color/lightgrey" />
-
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
@@ -70,15 +69,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/novo"
             android:layout_toEndOf="@+id/movies_detalis_image"
-            android:text="da vidim na sta lici"
-            android:textSize="20dp"/>
-
-
-
+            android:textSize="20dp"
+            android:text="da vidim na sta lici" /> <!--  <-temporary -->
     </LinearLayout>
-
-
-
-
 </RelativeLayout>
 </ScrollView>

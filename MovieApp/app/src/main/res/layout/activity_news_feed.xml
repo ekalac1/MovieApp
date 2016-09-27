@@ -9,7 +9,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="NEWS FEED ACTIVITY"/>
+        android:text="NEWS FEED ACTIVITY"/> <!--  <-temporary -->
 
     <com.roughike.bottombar.BottomBar
         android:id="@+id/bottomBar"

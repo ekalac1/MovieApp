@@ -18,11 +18,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-           <!-- <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".SearchResults" /> -->
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -42,16 +37,6 @@
         <activity
             android:name=".Activities.SearchResultsActivity"
             android:parentActivityName=".Activities.MainActivity">
-         <!--   <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>  -->
-
-           <!-- <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
-            <meta-data
-                android:name="android.app.default_searchable"
-                android:value=".SearchResults" /> -->
         </activity>
         <activity android:name=".Activities.NewsFeed" />
         <activity android:name=".Activities.TVShows" />
