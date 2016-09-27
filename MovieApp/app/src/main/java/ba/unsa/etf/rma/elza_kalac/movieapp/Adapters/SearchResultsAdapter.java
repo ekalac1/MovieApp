@@ -1,6 +1,7 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,25 +9,36 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import ba.unsa.etf.rma.elza_kalac.movieapp.API.ActorsListResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
+import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.MainActivity;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Actor;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class SearchResultsAdapter extends ArrayAdapter<Movie> {
+    private static final String TAG = MainActivity.class.getSimpleName();
+
+    public List<Actor> actorsList = new ArrayList<>();
 
     int resource;
     Context context;
-
-
 
     public SearchResultsAdapter(Context _context, int _resource, List<Movie> items) {
         super(_context, _resource, items);
@@ -35,13 +47,9 @@ public class SearchResultsAdapter extends ArrayAdapter<Movie> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-// Kreiranje i inflate-anje view klase
-        LinearLayout newView;
+        final LinearLayout newView;
 
         if (convertView == null) {
-// Ukoliko je ovo prvi put da se pristupa klasi
-
-// Potrebno je kreirati novi objekat i inflate-at ga
             newView = new LinearLayout(getContext());
             String inflater = Context.LAYOUT_INFLATER_SERVICE;
             LayoutInflater li;
@@ -54,6 +62,7 @@ public class SearchResultsAdapter extends ArrayAdapter<Movie> {
 
         Movie s = getItem(position);
         TextView titleText = (TextView)newView.findViewById(R.id.title);
+        final TextView actors = (TextView)newView.findViewById(R.id.actors);
         titleText.setText(s.getTitle());
 
         if (s.getReleaseDate()!=(""))
@@ -81,6 +90,22 @@ public class SearchResultsAdapter extends ArrayAdapter<Movie> {
                     .into((ImageView) newView.findViewById(R.id.imageView2));
 
         }
+      /*  ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<List<Actor>> call = apiService.getActors(s.getId(), ApiClient.API_KEY);
+        call.enqueue(new Callback<List<Actor>>() {
+            @Override
+            public void onResponse(Call<List<Actor>> call, Response<List<Actor>> response) {
+                actorsList = response.body();
+//                actors.setText(actorsList.get(0).getName());
+            }
+
+            @Override
+            public void onFailure(Call<List<Actor>> call, Throwable t) {
+                // Log error here since request failed
+                Log.e(TAG, t.toString());
+                Toast.makeText(newView.getContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
+            }
+        }); */
 
         return newView;
     }

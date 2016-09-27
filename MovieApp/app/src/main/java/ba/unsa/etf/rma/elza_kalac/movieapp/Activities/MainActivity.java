@@ -1,7 +1,5 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
@@ -11,14 +9,10 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toolbar;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -51,7 +45,6 @@ public class MainActivity extends AppCompatActivity {
         layoutParams.rightMargin = 40;
         imageView.setLayoutParams(layoutParams);
         actionBar.setCustomView(imageView);
-       // actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM);
 
@@ -64,10 +57,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-       /* ActionBar actionBar = getSupportActionBar();
-        actionBar.setIcon(android.R.drawable.ic_menu_search); */
-
 
 
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -146,45 +135,4 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
-
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_menu, menu);
-
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-
-        MenuItem item = menu.findItem(R.id.search);
-        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                searchIntent.putExtra("query", "");
-                startActivity(searchIntent);
-
-                return false;
-            }
-        });
-
-
-       searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        /*searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                searchIntent.putExtra("query", "");
-                startActivity(searchIntent);
-
-            }
-        });
-
-        return true;
-    } */
-
-
-
-
-
-
-
 }

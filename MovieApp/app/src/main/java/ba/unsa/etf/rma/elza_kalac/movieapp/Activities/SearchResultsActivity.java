@@ -18,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
@@ -30,112 +31,33 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Query;
 
 public class SearchResultsActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     public List<Movie> searchResultMovies;
+    public List<Movie> cachedMovies;
     public String query;
-    public List<Movie> searchResult;
     public int pageNum;
     public String lastQuery;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
+        final GridView grid = (GridView)findViewById(R.id.gridView);
         pageNum=1;
-        handleIntent(getIntent());
+
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        String queryOnCreate = sharedPref.getString("idSet", "");
+        final String queryOnCreate = sharedPref.getString("idSet", "");
+        query=queryOnCreate;
         if (queryOnCreate.length()>=3)
         {
-            final GridView grid = (GridView)findViewById(R.id.gridView);
             if (ApiClient.API_KEY.isEmpty()) {
                 Toast.makeText(getApplicationContext(), R.string.api_key_missing, Toast.LENGTH_LONG).show();
             }
-
             ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-
-
-            Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, queryOnCreate, pageNum);
-            call.enqueue(new Callback<MoviesListResponse>() {
-                @Override
-                public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                    searchResultMovies = response.body().getResults();
-                    pageNum++;
-                    final SearchResultsAdapter adapter = new SearchResultsAdapter(getApplicationContext(), R.layout.search_view_element, searchResultMovies);
-                    grid.setAdapter(adapter);
-
-                }
-
-                @Override
-                public void onFailure(Call<MoviesListResponse> call, Throwable t) {
-                    // Log error here since request failed
-                    Log.e(TAG, t.toString());
-                    Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
-                }
-            });
-            grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Intent intent = new Intent(getApplicationContext(), MoviesDetailsActivity.class);
-                    intent.putExtra("id", searchResultMovies.get(position).getId());
-                    startActivity(intent);
-
-                }
-            });
-            grid.setOnScrollListener(new EndlessScrollListener() {
-                @Override
-                public boolean onLoadMore(int page, int totalItemsCount) {
-                    ApiInterface apiService =
-                            ApiClient.getClient().create(ApiInterface.class);
-                    Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, query, pageNum);
-                    call.enqueue(new Callback<MoviesListResponse>() {
-                        @Override
-                        public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-
-                            List<Movie> temp = response.body().getResults();
-                            searchResultMovies.addAll(temp);
-                            pageNum++;
-                            ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
-                        }
-
-                        @Override
-                        public void onFailure(Call<MoviesListResponse> call, Throwable t) {
-                            // Log error here since request failed
-                            Log.e(TAG, t.toString());
-                            Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
-                        }
-                    });
-
-
-                    return true;
-                }
-            });
-        }
-
-
-
-
-    }
-    @Override
-    protected void onNewIntent(Intent intent) {
-
-        handleIntent(intent);
-    }
-    private void handleIntent(Intent intent) {
-
-        if (!intent.getStringExtra("query").equals("")) {
-            query = intent.getStringExtra("query");
-
-            final GridView grid = (GridView)findViewById(R.id.gridView);
-            if (ApiClient.API_KEY.isEmpty()) {
-                Toast.makeText(getApplicationContext(), R.string.api_key_missing, Toast.LENGTH_LONG).show();
-            }
-
-            ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-
-
             Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, query, pageNum);
             call.enqueue(new Callback<MoviesListResponse>() {
                 @Override
@@ -145,8 +67,6 @@ public class SearchResultsActivity extends AppCompatActivity {
                     final SearchResultsAdapter adapter = new SearchResultsAdapter(getApplicationContext(), R.layout.search_view_element, searchResultMovies);
                     grid.setAdapter(adapter);
 
-
-
                 }
 
                 @Override
@@ -156,48 +76,53 @@ public class SearchResultsActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
                 }
             });
-
             grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     Intent intent = new Intent(getApplicationContext(), MoviesDetailsActivity.class);
-                    intent.putExtra("id", searchResultMovies.get(position).getId());
+                    intent.putExtra("id", cachedMovies.get(position).getId());
                     startActivity(intent);
 
                 }
             });
 
-
-                    grid.setOnScrollListener(new EndlessScrollListener() {
-                        @Override
-                        public boolean onLoadMore(int page, int totalItemsCount) {
-                            ApiInterface apiService =
-                                    ApiClient.getClient().create(ApiInterface.class);
-                            Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, query, pageNum);
-                            call.enqueue(new Callback<MoviesListResponse>() {
-                                @Override
-                                public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-
-                                    List<Movie> temp = response.body().getResults();
-                                    searchResultMovies.addAll(temp);
-                                    pageNum++;
-                                    ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
-                                }
-
-                                @Override
-                                public void onFailure(Call<MoviesListResponse> call, Throwable t) {
-                                    // Log error here since request failed
-                                    Log.e(TAG, t.toString());
-                                    Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
-                                }
-                            });
-
-
-                            return true;
-                        }
-                    });
-
         }
+        grid.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                ApiInterface apiService =
+                        ApiClient.getClient().create(ApiInterface.class);
+                Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, query, page);
+                call.enqueue(new Callback<MoviesListResponse>() {
+                    @Override
+                    public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+
+                            List<Movie> temp = response.body().getResults();
+                            searchResultMovies.addAll(temp);
+                                pageNum++;
+                                ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
+
+
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+                        // Log error here since request failed
+                        Log.e(TAG, t.toString());
+                        Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+                return true;
+            }
+        });
+
+
+
+
     }
 
 
@@ -208,15 +133,51 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         // Associate searchable configuration with the SearchView
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
         MenuItem searchMenuItem = menu.findItem(R.id.search);
         searchMenuItem.expandActionView();
+        final GridView grid = (GridView) findViewById(R.id.gridView);
+
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
+
+                searchView.setQuery(query, false);
+
+                if (ApiClient.API_KEY.isEmpty()) {
+                    Toast.makeText(getApplicationContext(), R.string.api_key_missing, Toast.LENGTH_LONG).show();
+                }
+
+                ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+                pageNum = 1;
+
+                lastQuery = query;
+
+
+                Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, query, pageNum);
+                call.enqueue(new Callback<MoviesListResponse>() {
+                    @Override
+                    public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+                        searchResultMovies = response.body().getResults();
+                        pageNum++;
+                        final SearchResultsAdapter adapter = new SearchResultsAdapter(getApplicationContext(), R.layout.search_view_element, searchResultMovies);
+                        grid.setAdapter(adapter);
+
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+                        // Log error here since request failed
+                        Log.e(TAG, t.toString());
+                        Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
                 return false;
             }
 
@@ -224,7 +185,7 @@ public class SearchResultsActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
 
                 if (newText.length() >= 3) {
-                    final GridView grid = (GridView) findViewById(R.id.gridView);
+
                     if (ApiClient.API_KEY.isEmpty()) {
                         Toast.makeText(getApplicationContext(), R.string.api_key_missing, Toast.LENGTH_LONG).show();
                     }
@@ -232,7 +193,8 @@ public class SearchResultsActivity extends AppCompatActivity {
                     ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
                     pageNum = 1;
 
-                    lastQuery=newText;
+                    lastQuery = newText;
+                    query=newText;
 
 
                     Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, newText, pageNum);
@@ -254,8 +216,41 @@ public class SearchResultsActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
                         }
                     });
+
+
                 }
 
+                grid.setOnScrollListener(new EndlessScrollListener() {
+                    @Override
+                    public boolean onLoadMore(int page, int totalItemsCount) {
+                        ApiInterface apiService =
+                                ApiClient.getClient().create(ApiInterface.class);
+                        Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, query, pageNum);
+                        call.enqueue(new Callback<MoviesListResponse>() {
+                            @Override
+                            public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+
+                               {
+                                    List<Movie> temp = response.body().getResults();
+                                    searchResultMovies.addAll(temp);
+                                    pageNum++;
+                                    ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
+                                }
+
+                            }
+
+                            @Override
+                            public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+                                // Log error here since request failed
+                                Log.e(TAG, t.toString());
+                                Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+
+                        return true;
+                    }
+                });
                 return false;
             }
         });
@@ -271,6 +266,7 @@ public class SearchResultsActivity extends AppCompatActivity {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -278,16 +274,12 @@ public class SearchResultsActivity extends AppCompatActivity {
     @Override
     public void onDestroy()
     {
-
-
         super.onDestroy();
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
 
         editor.putString("idSet", lastQuery);
         editor.commit();
-       /* Intent proba = new Intent(this, MainActivity.class);
-        startActivity(proba); */
     }
 
 

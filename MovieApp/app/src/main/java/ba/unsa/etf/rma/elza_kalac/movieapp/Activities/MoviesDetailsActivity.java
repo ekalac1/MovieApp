@@ -9,12 +9,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
-import java.util.List;
-
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
-import ba.unsa.etf.rma.elza_kalac.movieapp.API.GenreResponse;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Genre;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;

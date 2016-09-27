@@ -1,5 +1,8 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.API;
 
+import java.util.List;
+
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Actor;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -24,7 +27,7 @@ public interface ApiInterface {
    @GET("movie/{id}")
     Call<Movie> getMovieDetails(@Path("id") int id, @Query("api_key") String apiKey);
 
-    @GET("genre/movie/list")
-    Call<GenreResponse> getGenres(@Query("api_key") String apiKey);
+    @GET("movie/{id}/credits")
+    Call<List<Actor>> getActors(@Path("id") int id, @Query("api_key") String apiKey );
 
 }

@@ -4,15 +4,16 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Actor;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 
 
-public class ActorsListResponse { /*
+public class ActorsListResponse {
 
     @SerializedName("page")
     private int page;
     @SerializedName("results")
-    private List<Movie> results;
+    private List<Actor> results;
     @SerializedName("total_results")
     private int totalResults;
     @SerializedName("total_pages")
@@ -26,11 +27,11 @@ public class ActorsListResponse { /*
         this.page = page;
     }
 
-    public List<Movie> getResults() {
+    public List<Actor> getResults() {
         return results;
     }
 
-    public void setResults(List<Movie> results) {
+    public void setResults(List<Actor> results) {
         this.results = results;
     }
 
@@ -48,5 +49,5 @@ public class ActorsListResponse { /*
 
     public void setTotalPages(int totalPages) {
         this.totalPages = totalPages;
-    } */
+    }
 }
