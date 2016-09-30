@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.PagerAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.MoviesPagerAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
 
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter
+        final MoviesPagerAdapter adapter = new MoviesPagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));

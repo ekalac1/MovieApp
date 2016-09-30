@@ -10,5 +10,9 @@
     <string name="on_failure">Failed</string>
     <string name="news">News</string>
     <string name="movies">Movies</string>
-    <string name="tv_shows">Tv_shows</string>
+    <string name="tv_shows">TV shows</string>
+    <string name="cast_failed">Falied to get CastList</string>
+    <string name="directors">Director: </string>
+    <string name="writers">Writers: </string>
+    <string name="stars">Stars: </string>
 </resources>

@@ -48,10 +48,12 @@ public class LatestMoviesFragment extends Fragment {
         call.enqueue(new Callback<MoviesListResponse>() {
            @Override
             public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+               if (response.body()!=null)
+               {
                 movies = response.body().getResults();
-                final GridViewAdapter adapter = new GridViewAdapter(getActivity().getApplicationContext(), R.layout.grid_view_element, movies);
-
+                final GridViewAdapter adapter = new GridViewAdapter(getActivity().getApplicationContext(), R.layout.movie_element, movies);
                  grid.setAdapter(adapter);
+               }
             }
 
             @Override

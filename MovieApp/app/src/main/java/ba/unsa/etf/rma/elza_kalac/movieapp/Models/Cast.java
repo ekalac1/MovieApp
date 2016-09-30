@@ -6,7 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 
-public class Actor {
+public class Cast {
 
     @SerializedName("cast_id")
     @Expose
@@ -16,7 +16,7 @@ public class Actor {
     private String character_name;
     @SerializedName("credit_id")
     @Expose
-    private int credit_id;
+    private String credit_id;
    @SerializedName("id")
    @Expose
     private int id;
@@ -31,6 +31,8 @@ public class Actor {
    private String profile_path;
 
 
+
+
    public void setCast_id(int cast_id) {
       this.cast_id = cast_id;
    }
@@ -39,7 +41,7 @@ public class Actor {
       this.character_name = character_name;
    }
 
-   public void setCredit_id(int credit_id) {
+   public void setCredit_id(String credit_id) {
       this.credit_id = credit_id;
    }
 
@@ -59,7 +61,7 @@ public class Actor {
       this.profile_path = profile_path;
    }
 
-   public Actor(int cast_id, String character_name, int credit_id, int id, String name, int order, String profile_path) {
+   public Cast(int cast_id, String character_name, String credit_id, int id, String name, int order, String profile_path) {
       this.cast_id = cast_id;
       this.character_name = character_name;
       this.credit_id = credit_id;
@@ -77,7 +79,7 @@ public class Actor {
       return character_name;
    }
 
-   public int getCredit_id() {
+   public String getCredit_id() {
       return credit_id;
    }
 
@@ -95,5 +97,9 @@ public class Actor {
 
    public String getProfile_path() {
       return profile_path;
+   }
+
+   public String getFullPosterPath() {
+      return "http://image.tmdb.org/t/p/" + "w92" + getProfile_path();
    }
 }

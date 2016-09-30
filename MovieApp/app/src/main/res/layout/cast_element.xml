@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/cast_image"
+        android:src="@drawable/unknown" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textColor="@color/lightgrey"
+        android:layout_alignStart="@+id/cast_image"
+        android:layout_alignEnd="@+id/cast_image"
+        android:id="@+id/actors_name"
+        android:layout_below="@+id/cast_image"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="20dp"
+        android:textColor="@color/white_dark"
+        android:layout_alignStart="@+id/cast_image"
+        android:layout_alignEnd="@+id/cast_image"
+        android:id="@+id/character"
+        android:layout_below="@id/actors_name"/>
+</RelativeLayout>

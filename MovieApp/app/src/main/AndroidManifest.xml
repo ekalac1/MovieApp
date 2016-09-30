@@ -33,13 +33,18 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
-        <activity android:name=".Activities.MoviesDetailsActivity" />
+        <activity
+            android:name=".Activities.MoviesDetailsActivity"
+            android:parentActivityName=".Activities.MainActivity" />
         <activity
             android:name=".Activities.SearchResultsActivity"
-            android:parentActivityName=".Activities.MainActivity">
-        </activity>
+            android:parentActivityName=".Activities.MainActivity" />
         <activity android:name=".Activities.NewsFeed" />
         <activity android:name=".Activities.TVShows" />
+        <activity android:name=".Fragments.MostPopularTvShowsFragment" />
+        <activity android:name=".Fragments.LatestTvShowsFragment" />
+        <activity android:name=".Fragments.HighestRatedTvShowFragment" />
+        <activity android:name=".Fragments.AiringTodayTvShowsFragment"></activity>
     </application>
 
 </manifest>

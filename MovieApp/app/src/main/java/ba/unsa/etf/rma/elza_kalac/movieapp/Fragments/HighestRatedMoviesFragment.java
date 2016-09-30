@@ -48,7 +48,7 @@ public class HighestRatedMoviesFragment extends Fragment {
             @Override
             public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
                 movies = response.body().getResults();
-                final GridViewAdapter adapter = new GridViewAdapter(getActivity().getApplicationContext(), R.layout.grid_view_element, movies);
+                final GridViewAdapter adapter = new GridViewAdapter(getActivity().getApplicationContext(), R.layout.movie_element, movies);
                 grid.setAdapter(adapter);
                 pageNum++;
             }

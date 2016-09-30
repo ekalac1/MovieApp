@@ -18,6 +18,7 @@ public class MoviesListResponse {
     @SerializedName("total_pages")
     private int totalPages;
 
+
     public int getPage() {
         return page;
     }
