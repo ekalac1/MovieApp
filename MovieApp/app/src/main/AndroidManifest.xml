@@ -12,7 +12,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Base.Theme.AppCompat.Light.DarkActionBar">
-        <activity android:name=".Activities.MainActivity">
+        <activity android:name=".Activities.MovieActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,10 +35,10 @@
         </activity>
         <activity
             android:name=".Activities.MoviesDetailsActivity"
-            android:parentActivityName=".Activities.MainActivity" />
+            android:parentActivityName=".Activities.MovieActivity" />
         <activity
             android:name=".Activities.SearchResultsActivity"
-            android:parentActivityName=".Activities.MainActivity" />
+            android:parentActivityName=".Activities.MovieActivity" />
         <activity android:name=".Activities.NewsFeed" />
         <activity android:name=".Activities.TVShows" />
         <activity android:name=".Fragments.MostPopularTvShowsFragment" />

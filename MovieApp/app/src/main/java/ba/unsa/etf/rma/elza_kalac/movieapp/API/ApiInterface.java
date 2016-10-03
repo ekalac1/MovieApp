@@ -1,6 +1,7 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.API;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -30,4 +31,15 @@ public interface ApiInterface {
     @GET("movie/{id}/reviews")
     Call<ReviewResponse> getReview(@Path("id") int id, @Query("api_key") String apiKey);
 
+    @GET("tv/popular")
+    Call<TvShowResponse> getPopularTvShows(@Query("api_key") String apiKey);
+
+    @GET("tv/airing_today")
+    Call<TvShowResponse> getAiringTodayTvShows(@Query("api_key") String apiKey);
+
+    @GET("tv/on_the_air")
+    Call<TvShowResponse> getLatestTvShows(@Query("api_key") String apiKey);
+
+    @GET("tv/top_rated")
+    Call<TvShowResponse> getHighestRatedTvShows(@Query("api_key") String apiKey);
 }

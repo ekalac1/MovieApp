@@ -22,7 +22,7 @@ public class CreditsResponse {
         for (Crew c: crew)
         {
             if (c.getJob().equals("Director"))
-                director=director+c.getJob();
+                director=director+c.getName();
         }
         return director;
     }
@@ -32,7 +32,7 @@ public class CreditsResponse {
         for (Crew c:crew)
         {
             if (c.getJob().equals("Screenplay"))
-                writers=writers+c.getJob()+", ";
+                writers=writers+c.getName()+", ";
         }
         if (writers.length()!=0)
             return writers.substring(0, writers.length()-2);

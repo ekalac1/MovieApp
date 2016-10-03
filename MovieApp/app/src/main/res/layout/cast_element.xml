@@ -7,11 +7,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/cast_image"
-        android:src="@drawable/unknown" />
+        android:src="@drawable/unknown"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"/>
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="12sp"
         android:textColor="@color/lightgrey"
         android:layout_alignStart="@+id/cast_image"
         android:layout_alignEnd="@+id/cast_image"
@@ -20,7 +22,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
+        android:textSize="12sp"
         android:textColor="@color/white_dark"
         android:layout_alignStart="@+id/cast_image"
         android:layout_alignEnd="@+id/cast_image"

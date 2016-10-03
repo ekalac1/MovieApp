@@ -21,7 +21,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.MoviesPagerAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MovieActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle mToogle;
     public Intent searchIntent ;
@@ -47,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setCustomView(imageView);
         actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM);
+
+        actionBar.setDisplayShowTitleEnabled(true);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,13 +105,13 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(@IdRes int tabId) {
                 if (true) {
                     if (tabId == R.id.tab_news) {
-                        Intent intent = new Intent(getApplicationContext(), NewsFeed.class);
-                        startActivity(intent);
+                       // Intent intent =
+                        startActivity(new Intent(getApplicationContext(), NewsFeed.class));
                     }
 
                     if (tabId == R.id.tab_tvshows) {
-                        Intent intent = new Intent(getApplicationContext(), TVShows.class);
-                        startActivity(intent);
+                        //Intent intent =
+                        startActivity(new Intent(getApplicationContext(), TVShows.class));
                     }
 
                 }

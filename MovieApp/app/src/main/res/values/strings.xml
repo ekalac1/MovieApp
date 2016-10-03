@@ -6,6 +6,7 @@
     <string name="tab_1_name">most popular</string>
     <string name="tab_2_name">latest</string>
     <string name="tab_3_name">Highest-rated</string>
+    <string name="tab_4_name">airing today</string>
     <string name="api_key_missing">Please obtain your API KEY first from themoviedb.org</string>
     <string name="on_failure">Failed</string>
     <string name="news">News</string>
@@ -15,4 +16,9 @@
     <string name="directors">Director: </string>
     <string name="writers">Writers: </string>
     <string name="stars">Stars: </string>
+    <string name="Read_more">Read more</string>
+    <string name="Reviews">Reviews: </string>
+    <string name="Favourites">Favourites</string>
+    <string name="Settings">Settings</string>
+
 </resources>

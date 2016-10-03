@@ -23,14 +23,14 @@ import java.util.List;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
-public class GridViewAdapter extends ArrayAdapter<Movie> {
+public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
 
     int resource;
     Context context;
 
 
 
-    public GridViewAdapter(Context _context, int _resource, List<Movie> items) {
+    public MovieGridViewAdapter(Context _context, int _resource, List<Movie> items) {
         super(_context, _resource, items);
         resource = _resource;
         context=_context;}
@@ -72,7 +72,7 @@ public class GridViewAdapter extends ArrayAdapter<Movie> {
             String year = movie.getReleaseDate();
             year=year.substring(0, 4);
             movieName.setText(movie.getTitle().toUpperCase() + " (" + year + ")");
-            date.setText((new SimpleDateFormat("dd MMM yyyy")).format(startDate).toString());
+            date.setText((new SimpleDateFormat("dd m yyyy")).format(startDate).toString());
         }
         else {
                 date.setText("");

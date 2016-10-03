@@ -17,10 +17,10 @@ import java.util.List;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
 import ba.unsa.etf.rma.elza_kalac.movieapp.EndlessScrollListener;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.MainActivity;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.MovieActivity;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.MoviesListResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.MoviesDetailsActivity;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.GridViewAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.MovieGridViewAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;
@@ -28,30 +28,27 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LatestMoviesFragment extends Fragment {
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = MovieActivity.class.getSimpleName();
     public List<Movie> movies;
-    private int pageNum;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.latest_movies_fragment, container, false);
         final GridView grid = (GridView) view.findViewById(R.id.gridView2);
-        pageNum=1;
 
         if (ApiClient.API_KEY.isEmpty()) {
             Toast.makeText(getActivity().getApplicationContext(), R.string.api_key_missing, Toast.LENGTH_LONG).show();
         }
 
-        ApiInterface apiService =
-                ApiClient.getClient().create(ApiInterface.class);
-
-        Call<MoviesListResponse> call = apiService.getLatestMovies(ApiClient.API_KEY, pageNum);
+        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        Call<MoviesListResponse> call = apiService.getLatestMovies(ApiClient.API_KEY, 1);
         call.enqueue(new Callback<MoviesListResponse>() {
            @Override
             public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
                if (response.body()!=null)
                {
                 movies = response.body().getResults();
-                final GridViewAdapter adapter = new GridViewAdapter(getActivity().getApplicationContext(), R.layout.movie_element, movies);
+                final MovieGridViewAdapter adapter = new MovieGridViewAdapter(getActivity().getApplicationContext(), R.layout.movie_element, movies);
                  grid.setAdapter(adapter);
                }
             }
@@ -70,7 +67,7 @@ public class LatestMoviesFragment extends Fragment {
             public boolean onLoadMore(int page, int totalItemsCount) {
                 ApiInterface apiService =
                         ApiClient.getClient().create(ApiInterface.class);
-                Call<MoviesListResponse> call = apiService.getMostPopularMovies(ApiClient.API_KEY, pageNum);
+                Call<MoviesListResponse> call = apiService.getMostPopularMovies(ApiClient.API_KEY, page);
                 call.enqueue(new Callback<MoviesListResponse>() {
                     @Override
                     public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {

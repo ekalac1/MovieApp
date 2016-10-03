@@ -29,7 +29,7 @@ public class NewsFeed extends Activity {
                 }
 
                 if (tabId == R.id.tab_movies) {
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MovieActivity.class);
                     startActivity(intent);
                 }
 

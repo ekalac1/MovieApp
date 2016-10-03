@@ -18,14 +18,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.MainActivity;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.MovieActivity;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Cast;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
 
 public class SearchResultsAdapter extends ArrayAdapter<Movie> {
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = MovieActivity.class.getSimpleName();
 
     public List<Cast> actorsList = new ArrayList<>();
 

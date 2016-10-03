@@ -7,7 +7,7 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/tvShowimageView"
+        android:id="@+id/tvShowImageView"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:background="@drawable/greymain"/>
@@ -33,7 +33,7 @@
             android:textSize="16sp"
             android:textStyle="bold"/>
         <TextView
-            android:id="@+id/tvrelaseDate"
+            android:id="@+id/tvShowRelaseDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
@@ -47,27 +47,27 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/one"
+                android:id="@+id/tvStarOne"
                 android:src="@drawable/star_empty"/>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/two"
+                android:id="@+id/tvStarTwo"
                 android:src="@drawable/star_empty"/>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/three"
+                android:id="@+id/tvStarThree"
                 android:src="@drawable/star_empty"/>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/four"
+                android:id="@+id/tvStarFour"
                 android:src="@drawable/star_empty"/>
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/five"
+                android:id="@+id/tvStarFive"
                 android:src="@drawable/star_empty"/>
         </LinearLayout>
     </LinearLayout>

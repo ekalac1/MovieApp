@@ -1,23 +1,14 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Adapters;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.ms.square.android.expandabletextview.ExpandableTextView;
 
 import java.util.List;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Cast;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Review;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
@@ -29,7 +20,7 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.My
     public Context c;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView name;
+        public TextView name, readmore;
         public TextView expandableTextView;
 
         public MyViewHolder(View view_) {
@@ -37,6 +28,25 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.My
             view=view_;
             name=(TextView)view.findViewById(R.id.name);
             expandableTextView=(TextView)view.findViewById(R.id.review);
+            readmore=(TextView)view.findViewById(R.id.readmore);
+            view_.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    if (expandableTextView.getMaxLines()==3)
+                    {
+                        expandableTextView.setMaxLines(300);
+                        readmore.setText("");
+                    }
+
+                    else
+                    {
+                        expandableTextView.setMaxLines(3);
+                        readmore.setText("Read all");
+                    }
+
+                }
+            });
         }
     }
 
@@ -65,14 +75,6 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.My
         this.items = items;
         this.listener = listener;
     }
-
-
-
-
-
-
-
-
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         Review review = reviewList.get(position);
@@ -84,38 +86,5 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.My
     public int getItemCount() {
         return reviewList.size();
     }
-
-    /*
-
-    int resource;
-    Context context;
-
-    public ReviewListAdapter(Context _context, int _resource, List<Review> items) {
-        super(_context, _resource, items);
-        resource = _resource;
-        context=_context;}
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-
-        LinearLayout newView;
-        if (convertView == null) {
-            newView = new LinearLayout(getContext());
-            String inflater = Context.LAYOUT_INFLATER_SERVICE;
-            LayoutInflater li;
-            li = (LayoutInflater) getContext().
-                    getSystemService(inflater);
-            li.inflate(resource, newView, true);
-        } else {
-            newView = (LinearLayout) convertView;
-        }
-        Review review=getItem(position);
-        TextView name = (TextView)newView.findViewById(R.id.name);
-        ExpandableTextView review_text=(ExpandableTextView)newView.findViewById(R.id.expand_text_view);
-        name.setText(review.getAuthor());
-        review_text.setText(review.getContent());
-
-        return newView;
-    } */
 
 }

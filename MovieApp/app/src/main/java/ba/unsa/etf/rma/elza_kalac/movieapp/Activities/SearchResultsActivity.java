@@ -32,10 +32,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SearchResultsActivity extends AppCompatActivity {
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = MovieActivity.class.getSimpleName();
     public List<Movie> searchResultMovies = new ArrayList<>();
     public String query;
-    public int pageNum;
 
 
     @Override
@@ -43,18 +42,17 @@ public class SearchResultsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_results);
         final GridView grid = (GridView)findViewById(R.id.gridView);
-        pageNum=1;
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         query=sharedPref.getString("idSet", "");
             ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-            Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, query, pageNum);
+            Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, query, 1);
             call.enqueue(new Callback<MoviesListResponse>() {
                 @Override
                 public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
                     searchResultMovies=response.body().getResults();
                         final SearchResultsAdapter adapter = new SearchResultsAdapter(getApplicationContext(), R.layout.search_view_element, searchResultMovies);
                         grid.setAdapter(adapter);
-                    pageNum++;
+
 
                 }
                 @Override
@@ -87,7 +85,6 @@ public class SearchResultsActivity extends AppCompatActivity {
 
                         List<Movie> temp = response.body().getResults();
                         searchResultMovies.addAll(temp);
-                        pageNum++;
                         ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
                     }
 
@@ -125,38 +122,6 @@ public class SearchResultsActivity extends AppCompatActivity {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query1) {
-
-                searchView.setQuery(query1, false);
-
-                if (ApiClient.API_KEY.isEmpty()) {
-                    Toast.makeText(getApplicationContext(), R.string.api_key_missing, Toast.LENGTH_LONG).show();
-                }
-
-                ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-                pageNum = 1;
-
-                query=query1;
-
-
-                Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, query, pageNum);
-                call.enqueue(new Callback<MoviesListResponse>() {
-                    @Override
-                    public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                        searchResultMovies = response.body().getResults();
-                        pageNum++;
-                        final SearchResultsAdapter adapter = new SearchResultsAdapter(getApplicationContext(), R.layout.search_view_element, searchResultMovies);
-                        grid.setAdapter(adapter);
-                    }
-
-                    @Override
-                    public void onFailure(Call<MoviesListResponse> call, Throwable t) {
-                        // Log error here since request failed
-                        Log.e(TAG, t.toString());
-                        Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
-                    }
-                });
-
-
                 return false;
             }
 
@@ -170,15 +135,13 @@ public class SearchResultsActivity extends AppCompatActivity {
                     }
 
                     ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-                    pageNum = 1;
                     query=newText;
 
-                    Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, newText, pageNum);
+                    Call<MoviesListResponse> call = apiService.getSearchedMovies(ApiClient.API_KEY, newText, 1);
                     call.enqueue(new Callback<MoviesListResponse>() {
                         @Override
                         public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
                             searchResultMovies = response.body().getResults();
-                            pageNum++;
                             final SearchResultsAdapter adapter = new SearchResultsAdapter(getApplicationContext(), R.layout.search_view_element, searchResultMovies);
                             grid.setAdapter(adapter);
                         }
