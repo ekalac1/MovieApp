@@ -11,29 +11,19 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.MovieActivity;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Cast;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.SearchResults;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
 
-public class SearchResultsAdapter extends ArrayAdapter<Movie> {
-    private static final String TAG = MovieActivity.class.getSimpleName();
-
-    public List<Cast> actorsList = new ArrayList<>();
+public class SearchResultsAdapter extends ArrayAdapter<SearchResults> {
 
     int resource;
     Context context;
     LinearLayout newView;
 
-    public SearchResultsAdapter(Context _context, int _resource, List<Movie> items) {
+    public SearchResultsAdapter(Context _context, int _resource, List<SearchResults> items) {
         super(_context, _resource, items);
         resource = _resource;
         context=_context;}
@@ -53,33 +43,70 @@ public class SearchResultsAdapter extends ArrayAdapter<Movie> {
             newView = (LinearLayout) convertView;
         }
 
-        Movie movie = getItem(position);
-        TextView titleText = (TextView)newView.findViewById(R.id.title);
+        SearchResults movie = getItem(position);
+        TextView titleText = (TextView) newView.findViewById(R.id.title);
+        TextView type =(TextView) newView.findViewById(R.id.actors);
+        TextView voteAverage=(TextView)newView.findViewById(R.id.search_vote_average);
+
+        voteAverage.setText(String.valueOf(movie.getVoteAverage()));
 
 
-        if (movie.getReleaseDate()!=(""))
+        if (movie.getMediaType().equals("movie"))
         {
-            DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-            Date startDate=new Date();
-            try {
-                startDate = df.parse(movie.getReleaseDate());
-            } catch (ParseException e) {
-                e.printStackTrace();
+            type.setText(R.string.movie);
+            if (movie.getReleaseDate() != null) {
+              /*  DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+                Date startDate = new Date();
+                try {
+                    startDate = df.parse(movie.getReleaseDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                (new SimpleDateFormat("yyyy-mm-dd")).format(startDate); */
+
+                String year = movie.getReleaseDate();
+                if (year.length()>=4)
+                {
+                    year = year.substring(0, 4);
+                    titleText.setText(movie.getTitle() + " (" + year + ")");
+                }
+            } else
+            {
+                titleText.setText(movie.getTitle());
             }
-            (new SimpleDateFormat("yyyy-mm-dd")).format(startDate);
 
-            String year = movie.getReleaseDate();
+        } else if(movie.getMediaType().equals("tv"))
+        {
+            type.setText(R.string.tv_show);
+            if (movie.getFirstAirDate()!= null) {
+              /*  DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+                Date startDate = new Date();
+                try {
+                    startDate = df.parse(movie.getReleaseDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                (new SimpleDateFormat("yyyy-mm-dd")).format(startDate); */
 
-            year=year.substring(0,4);
 
-            titleText.setText(movie.getTitle() + " ( " + year + " )");
+                String year = movie.getFirstAirDate();
+                if (year.length()>=4)
+                {
+                    year = year.substring(0, 4);
+                    titleText.setText(movie.getName() + " ( " + year + " )");
+                }
 
+
+
+            } else
+            {
+                titleText.setText(movie.getName());
+            }
         }
-
-        if (movie.getPosterPath()!=(""))
+        if (movie.getPosterPath()!=null)
         {
             Glide.with(context)
-                    .load(movie.getFullPosterPath())
+                    .load(movie.getFullPosterPath(getContext()))
                     .into((ImageView) newView.findViewById(R.id.imageView2));
 
         }

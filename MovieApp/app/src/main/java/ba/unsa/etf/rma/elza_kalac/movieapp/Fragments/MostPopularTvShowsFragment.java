@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -20,6 +21,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.MovieActivity;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.MovieGridViewAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.TvShowGridViewAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.TvShowsPagerAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.EndlessScrollListener;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;
@@ -27,6 +29,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MostPopularTvShowsFragment extends Fragment {
+
+    public List<TvShow> tvShow;
 
     private static final String TAG = MovieActivity.class.getSimpleName();
 
@@ -38,12 +42,12 @@ public class MostPopularTvShowsFragment extends Fragment {
 
         final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
-        Call<TvShowResponse> call = apiService.getPopularTvShows(ApiClient.API_KEY);
+        Call<TvShowResponse> call = apiService.getPopularTvShows(ApiClient.API_KEY, 1);
         call.enqueue(new Callback<TvShowResponse>() {
             @Override
             public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
 
-                List<TvShow> tvShow = response.body().getResults();
+                tvShow = response.body().getResults();
                final TvShowGridViewAdapter adapter = new TvShowGridViewAdapter(getActivity().getApplicationContext(), R.layout.tv_show_element, tvShow);
 
                 grid.setAdapter(adapter);
@@ -55,6 +59,35 @@ public class MostPopularTvShowsFragment extends Fragment {
                 Log.e(TAG, t.toString());
                 Toast.makeText(getActivity().getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
                 return;
+            }
+        });
+        grid.setOnScrollListener(new EndlessScrollListener() {
+            @Override
+            public boolean onLoadMore(int page, int totalItemsCount) {
+                final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+
+                Call<TvShowResponse> call = apiService.getPopularTvShows(ApiClient.API_KEY, page);
+                call.enqueue(new Callback<TvShowResponse>() {
+                    @Override
+                    public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
+
+                        List<TvShow> temp = response.body().getResults();
+
+                        tvShow.addAll(temp);
+
+                        ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onFailure(Call<TvShowResponse> call, Throwable t) {
+                        // Log error here since request failed
+                        Log.e(TAG, t.toString());
+                        Toast.makeText(getActivity().getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                });
+
+                return true;
             }
         });
         return view;

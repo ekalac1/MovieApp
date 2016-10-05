@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import org.w3c.dom.Text;
+
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -55,11 +57,7 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
         TvShow tvShow = getItem(position);
         TextView tvShowName = (TextView) newView.findViewById(R.id.tvShowName);
         TextView date = (TextView) newView.findViewById(R.id.tvShowRelaseDate);
-        ImageView star_one = (ImageView) newView.findViewById(R.id.tvStarOne);
-        ImageView star_two = (ImageView) newView.findViewById(R.id.tvStarTwo);
-        ImageView star_three = (ImageView) newView.findViewById(R.id.tvStarThree);
-        ImageView star_four = (ImageView) newView.findViewById(R.id.tvStarFour);
-        ImageView star_five = (ImageView) newView.findViewById(R.id.tvStarFive);
+        TextView voteAverage = (TextView)newView.findViewById(R.id.tvShowAverage);
 
         if (tvShow.getFirstAirDate() != ("")) {
             DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
@@ -73,36 +71,15 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
 
             String year = tvShow.getFirstAirDate();
             year = year.substring(0, 4);
-            tvShowName.setText(tvShow.getOriginalName().toUpperCase() + " (" + year + ")");
+            tvShowName.setText(tvShow.getName() + " (" + year + ")");
             date.setText((new SimpleDateFormat("dd MMM yyyy")).format(startDate).toString());
         } else {
             date.setText("");
-            tvShowName.setText(tvShow.getOriginalName().toUpperCase());
+            tvShowName.setText(tvShow.getName());
         }
 
 
-        double vote = Double.valueOf(tvShow.getVoteAverage());
-        if (vote <= 2) {
-            star_one.setImageResource(R.drawable.star_filled);
-        } else if (vote <= 4) {
-            star_one.setImageResource(R.drawable.star_filled);
-            star_two.setImageResource(R.drawable.star_filled);
-        } else if (vote <= 6) {
-            star_one.setImageResource(R.drawable.star_filled);
-            star_two.setImageResource(R.drawable.star_filled);
-            star_three.setImageResource(R.drawable.star_filled);
-        } else if (vote <= 8) {
-            star_one.setImageResource(R.drawable.star_filled);
-            star_two.setImageResource(R.drawable.star_filled);
-            star_three.setImageResource(R.drawable.star_filled);
-            star_four.setImageResource(R.drawable.star_filled);
-        } else {
-            star_one.setImageResource(R.drawable.star_filled);
-            star_two.setImageResource(R.drawable.star_filled);
-            star_three.setImageResource(R.drawable.star_filled);
-            star_four.setImageResource(R.drawable.star_filled);
-            star_five.setImageResource(R.drawable.star_filled);
-        }
+        voteAverage.setText(String.valueOf(tvShow.getVoteAverage()));
 
         if (tvShow.getPosterPath()!=("")) {
 

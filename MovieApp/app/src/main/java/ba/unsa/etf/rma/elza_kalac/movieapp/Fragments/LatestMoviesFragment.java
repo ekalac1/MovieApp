@@ -67,7 +67,7 @@ public class LatestMoviesFragment extends Fragment {
             public boolean onLoadMore(int page, int totalItemsCount) {
                 ApiInterface apiService =
                         ApiClient.getClient().create(ApiInterface.class);
-                Call<MoviesListResponse> call = apiService.getMostPopularMovies(ApiClient.API_KEY, page);
+                Call<MoviesListResponse> call = apiService.getLatestMovies(ApiClient.API_KEY, page);
                 call.enqueue(new Callback<MoviesListResponse>() {
                     @Override
                     public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {

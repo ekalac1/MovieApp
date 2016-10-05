@@ -16,7 +16,6 @@
         android:layout_height="match_parent"
         android:background="@drawable/gradient"/>
     <LinearLayout
-        android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -31,44 +30,40 @@
             android:textColor="@color/white"
             android:layout_gravity="bottom"
             android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:layout_marginLeft="10dp"/>
         <TextView
             android:id="@+id/tvShowRelaseDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
             android:layout_gravity="bottom"
-            android:textColor="@color/lightgrey" />
+            android:textColor="@color/lightgrey"
+            android:layout_marginLeft="10dp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/movie_separator"
+            android:layout_marginBottom="10dp"
+            android:paddingTop="10dp"/>
         <LinearLayout
+            android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="10dp">
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
                 android:id="@+id/tvStarOne"
-                android:src="@drawable/star_empty"/>
-            <ImageView
+                android:src="@drawable/star_filled"/>
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvStarTwo"
-                android:src="@drawable/star_empty"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvStarThree"
-                android:src="@drawable/star_empty"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvStarFour"
-                android:src="@drawable/star_empty"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tvStarFive"
-                android:src="@drawable/star_empty"/>
+                android:id="@+id/tvShowAverage"
+                android:textSize="10sp"
+                android:layout_marginStart="5dp"
+                android:textColor="@color/lightgrey"/>
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

@@ -52,11 +52,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
         Movie movie = getItem(position);
         TextView movieName = (TextView)newView.findViewById(R.id.movieName);
         TextView date=(TextView)newView.findViewById(R.id.relaseDate);
-        ImageView star_one = (ImageView)newView.findViewById(R.id.star_one);
-        ImageView star_two = (ImageView)newView.findViewById(R.id.star_two);
-        ImageView star_three = (ImageView)newView.findViewById(R.id.star_three);
-        ImageView star_four = (ImageView)newView.findViewById(R.id.star_four);
-        ImageView star_five = (ImageView)newView.findViewById(R.id.star_five);
+        TextView voteAverage = (TextView)newView.findViewById(R.id.vote_average);
 
         if (movie.getReleaseDate()!=(""))
         {
@@ -71,17 +67,21 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
 
             String year = movie.getReleaseDate();
             year=year.substring(0, 4);
-            movieName.setText(movie.getTitle().toUpperCase() + " (" + year + ")");
+            movieName.setText(movie.getTitle() + " (" + year + ")");
             date.setText((new SimpleDateFormat("dd m yyyy")).format(startDate).toString());
         }
         else {
                 date.setText("");
-                movieName.setText(movie.getOriginalTitle().toUpperCase());
+                movieName.setText(movie.getOriginalTitle());
             }
 
+        voteAverage.setText(String.valueOf(movie.getVoteAverage()));
 
-        double vote = Double.valueOf(movie.getVoteAverage());
-        if (vote<=2)
+
+
+       /*
+       double vote = Double.valueOf(movie.getVoteAverage());
+       if (vote<=2)
         {
             star_one.setImageResource(R.drawable.star_filled);
         }
@@ -110,7 +110,9 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
             star_three.setImageResource(R.drawable.star_filled);
             star_four.setImageResource(R.drawable.star_filled);
             star_five.setImageResource(R.drawable.star_filled);
-        }
+        } */
+
+
 
         if (!movie.getPosterPath().equals(""))
         {
@@ -121,7 +123,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
             display.getSize(size);
             int width = size.x;
             Glide.with(context)
-                    .load(movie.getFullPosterPath())
+                    .load(movie.getFullPosterPath(getContext()))
                     .override(width/2, 750)
                     .into((ImageView) newView.findViewById(R.id.imageView));
         }

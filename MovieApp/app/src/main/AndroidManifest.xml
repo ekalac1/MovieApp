@@ -36,15 +36,12 @@
         <activity
             android:name=".Activities.MoviesDetailsActivity"
             android:parentActivityName=".Activities.MovieActivity" />
-        <activity
-            android:name=".Activities.SearchResultsActivity"
-            android:parentActivityName=".Activities.MovieActivity" />
+        <activity android:name=".Activities.SearchResultsActivity" />
         <activity android:name=".Activities.NewsFeed" />
         <activity android:name=".Activities.TVShows" />
-        <activity android:name=".Fragments.MostPopularTvShowsFragment" />
-        <activity android:name=".Fragments.LatestTvShowsFragment" />
-        <activity android:name=".Fragments.HighestRatedTvShowFragment" />
-        <activity android:name=".Fragments.AiringTodayTvShowsFragment"></activity>
+        <activity
+            android:name=".Activities.TrailerActivity"
+            android:parentActivityName=".Activities.MoviesDetailsActivity">
+        </activity>
     </application>
-
 </manifest>

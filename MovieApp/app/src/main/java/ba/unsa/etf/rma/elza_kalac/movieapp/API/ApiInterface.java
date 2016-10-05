@@ -25,21 +25,19 @@ public interface ApiInterface {
    @GET("movie/{id}")
     Call<Movie> getMovieDetails(@Path("id") int id, @Query("api_key") String apiKey, @Query("append_to_response") String append);
 
-    @GET("movie/{id}/credits")
-    Call<CreditsResponse> getActors(@Path("id") int id, @Query("api_key") String apiKey );
-
-    @GET("movie/{id}/reviews")
-    Call<ReviewResponse> getReview(@Path("id") int id, @Query("api_key") String apiKey);
 
     @GET("tv/popular")
-    Call<TvShowResponse> getPopularTvShows(@Query("api_key") String apiKey);
+    Call<TvShowResponse> getPopularTvShows(@Query("api_key") String apiKey, @Query("page") int page);
 
     @GET("tv/airing_today")
-    Call<TvShowResponse> getAiringTodayTvShows(@Query("api_key") String apiKey);
+    Call<TvShowResponse> getAiringTodayTvShows(@Query("api_key") String apiKey, @Query("page") int page);
 
     @GET("tv/on_the_air")
-    Call<TvShowResponse> getLatestTvShows(@Query("api_key") String apiKey);
+    Call<TvShowResponse> getLatestTvShows(@Query("api_key") String apiKey, @Query("page") int page);
 
     @GET("tv/top_rated")
-    Call<TvShowResponse> getHighestRatedTvShows(@Query("api_key") String apiKey);
+    Call<TvShowResponse> getHighestRatedTvShows(@Query("api_key") String apiKey, @Query("page") int page);
+
+    @GET("search/multi")
+    Call<SearchResponse> getSearchedItems(@Query("api_key") String apiKey, @Query("query") String query, @Query("page") int page );
 }

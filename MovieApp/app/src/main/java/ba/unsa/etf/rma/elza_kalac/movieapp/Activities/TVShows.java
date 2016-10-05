@@ -6,9 +6,13 @@ import android.support.annotation.IdRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
@@ -24,6 +28,32 @@ public class TVShows extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tvshows);
+
+        ActionBar actionBar = getSupportActionBar();
+
+        actionBar.setTitle(R.string.tv_shows);
+        ImageView imageView = new ImageView(actionBar.getThemedContext());
+        imageView.setScaleType(ImageView.ScaleType.CENTER);
+        imageView.setImageResource(android.R.drawable.ic_menu_search);
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+        layoutParams.rightMargin = 40;
+        imageView.setLayoutParams(layoutParams);
+        actionBar.setCustomView(imageView);
+        actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM);
+
+        actionBar.setDisplayShowTitleEnabled(true);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                startActivity(new Intent(getApplicationContext(), SearchResultsActivity.class));
+
+            }
+        });
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tvtab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_1_name));
@@ -88,14 +118,12 @@ public class TVShows extends AppCompatActivity {
         super.onResume();
         final BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.selectTabWithId(R.id.tab_tvshows);
-
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mToogle.onOptionsItemSelected(item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

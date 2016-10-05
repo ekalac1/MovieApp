@@ -1,5 +1,7 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Models;
 
+import android.content.Context;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -8,6 +10,8 @@ import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.CreditsResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ReviewResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.API.TrailerResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
 /**
  * Created by Laptop on 23.09.2016..
@@ -82,6 +86,17 @@ public class Movie {
     @SerializedName("credits")
     @Expose
     private CreditsResponse credits;
+
+    public TrailerResponse getVideos() {
+        return videos;
+    }
+
+    public void setVideos(TrailerResponse videos) {
+        this.videos = videos;
+    }
+
+    @SerializedName("videos")
+    private TrailerResponse videos;
 
     public CreditsResponse getCredits() {
         return credits;
@@ -190,8 +205,10 @@ public class Movie {
         return voteAverage;
     }
 
-    public String getFullPosterPath() {
-        return "http://image.tmdb.org/t/p/" + "w500" + getPosterPath();
+    public String getFullPosterPath(Context c) {
+        String url =c.getString(R.string.MovieImageBaseAdress);
+        String url1=c.getString(R.string.MovieImageWidth500);
+        return url+url1 + getPosterPath();
     }
 
 

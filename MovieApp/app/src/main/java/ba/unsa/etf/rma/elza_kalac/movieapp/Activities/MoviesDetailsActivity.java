@@ -1,11 +1,13 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +33,6 @@ public class MoviesDetailsActivity extends AppCompatActivity {
     private static final String TAG = MovieActivity.class.getSimpleName();
     public Movie movie;
     public int movieID;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +53,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         movieID = getIntent().getIntExtra("id", 0);
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<Movie> call = apiService.getMovieDetails(movieID, ApiClient.API_KEY, "credits,reviews");
+        Call<Movie> call = apiService.getMovieDetails(movieID, ApiClient.API_KEY, "credits,reviews,videos");
 
         call.enqueue(new Callback<Movie>() {
             @Override
@@ -76,7 +77,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 }
                 temp.setText(movie.getGenres());
                 Glide.with(getApplicationContext())
-                        .load(movie.getFullPosterPath())
+                        .load(movie.getFullPosterPath(getApplicationContext()))
                         .override(360, 300)
                         .centerCrop()
                         .into((ImageView) findViewById(R.id.movies_detalis_image));
@@ -102,6 +103,18 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 // Log error here since request failed
                 Log.e(TAG, t.toString());
                 Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        ImageView moviesImage = (ImageView)findViewById(R.id.movies_detalis_image);
+        moviesImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), TrailerActivity.class);
+                i.putExtra("id", movieID);
+                if (movie.getVideos().getResults().size()!=0)
+                startActivity(i);
+                else Toast.makeText(getApplicationContext(), R.string.trailer_error, Toast.LENGTH_LONG).show();
             }
         });
 

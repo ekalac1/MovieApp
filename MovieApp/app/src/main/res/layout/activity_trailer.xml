@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/trailer_bcg"
+    tools:context=".Activities.TrailerActivity">
+
+    <com.google.android.youtube.player.YouTubePlayerView
+        android:id="@+id/youtube_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/my_awesome_toolbar"/>
+
+    <android.widget.Toolbar
+
+        android:id="@+id/my_awesome_toolbar"
+        android:layout_height="50dp"
+        android:layout_width="match_parent"
+        android:minHeight="50dp"
+        android:titleTextColor="@color/white"
+        android:background="@color/trailer_bcg" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/trailer_name"
+        android:textSize="14sp"
+        android:layout_below="@id/youtube_view"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:textColor="@color/white"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="14sp"
+        android:id="@+id/trailer_overview"
+        android:layout_below="@+id/trailer_name"
+        android:layout_alignStart="@+id/trailer_name"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="15dp"
+        android:textColor="@color/white_dark"/>
+
+
+
+</RelativeLayout>

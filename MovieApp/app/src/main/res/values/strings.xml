@@ -11,7 +11,9 @@
     <string name="on_failure">Failed</string>
     <string name="news">News</string>
     <string name="movies">Movies</string>
+    <string name="movie">Movie</string>
     <string name="tv_shows">TV shows</string>
+    <string name="tv_show">TV show</string>
     <string name="cast_failed">Falied to get CastList</string>
     <string name="directors">Director: </string>
     <string name="writers">Writers: </string>
@@ -20,5 +22,8 @@
     <string name="Reviews">Reviews: </string>
     <string name="Favourites">Favourites</string>
     <string name="Settings">Settings</string>
+    <string name="trailer_error">Trailer not available</string>
+    <string name="MovieImageBaseAdress">http://image.tmdb.org/t/p/</string>
+    <string name="MovieImageWidth500">w500</string>
 
 </resources>
