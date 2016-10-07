@@ -36,13 +36,14 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.My
                     if (expandableTextView.getMaxLines()==3)
                     {
                         expandableTextView.setMaxLines(300);
-                        readmore.setText("");
+
+                        readmore.setText(c.getString(R.string.Hide));
                     }
 
                     else
                     {
                         expandableTextView.setMaxLines(3);
-                        readmore.setText("Read all");
+                        readmore.setText(c.getString(R.string.Read_more));
                     }
 
                 }

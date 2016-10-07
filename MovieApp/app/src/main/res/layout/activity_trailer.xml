@@ -15,9 +15,10 @@
     <android.widget.Toolbar
 
         android:id="@+id/my_awesome_toolbar"
-        android:layout_height="50dp"
+        android:layout_height="60dp"
         android:layout_width="match_parent"
-        android:minHeight="50dp"
+        android:minHeight="60dp"
+        android:navigationIcon="@drawable/shape"
         android:titleTextColor="@color/white"
         android:background="@color/trailer_bcg" />
 

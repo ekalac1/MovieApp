@@ -107,6 +107,7 @@ public class SearchResultsAdapter extends ArrayAdapter<SearchResults> {
         {
             Glide.with(context)
                     .load(movie.getFullPosterPath(getContext()))
+                    .centerCrop()
                     .into((ImageView) newView.findViewById(R.id.imageView2));
 
         }

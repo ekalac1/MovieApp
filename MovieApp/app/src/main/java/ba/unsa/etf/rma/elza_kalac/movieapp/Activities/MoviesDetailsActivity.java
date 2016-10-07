@@ -2,7 +2,6 @@ package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -47,7 +46,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         final RecyclerView review = (RecyclerView)findViewById(R.id.reviews);
         final TextView votes = (TextView)findViewById(R.id.votes);
-
+        final ImageView play = (ImageView)findViewById(R.id.star_vote);
 
 
         movieID = getIntent().getIntExtra("id", 0);
@@ -75,6 +74,22 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                     date.setText("");
 
                 }
+
+                if (movie.getReviews().getResults().size()==0)
+                {
+                    TextView r = (TextView)findViewById(R.id.reviewtext);
+                    r.setVisibility(View.INVISIBLE);
+                    View v = (View)findViewById(R.id.view___);
+                    v.setVisibility(View.INVISIBLE);
+                }
+               /* if (movie.getCredits().getCast().isEmpty())
+                {
+                    View v = (View)findViewById(R.id.view__);
+                    v.setVisibility(View.GONE);
+                    recyclerView.setVisibility(View.GONE);
+                } */
+                if (movie.getVideos().getResults().size()==0)
+                    play.setVisibility(View.INVISIBLE);
                 temp.setText(movie.getGenres());
                 Glide.with(getApplicationContext())
                         .load(movie.getFullPosterPath(getApplicationContext()))
@@ -112,9 +127,10 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(getApplicationContext(), TrailerActivity.class);
                 i.putExtra("id", movieID);
-                if (movie.getVideos().getResults().size()!=0)
-                startActivity(i);
-                else Toast.makeText(getApplicationContext(), R.string.trailer_error, Toast.LENGTH_LONG).show();
+                if (movie.getVideos().getResults().size() != 0)
+                    startActivity(i);
+                else
+                    Toast.makeText(getApplicationContext(), R.string.trailer_error, Toast.LENGTH_LONG).show();
             }
         });
 

@@ -42,10 +42,10 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:id="@+id/imageView4"
+                    android:id="@+id/star_vote"
                     android:layout_marginTop="80dp"
                     android:layout_marginStart="160dp"
-                    android:src="@drawable/play"
+                    android:src="@drawable/playvideo"
                     android:layout_marginBottom="60dp" />
 
                 <TextView

@@ -77,44 +77,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
 
         voteAverage.setText(String.valueOf(movie.getVoteAverage()));
 
-
-
-       /*
-       double vote = Double.valueOf(movie.getVoteAverage());
-       if (vote<=2)
-        {
-            star_one.setImageResource(R.drawable.star_filled);
-        }
-        else if (vote<=4)
-        {
-            star_one.setImageResource(R.drawable.star_filled);
-            star_two.setImageResource(R.drawable.star_filled);
-        }
-        else if (vote<=6)
-        {
-            star_one.setImageResource(R.drawable.star_filled);
-            star_two.setImageResource(R.drawable.star_filled);
-            star_three.setImageResource(R.drawable.star_filled);
-        }
-        else if (vote<=8)
-        {
-            star_one.setImageResource(R.drawable.star_filled);
-            star_two.setImageResource(R.drawable.star_filled);
-            star_three.setImageResource(R.drawable.star_filled);
-            star_four.setImageResource(R.drawable.star_filled);
-        }
-        else
-        {
-            star_one.setImageResource(R.drawable.star_filled);
-            star_two.setImageResource(R.drawable.star_filled);
-            star_three.setImageResource(R.drawable.star_filled);
-            star_four.setImageResource(R.drawable.star_filled);
-            star_five.setImageResource(R.drawable.star_filled);
-        } */
-
-
-
-        if (!movie.getPosterPath().equals(""))
+        if (movie.getPosterPath()!=null)
         {
 
             WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);

@@ -1,16 +1,32 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.support.annotation.IdRes;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
-public class NewsFeed extends Activity {
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import okhttp3.OkHttpClient;
+
+public class NewsFeed extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
