@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -87,7 +88,8 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
             int width = size.x;
             Glide.with(context)
                     .load(movie.getFullPosterPath(getContext()))
-                    .override(width/2, 750)
+                    .override(width / 2, 750)
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .into((ImageView) newView.findViewById(R.id.imageView));
         }
         return newView;

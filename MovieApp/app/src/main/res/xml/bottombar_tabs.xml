@@ -1,7 +1,7 @@
 <tabs>
     <tab
         id="@+id/tab_news"
-        icon="@drawable/rssfeedoutline"
+        icon="@drawable/news"
         title="@string/news"
         inActiveColor="@color/white"
         activeColor="@color/golden"/>
@@ -13,7 +13,7 @@
         activeColor="@color/golden"/>
     <tab
         id="@+id/tab_tvshows"
-        icon="@drawable/television"
+        icon="@drawable/tv"
         title="@string/tv_shows"
         inActiveColor="@color/white"
         activeColor="@color/golden"/>

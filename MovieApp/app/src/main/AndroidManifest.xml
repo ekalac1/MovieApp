@@ -16,6 +16,7 @@
         <activity android:name=".Activities.MovieActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
@@ -41,10 +42,14 @@
             android:parentActivityName=".Activities.MovieActivity" />
         <activity android:name=".Activities.NewsFeed" />
         <activity android:name=".Activities.TVShows" />
-        <activity android:name=".Activities.TrailerActivity"></activity>
-        <activity android:name=".Activities.TVShowDetails"
-            android:parentActivityName=".Activities.TVShows"/>
-
+        <activity
+            android:name=".Activities.TrailerActivity"
+            android:parentActivityName=".Activities.MoviesDetailsActivity" />
+        <activity
+            android:name=".Activities.TVShowDetails"
+            android:parentActivityName=".Activities.TVShows" />
+        <activity android:name=".Activities.Seasons"
+            android:parentActivityName=".Activities.TVShowDetails"/>
     </application>
 
 </manifest>

@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import org.w3c.dom.Text;
 
@@ -91,6 +92,7 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
             Glide.with(getContext())
                     .load(tvShow.getFullPosterPath())
                     .override(width / 2, 750)
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .into((ImageView) newView.findViewById(R.id.tvShowImageView));
         }
         return newView;

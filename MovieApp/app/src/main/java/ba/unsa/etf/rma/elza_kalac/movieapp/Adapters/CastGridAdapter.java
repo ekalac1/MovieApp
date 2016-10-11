@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
@@ -58,7 +59,9 @@ public class CastGridAdapter extends RecyclerView.Adapter<CastGridAdapter.MyView
         holder.character.setText(cast.getCharacter_name());
         Glide.with(c)
                 .load(cast.getFullPosterPath())
-                .override(105*3, 130*3)
+                .override(105 * 3, 130 * 3)
+                .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(holder.cast_image);
     }
 

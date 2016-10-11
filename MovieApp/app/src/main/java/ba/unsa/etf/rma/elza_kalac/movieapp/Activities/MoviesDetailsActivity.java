@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -95,6 +96,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         .load(movie.getFullPosterPath(getApplicationContext()))
                         .override(360, 300)
                         .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .into((ImageView) findViewById(R.id.movies_detalis_image));
                 directors.setText(movie.getCredits().getDirectors());
                 writers.setText(movie.getCredits().getWriters());

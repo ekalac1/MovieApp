@@ -1,5 +1,6 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -52,6 +54,15 @@ public class TVShowDetails extends AppCompatActivity {
         final TextView votes = (TextView)findViewById(R.id.tv_show_votes);
         final TextView seasonsList = (TextView)findViewById(R.id.season_list);
         final TextView yearsList = (TextView)findViewById(R.id.years_list);
+        final TextView seeAll = (TextView)findViewById(R.id.see_all);
+
+        seeAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), Seasons.class);
+                startActivity(intent);
+            }
+        });
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<TvShow> call = apiService.getTvShowDetails(tvshowID, ApiClient.API_KEY, "credits");
@@ -101,17 +112,16 @@ public class TVShowDetails extends AppCompatActivity {
                     if (tvshow.getStatus().equals("Returning Series"))
                     date.setText("Tv Series ("+tempe+m+" )");
                     else date.setText("Tv Series ("+tempe+m+temp2+")");
-
                 }
                 else {
                     date.setText("");
                 }
-
                 temp.setText(tvshow.getGenres());
                 Glide.with(getApplicationContext())
                         .load(tvshow.getFullPosterPath())
                         .override(360, 300)
                         .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .into((ImageView) findViewById(R.id.tv_show_image));
 
                 if (tvshow.getCredits().getDirectors()!="")

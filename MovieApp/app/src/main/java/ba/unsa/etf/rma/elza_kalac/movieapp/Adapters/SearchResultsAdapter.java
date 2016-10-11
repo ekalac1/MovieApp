@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
@@ -55,15 +56,6 @@ public class SearchResultsAdapter extends ArrayAdapter<SearchResults> {
         {
             type.setText(R.string.movie);
             if (movie.getReleaseDate() != null) {
-              /*  DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-                Date startDate = new Date();
-                try {
-                    startDate = df.parse(movie.getReleaseDate());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                (new SimpleDateFormat("yyyy-mm-dd")).format(startDate); */
-
                 String year = movie.getReleaseDate();
                 if (year.length()>=4)
                 {
@@ -79,25 +71,12 @@ public class SearchResultsAdapter extends ArrayAdapter<SearchResults> {
         {
             type.setText(R.string.tv_show);
             if (movie.getFirstAirDate()!= null) {
-              /*  DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-                Date startDate = new Date();
-                try {
-                    startDate = df.parse(movie.getReleaseDate());
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                (new SimpleDateFormat("yyyy-mm-dd")).format(startDate); */
-
-
                 String year = movie.getFirstAirDate();
                 if (year.length()>=4)
                 {
                     year = year.substring(0, 4);
                     titleText.setText(movie.getName() + " ( " + year + " )");
                 }
-
-
-
             } else
             {
                 titleText.setText(movie.getName());
@@ -108,6 +87,7 @@ public class SearchResultsAdapter extends ArrayAdapter<SearchResults> {
             Glide.with(context)
                     .load(movie.getFullPosterPath(getContext()))
                     .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .into((ImageView) newView.findViewById(R.id.imageView2));
 
         }
