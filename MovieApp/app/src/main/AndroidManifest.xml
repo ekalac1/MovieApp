@@ -3,6 +3,7 @@
     package="ba.unsa.etf.rma.elza_kalac.movieapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Permission to write to external storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -15,7 +16,6 @@
         <activity android:name=".Activities.MovieActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
@@ -36,12 +36,15 @@
         <activity
             android:name=".Activities.MoviesDetailsActivity"
             android:parentActivityName=".Activities.MovieActivity" />
-        <activity android:name=".Activities.SearchResultsActivity"
-            android:parentActivityName=".Activities.MovieActivity"/>
+        <activity
+            android:name=".Activities.SearchResultsActivity"
+            android:parentActivityName=".Activities.MovieActivity" />
         <activity android:name=".Activities.NewsFeed" />
         <activity android:name=".Activities.TVShows" />
-        <activity
-            android:name=".Activities.TrailerActivity">
-        </activity>
+        <activity android:name=".Activities.TrailerActivity"></activity>
+        <activity android:name=".Activities.TVShowDetails"
+            android:parentActivityName=".Activities.TVShows"/>
+
     </application>
+
 </manifest>

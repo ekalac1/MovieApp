@@ -1,7 +1,6 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 
 import android.app.SearchManager;
-import android.app.SearchableInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,11 +22,9 @@ import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
-import ba.unsa.etf.rma.elza_kalac.movieapp.API.SearchResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.SearchResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.SearchResultsAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.EndlessScrollListener;
-import ba.unsa.etf.rma.elza_kalac.movieapp.API.MoviesListResponse;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.SearchResults;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;

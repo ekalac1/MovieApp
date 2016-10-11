@@ -1,4 +1,4 @@
-package ba.unsa.etf.rma.elza_kalac.movieapp.API;
+package ba.unsa.etf.rma.elza_kalac.movieapp.Responses;
 
 import com.google.gson.annotations.SerializedName;
 

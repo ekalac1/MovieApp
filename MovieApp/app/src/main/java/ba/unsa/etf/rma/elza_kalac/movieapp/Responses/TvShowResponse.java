@@ -1,26 +1,24 @@
-package ba.unsa.etf.rma.elza_kalac.movieapp.API;
+package ba.unsa.etf.rma.elza_kalac.movieapp.Responses;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.SearchResults;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 
-/**
- * Created by Laptop on 03.10.2016..
- */
-public class SearchResponse {
+
+public class TvShowResponse  {
+
     @SerializedName("page")
     private int page;
     @SerializedName("results")
-    private List<SearchResults> results;
+    private List<TvShow> results;
     @SerializedName("total_results")
     private int totalResults;
     @SerializedName("total_pages")
     private int totalPages;
 
-    public SearchResponse(int page, List<SearchResults> results, int totalResults, int totalPages) {
+    public TvShowResponse(int page, List<TvShow> results, int totalResults, int totalPages) {
         this.page = page;
         this.results = results;
         this.totalResults = totalResults;
@@ -35,11 +33,11 @@ public class SearchResponse {
         this.page = page;
     }
 
-    public List<SearchResults> getResults() {
+    public List<TvShow> getResults() {
         return results;
     }
 
-    public void setResults(List<SearchResults> results) {
+    public void setResults(List<TvShow> results) {
         this.results = results;
     }
 

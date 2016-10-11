@@ -8,9 +8,9 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.API.CreditsResponse;
-import ba.unsa.etf.rma.elza_kalac.movieapp.API.ReviewResponse;
-import ba.unsa.etf.rma.elza_kalac.movieapp.API.TrailerResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.CreditsResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.ReviewResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TrailerResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
 /**
@@ -83,10 +83,6 @@ public class Movie {
     @Expose
     private int voteCount;
 
-    @SerializedName("credits")
-    @Expose
-    private CreditsResponse credits;
-
     public TrailerResponse getVideos() {
         return videos;
     }
@@ -97,6 +93,11 @@ public class Movie {
 
     @SerializedName("videos")
     private TrailerResponse videos;
+
+
+    @SerializedName("credits")
+    @Expose
+    private CreditsResponse credits;
 
     public CreditsResponse getCredits() {
         return credits;
@@ -122,7 +123,7 @@ public class Movie {
 
     private ReviewResponse reviews;
 
-    public void setReviews(ReviewResponse reviews) {this.reviews=reviews;} // ovdje treba objekat response
+    public void setReviews(ReviewResponse reviews) {this.reviews=reviews;}
     public ReviewResponse getReviews() {return reviews;}
 
     public String getBackdropPath() {
