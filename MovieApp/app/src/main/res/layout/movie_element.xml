@@ -4,8 +4,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-
-
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -18,7 +16,6 @@
             android:layout_height="match_parent"
             android:background="@drawable/gradient"/>
     <LinearLayout
-        android:layout_marginLeft="10dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -30,52 +27,45 @@
             android:id="@+id/movieName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:textColor="@color/white"
             android:layout_gravity="bottom"
-            android:textSize="16sp"
-            android:textStyle="bold"/>
+            android:textSize="16sp" />
         <TextView
             android:id="@+id/relaseDate"
+            android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="10sp"
             android:layout_gravity="bottom"
             android:textColor="@color/lightgrey" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="10dp"
+            android:background="@color/movie_separator"
+            android:layout_marginBottom="10dp"
+            android:paddingTop="10dp"/>
         <LinearLayout
+            android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingBottom="10dp">
-
-
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="13dp"
+                android:layout_height="13dp"
                 android:id="@+id/star_one"
-                android:src="@drawable/star_empty"/>
-            <ImageView
+                android:src="@drawable/star_filled"/>
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/star_two"
-                android:src="@drawable/star_empty"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/star_three"
-                android:src="@drawable/star_empty"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/star_four"
-                android:src="@drawable/star_empty"/>
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/star_five"
-                android:src="@drawable/star_empty"/>
+                android:id="@+id/vote_average"
+                android:textSize="10sp"
+                android:layout_marginStart="5dp"
+                android:textColor="@color/lightgrey"/>
 
         </LinearLayout>
     </LinearLayout>
-
-
 </RelativeLayout>

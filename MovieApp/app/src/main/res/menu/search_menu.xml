@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:MovieApp="http://schemas.android.com/apk/res-auto" >
+    xmlns:MovieApp="http://schemas.android.com/apk/res-auto"
+    android:imeOptions="actionNone">
     <item android:id="@+id/search"
         android:title="@string/search_hint"
         android:icon="@android:drawable/ic_menu_search"
         android:showAsAction="collapseActionView"
+        android:imeOptions="actionNone"
         android:actionViewClass="android.widget.SearchView"
         MovieApp:showAsAction="ifRoom|collapseActionView"
         MovieApp:actionViewClass="android.support.v7.widget.SearchView"/>

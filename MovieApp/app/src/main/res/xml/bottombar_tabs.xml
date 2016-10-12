@@ -2,19 +2,19 @@
     <tab
         id="@+id/tab_news"
         icon="@drawable/rssfeedoutline"
-        title="News"
+        title="@string/news"
         inActiveColor="@color/white"
         activeColor="@color/golden"/>
     <tab
         id="@+id/tab_movies"
         icon="@drawable/videocamera"
-        title="Movies"
+        title="@string/movies"
         inActiveColor="@color/white"
         activeColor="@color/golden"/>
     <tab
         id="@+id/tab_tvshows"
         icon="@drawable/television"
-        title="TV Shows"
+        title="@string/tv_shows"
         inActiveColor="@color/white"
         activeColor="@color/golden"/>
 </tabs>

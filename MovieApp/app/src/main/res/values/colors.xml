@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimary">#898885</color>
     <color name="colorPrimaryDark">#0f100f</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="grey">#292929</color>
+    <color name="grey">#303030</color>
     <color name="white">#ffffff</color>
     <color name="golden">#f8ca00</color>
+    <color name="golden_transparent">#80f8ca00</color>
     <color name="lightgrey">#898885</color>
-    <color name="black9ctransparent">#9c000000</color>
+    <color name="black9ctransparent">#212121</color>
+    <color name="view_grey">#4c4c4c</color>
+    <color name="white_dark">#cecece</color>
+    <color name="gradient_start">#337b7b7b</color>
+    <color name="gradient_end">#fa000000</color>
+    <color name="movie_detalis_background">#0f100f</color>
+    <color name="movie_separator">#1ad8d8d8</color>
+    <color name="slide_menu">#27282a</color>
+    <color name="trailer_bcg">#212121</color>
 </resources>

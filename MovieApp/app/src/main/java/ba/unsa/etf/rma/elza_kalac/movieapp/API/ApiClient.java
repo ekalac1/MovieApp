@@ -8,6 +8,8 @@ public class ApiClient {
 
     public static final String BASE_URL = "http://api.themoviedb.org/3/";
     public static final String API_KEY = BuildConfig.API_KEY;
+    public static final String YOUTUBE_API_KEY = BuildConfig.YOUTUBE_API_KEY;
+
     private static Retrofit retrofit = null;
 
 

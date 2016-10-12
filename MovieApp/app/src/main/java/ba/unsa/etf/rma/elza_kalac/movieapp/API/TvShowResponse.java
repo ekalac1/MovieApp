@@ -4,19 +4,26 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 
 
-public class ActorsListResponse { /*
+public class TvShowResponse  {
 
     @SerializedName("page")
     private int page;
     @SerializedName("results")
-    private List<Movie> results;
+    private List<TvShow> results;
     @SerializedName("total_results")
     private int totalResults;
     @SerializedName("total_pages")
     private int totalPages;
+
+    public TvShowResponse(int page, List<TvShow> results, int totalResults, int totalPages) {
+        this.page = page;
+        this.results = results;
+        this.totalResults = totalResults;
+        this.totalPages = totalPages;
+    }
 
     public int getPage() {
         return page;
@@ -26,11 +33,11 @@ public class ActorsListResponse { /*
         this.page = page;
     }
 
-    public List<Movie> getResults() {
+    public List<TvShow> getResults() {
         return results;
     }
 
-    public void setResults(List<Movie> results) {
+    public void setResults(List<TvShow> results) {
         this.results = results;
     }
 
@@ -48,5 +55,5 @@ public class ActorsListResponse { /*
 
     public void setTotalPages(int totalPages) {
         this.totalPages = totalPages;
-    } */
+    }
 }

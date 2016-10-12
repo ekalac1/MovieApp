@@ -4,47 +4,71 @@
     android:layout_height="match_parent">
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="100sp"
             android:layout_height="130sp"
             android:id="@+id/imageView2"
-            android:background="@drawable/grey"/>
+            android:background="@drawable/grey"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="New Text"
             android:id="@+id/title"
             android:layout_alignParentTop="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="20dp"
             android:layout_toEndOf="@+id/imageView2"
-            android:layout_marginStart="52dp"
             android:textColor="@color/white"
-            android:textSize="16sp"
-            android:layout_marginTop="30dp" />
+            android:textSize="14sp"
+            android:layout_marginTop="40dp" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="New Text"
-            android:id="@+id/relaseYear"
-            android:layout_below="@+id/title"
-            android:layout_alignStart="@+id/title"
-            android:textColor="@color/lightgrey"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="New Text"
             android:id="@+id/actors"
-            android:layout_below="@+id/relaseYear"
-            android:layout_alignStart="@+id/relaseYear"
+            android:textSize="12sp"
+            android:layout_below="@+id/title"
+            android:layout_alignStart="@+id/title"
+            android:layout_marginRight="20dp"
             android:textColor="@color/lightgrey"/>
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:id="@+id/search_star"
+            android:src="@drawable/star_filled"
+            android:layout_below="@+id/actors"
+            android:layout_alignStart="@+id/title"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/search_vote_average"
+            android:layout_below="@+id/actors"
+            android:textSize="12sp"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@+id/search_star"
+            android:textColor="@color/lightgrey"/>
+
 
         <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:background="@color/lightgrey"
             android:layout_below="@+id/imageView2"
-            android:layout_marginTop="5dp"/>
+            android:layout_marginTop="20dp"/>
+
+    <ImageView
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:id="@+id/imageView3"
+        android:layout_below="@+id/actors"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/arrow"
+        android:layout_marginRight="20dp" />
 
 
 </RelativeLayout>

@@ -1,8 +1,7 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.IdRes;
 import android.support.design.widget.TabLayout;
@@ -11,37 +10,33 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
+import android.view.ActionProvider;
+import android.view.ContextMenu;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.SubMenu;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.Toolbar;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.PagerAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.MoviesPagerAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MovieActivity extends AppCompatActivity {
 
     private ActionBarDrawerToggle mToogle;
-    public Intent searchIntent ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        searchIntent=new Intent(this, SearchResultsActivity.class);
-
         ActionBar actionBar = getSupportActionBar();
 
-        actionBar.setTitle(R.string.app_name);
+        actionBar.setTitle(R.string.movies);
         ImageView imageView = new ImageView(actionBar.getThemedContext());
         imageView.setScaleType(ImageView.ScaleType.CENTER);
         imageView.setImageResource(android.R.drawable.ic_menu_search);
@@ -51,23 +46,19 @@ public class MainActivity extends AppCompatActivity {
         layoutParams.rightMargin = 40;
         imageView.setLayoutParams(layoutParams);
         actionBar.setCustomView(imageView);
-       // actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE);
         actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+
+        actionBar.setDisplayShowTitleEnabled(true);
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                searchIntent.putExtra("query", "");
-                startActivity(searchIntent);
+                startActivity(new Intent(getApplicationContext(), SearchResultsActivity.class));
 
             }
         });
-
-       /* ActionBar actionBar = getSupportActionBar();
-        actionBar.setIcon(android.R.drawable.ic_menu_search); */
-
 
 
         DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
@@ -85,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         final ViewPager viewPager = (ViewPager) findViewById(R.id.pager);
-        final PagerAdapter adapter = new PagerAdapter
+        final MoviesPagerAdapter adapter = new MoviesPagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
@@ -114,13 +105,11 @@ public class MainActivity extends AppCompatActivity {
             public void onTabSelected(@IdRes int tabId) {
                 if (true) {
                     if (tabId == R.id.tab_news) {
-                        Intent intent = new Intent(getApplicationContext(), NewsFeed.class);
-                        startActivity(intent);
+                        startActivity(new Intent(getApplicationContext(), NewsFeed.class));
                     }
 
                     if (tabId == R.id.tab_tvshows) {
-                        Intent intent = new Intent(getApplicationContext(), TVShows.class);
-                        startActivity(intent);
+                        startActivity(new Intent(getApplicationContext(), TVShows.class));
                     }
 
                 }
@@ -143,48 +132,6 @@ public class MainActivity extends AppCompatActivity {
         if (mToogle.onOptionsItemSelected(item)) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
-
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.search_menu, menu);
-
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-
-        MenuItem item = menu.findItem(R.id.search);
-        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                searchIntent.putExtra("query", "");
-                startActivity(searchIntent);
-
-                return false;
-            }
-        });
-
-
-       searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        /*searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                searchIntent.putExtra("query", "");
-                startActivity(searchIntent);
-
-            }
-        });
-
-        return true;
-    } */
-
-
-
-
-
-
-
 }

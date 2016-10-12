@@ -8,10 +8,10 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Fragments.MostPopularMoviesFragment;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Fragments.LatestMoviesFragment;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Fragments.HighestRatedMoviesFragment;
 
-public class PagerAdapter extends FragmentStatePagerAdapter {
+public class MoviesPagerAdapter extends FragmentStatePagerAdapter {
     int mNumOfTabs;
 
-    public PagerAdapter(FragmentManager fm, int NumOfTabs) {
+    public MoviesPagerAdapter(FragmentManager fm, int NumOfTabs) {
         super(fm);
         this.mNumOfTabs = NumOfTabs;
     }

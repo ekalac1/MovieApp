@@ -18,6 +18,8 @@ android {
         }
         buildTypes.each {
             it.buildConfigField("String", "API_KEY", API_KEY)
+            it.buildConfigField("String", "YOUTUBE_API_KEY", YOUTUBE_API_KEY)
+
         }
     }
 }
@@ -34,4 +36,8 @@ dependencies {
     compile 'com.android.support:support-v4:23.0.0'
     compile 'com.roughike:bottom-bar:2.0.2'
     compile 'com.uwetrottmann.tmdb2:tmdb-java:1.2.0'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.ms-square:expandableTextView:0.1.4'
+    compile files('libs/YouTubeAndroidPlayerApi.jar')
+
 }

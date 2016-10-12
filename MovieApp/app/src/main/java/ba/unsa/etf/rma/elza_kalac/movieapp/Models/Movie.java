@@ -1,10 +1,17 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Models;
 
+import android.content.Context;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import ba.unsa.etf.rma.elza_kalac.movieapp.API.CreditsResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.API.ReviewResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.API.TrailerResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
 /**
  * Created by Laptop on 23.09.2016..
@@ -69,28 +76,54 @@ public class Movie {
     @SerializedName("vote_average")
     @Expose
     private double voteAverage;
-
     @SerializedName("genres")
     @Expose
-    private List<Genre> genresList=new ArrayList<Genre>();
-
-
+    private List<Genre> genresList = new ArrayList<Genre>();
     @SerializedName("vote_count")
     @Expose
     private int voteCount;
 
-    public List<Genre> getGenresList() {
-        return genresList; }
+    @SerializedName("credits")
+    @Expose
+    private CreditsResponse credits;
 
-    public String getGenres()
-    {
-        String genres="";
-        for (Genre g:genresList) {
-            genres=genres+g.getGenre()+", ";
+    public TrailerResponse getVideos() {
+        return videos;
+    }
+
+    public void setVideos(TrailerResponse videos) {
+        this.videos = videos;
+    }
+
+    @SerializedName("videos")
+    private TrailerResponse videos;
+
+    public CreditsResponse getCredits() {
+        return credits;
+    }
+
+    public void setCredits(CreditsResponse credits) {
+        this.credits = credits;
+    }
+
+    public List<Genre> getGenresList() {
+        return genresList;
+    }
+
+    public String getGenres() {
+        String genres = "";
+        for (Genre g : genresList) {
+            genres = genres + g.getGenre() + ", ";
         }
-        genres=genres.substring(0, genres.length()-2);
+        if (genres.length()!=0)
+        genres = genres.substring(0, genres.length() - 2);
         return genres;
     }
+
+    private ReviewResponse reviews;
+
+    public void setReviews(ReviewResponse reviews) {this.reviews=reviews;} // ovdje treba objekat response
+    public ReviewResponse getReviews() {return reviews;}
 
     public String getBackdropPath() {
         return backdropPath;
@@ -168,13 +201,15 @@ public class Movie {
         return title;
     }
 
-    public double getVoteAverage() {return voteAverage; }
-
-    public String getFullPosterPath()
-    {
-        return "http://image.tmdb.org/t/p/"+"w500"+getPosterPath();
+    public double getVoteAverage() {
+        return voteAverage;
     }
 
+    public String getFullPosterPath(Context c) {
+        String url =c.getString(R.string.MovieImageBaseAdress);
+        String url1=c.getString(R.string.MovieImageWidth500);
+        return url+url1 + getPosterPath();
+    }
 
 
 }
