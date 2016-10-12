@@ -89,7 +89,7 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
             display.getSize(size);
             int width = size.x;
             Glide.with(getContext())
-                    .load(tvShow.getFullPosterPath())
+                    .load(tvShow.getFullPosterPath(getContext()))
                     .override(width / 2, 750)
                     .into((ImageView) newView.findViewById(R.id.tvShowImageView));
         }

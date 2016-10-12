@@ -63,7 +63,7 @@ public class LatestTvShowsFragment extends Fragment {
             public boolean onLoadMore(int page, int totalItemsCount) {
                 final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
 
-                Call<TvShowResponse> call = apiService.getHighestRatedTvShows(ApiClient.API_KEY, page);
+                Call<TvShowResponse> call = apiService.getLatestTvShows(ApiClient.API_KEY, page);
                 call.enqueue(new Callback<TvShowResponse>() {
                     @Override
                     public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {

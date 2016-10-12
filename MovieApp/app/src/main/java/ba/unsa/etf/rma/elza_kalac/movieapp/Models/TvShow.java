@@ -1,8 +1,12 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Models;
 
+import android.content.Context;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+
+import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
 /**
  * Created by Laptop on 01.10.2016..
@@ -156,5 +160,8 @@ public class TvShow {
         this.originalName = originalName;
     }
 
-    public String getFullPosterPath() {return "http://image.tmdb.org/t/p/" + "w500" + getPosterPath();}
+    public String getFullPosterPath(Context c)
+    {
+        String imagePath=c.getString((R.string.MovieImageBaseAdress))+c.getString(R.string.MovieImageWidth500)+getPosterPath();
+        return imagePath;}
 }
