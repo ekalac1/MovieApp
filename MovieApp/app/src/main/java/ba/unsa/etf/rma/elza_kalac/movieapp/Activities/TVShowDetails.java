@@ -34,7 +34,6 @@ public class TVShowDetails extends AppCompatActivity {
 
     private static final String TAG = MovieActivity.class.getSimpleName();
     public TvShow tvshow;
-
     public int tvshowID;
 
     @Override
@@ -42,6 +41,9 @@ public class TVShowDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tvshow_details);
         tvshowID = getIntent().getIntExtra("id", 0);
+        final Intent intent = new Intent(getApplicationContext(), Seasons.class);
+        intent.putExtra("id", tvshowID);
+
 
         final TextView movieId = (TextView) findViewById(R.id.tv_show_detalis_title);
         final TextView date = (TextView) findViewById(R.id.tv_show_detalis_release_date);
@@ -56,10 +58,23 @@ public class TVShowDetails extends AppCompatActivity {
         final TextView yearsList = (TextView)findViewById(R.id.years_list);
         final TextView seeAll = (TextView)findViewById(R.id.see_all);
 
+        yearsList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intent);
+            }
+        });
+
+        seasonsList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(intent);
+            }
+        });
+
         seeAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), Seasons.class);
                 startActivity(intent);
             }
         });
@@ -72,6 +87,7 @@ public class TVShowDetails extends AppCompatActivity {
             public void onResponse(Call<TvShow> call, Response<TvShow> response) {
                 tvshow = response.body();
                 movieId.setText(tvshow.getName());
+                intent.putExtra("name", tvshow.getName());
                 String seasonList="";
                 for (int i=1; i<=tvshow.getSeasons().size(); i++)
                 {
