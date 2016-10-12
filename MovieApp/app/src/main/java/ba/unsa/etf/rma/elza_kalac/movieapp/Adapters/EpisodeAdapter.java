@@ -10,6 +10,11 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Episode;
@@ -48,9 +53,23 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
         TextView episodeRate = (TextView)newView.findViewById(R.id.episode_rate);
         TextView episodeDate = (TextView)newView.findViewById(R.id.episode_date);
 
-        episodeName.setText(episode.getName());
-        episodeRate.setText(String.valueOf(episode.getVoteAverage()));
+        episodeName.setText(String.valueOf(position+1)+". "+episode.getName());
+        DecimalFormat df = new DecimalFormat("##.##");
+        episodeRate.setText(String.valueOf(df.format(episode.getVoteAverage())));
         episodeDate.setText(episode.getAirDate());
+
+        if (episode.getAirDate()!=(""))
+        {
+            DateFormat d = new SimpleDateFormat("yyyy-mm-dd");
+            Date startDate=new Date();
+            try {
+                startDate = d.parse(episode.getAirDate());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+            episodeDate.setText((new SimpleDateFormat("dd MMMM yyyy")).format(startDate).toString());
+        }
 
         return newView;
     }

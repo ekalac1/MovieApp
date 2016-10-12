@@ -19,7 +19,8 @@
             android:id="@+id/tv_show_image"
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:focusableInTouchMode="true" />
+            android:focusableInTouchMode="true"
+            android:contentDescription="@string/app_name" />
 
         <View
             android:id="@+id/view"
@@ -145,6 +146,7 @@
             android:layout_marginStart="16sp"
             android:layout_below="@id/tv_show_stars_list"
             android:layout_marginTop="25dp"
+            android:contentDescription="@string/app_name"
             android:src="@drawable/star_filled" />
 
         <TextView
@@ -186,8 +188,7 @@
             android:textSize="12sp"
             android:textColor="@color/golden"
             android:layout_below="@+id/season_list"
-            android:layout_alignEnd="@+id/tv_show_cast"
-            android:layout_marginEnd="21dp" />
+            android:layout_alignEnd="@+id/tv_show_about" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -241,6 +242,15 @@
             android:layout_below="@+id/years_list"
             android:background="@color/view_grey" />
 
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="180dp"
+            android:src="@drawable/right"
+            android:foregroundGravity="left"
+            android:contentDescription="@string/app_name"
+            android:layout_below="@+id/view_"
+            android:layout_alignParentEnd="true" />
+
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/tv_show_cast"
@@ -249,6 +259,7 @@
             android:layout_below="@+id/view_"
             android:layout_marginStart="16sp"
             android:layout_marginBottom="30dp"
+            android:layout_marginEnd="30dp"
             android:layout_marginTop="30dp" />
 
     </RelativeLayout>

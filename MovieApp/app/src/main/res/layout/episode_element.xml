@@ -9,6 +9,7 @@
         android:id="@+id/episode_name"
         android:textColor="@color/white"
         android:layout_marginTop="15dp"
+        android:layout_marginStart="30dp"
         android:textSize="14sp"/>
 
     <ImageView
@@ -17,7 +18,9 @@
         android:id="@+id/episode_image"
         android:layout_below="@+id/episode_name"
         android:layout_marginTop="5dp"
-        android:src="@drawable/star_filled"/>
+        android:layout_marginStart="45dp"
+        android:src="@drawable/star_filled"
+        android:paddingBottom="15dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -45,5 +48,11 @@
         android:layout_alignBottom="@id/episode_image"
         android:layout_marginStart="5dp"
         android:layout_below="@id/episode_name"
-        />
+        android:paddingBottom="15dp"/>
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/white_dark"
+        android:layout_below="@+id/episode_image">
+    </View>
 </RelativeLayout>

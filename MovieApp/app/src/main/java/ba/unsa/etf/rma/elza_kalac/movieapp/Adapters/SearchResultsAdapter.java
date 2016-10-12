@@ -88,6 +88,7 @@ public class SearchResultsAdapter extends ArrayAdapter<SearchResults> {
                     .load(movie.getFullPosterPath(getContext()))
                     .centerCrop()
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .placeholder(R.drawable.movies)
                     .into((ImageView) newView.findViewById(R.id.imageView2));
 
         }

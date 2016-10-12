@@ -69,7 +69,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
             String year = movie.getReleaseDate();
             year=year.substring(0, 4);
             movieName.setText(movie.getTitle() + " (" + year + ")");
-            date.setText((new SimpleDateFormat("dd m yyyy")).format(startDate).toString());
+            date.setText((new SimpleDateFormat("dd MMMM yyyy")).format(startDate).toString());
         }
         else {
                 date.setText("");
@@ -90,6 +90,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
                     .load(movie.getFullPosterPath(getContext()))
                     .override(width / 2, 750)
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .placeholder(R.drawable.movies)
                     .into((ImageView) newView.findViewById(R.id.imageView));
         }
         return newView;

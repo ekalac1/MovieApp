@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -32,6 +33,8 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.CastGridAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.EpisodeAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.SeasonsAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.SeasonsGridAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.SearchResults;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Season;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;
@@ -50,21 +53,23 @@ public class Seasons extends AppCompatActivity {
         setContentView(R.layout.activity_seasons);
         tvshowID = getIntent().getIntExtra("id", 0);
 
+        final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+
         getSupportActionBar().setTitle(getIntent().getStringExtra("name"));
 
         final TextView seasons = (TextView)findViewById(R.id.seasons_text);
         final GridView seasonsList = (GridView)findViewById(R.id.list);
         final TextView seasonYear = (TextView)findViewById(R.id.seasons_year);
         final ListView episodesList = (ListView)findViewById(R.id.episode_list);
-        seasons.setText("Seasons");
+        seasons.setText(R.string.Seasons1);
 
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+
         Call<TvShow> call = apiService.getTvShowDetails(tvshowID, ApiClient.API_KEY, "credits");
-
         call.enqueue(new Callback<TvShow>() {
             @Override
             public void onResponse(Call<TvShow> call, Response<TvShow> response) {
                 tvshow = response.body();
+                tvshow.getSeasons().remove(0);
                 SeasonsGridAdapter g = new SeasonsGridAdapter(getApplicationContext(), R.layout.season_element, tvshow.getSeasons());
                 seasonsList.setAdapter(g);
             }
@@ -76,6 +81,53 @@ public class Seasons extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
             }
         });
+
+
+        Call<Season> call1 = apiService.getSeasonEpisodes(tvshowID, 1, ApiClient.API_KEY);
+        call1.enqueue(new Callback<Season>() {
+            @Override
+            public void onResponse(Call<Season> call, Response<Season> response) {
+                Season season = response.body();
+                EpisodeAdapter e = new EpisodeAdapter(getApplicationContext(), R.layout.episode_element, season.getEpisodes());
+                episodesList.setAdapter(e);
+                seasonYear.setText("Season 1 ("+season.getAir_date().substring(0,4)+")");
+            }
+
+            @Override
+            public void onFailure(Call<Season> call, Throwable t) {
+                // Log error here since request failed
+                Log.e(TAG, t.toString());
+                Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        seasonsList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
+                Call<Season> call = apiService.getSeasonEpisodes(tvshowID, position + 1, ApiClient.API_KEY);
+                call.enqueue(new Callback<Season>() {
+                    @Override
+                    public void onResponse(Call<Season> call, Response<Season> response) {
+                        Season season = response.body();
+                        EpisodeAdapter e = new EpisodeAdapter(getApplicationContext(), R.layout.episode_element, season.getEpisodes());
+                        episodesList.setAdapter(e);
+                        seasonYear.setText("Season " + String.valueOf(position+1)+" ("+ season.getAir_date().substring(0, 4)+")");
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<Season> call, Throwable t) {
+                        // Log error here since request failed
+                        Log.e(TAG, t.toString());
+                        Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
+                    }
+                });
+
+
+            }
+        });
+
+
     }
 
 

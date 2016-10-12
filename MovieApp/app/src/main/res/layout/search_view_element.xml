@@ -7,7 +7,6 @@
             android:layout_width="100sp"
             android:layout_height="130sp"
             android:id="@+id/imageView2"
-            android:background="@drawable/grey"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="20dp" />
 

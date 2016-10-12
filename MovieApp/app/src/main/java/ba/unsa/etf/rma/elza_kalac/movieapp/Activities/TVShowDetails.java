@@ -134,7 +134,7 @@ public class TVShowDetails extends AppCompatActivity {
                 }
                 temp.setText(tvshow.getGenres());
                 Glide.with(getApplicationContext())
-                        .load(tvshow.getFullPosterPath())
+                        .load(tvshow.getFullPosterPath(getApplicationContext()))
                         .override(360, 300)
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.RESULT)
