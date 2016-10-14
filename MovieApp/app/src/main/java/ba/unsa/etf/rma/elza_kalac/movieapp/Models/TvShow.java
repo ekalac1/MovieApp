@@ -11,6 +11,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.CreditsResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.ReviewResponse;
 
+
 /**
  * Created by Laptop on 01.10.2016..
  */
@@ -186,6 +187,9 @@ public class TvShow {
         this.originalName = originalName;
     }
 
-    public String getFullPosterPath(Context c) {
-        return c.getString(R.string.MovieImageBaseAdress) +c.getString(R.string.MovieImageWidth500)+ getPosterPath();}
+
+    public String getFullPosterPath(Context c)
+    {
+        String imagePath=c.getString((R.string.MovieImageBaseAdress))+c.getString(R.string.MovieImageWidth500)+getPosterPath();
+        return imagePath;}
 }
