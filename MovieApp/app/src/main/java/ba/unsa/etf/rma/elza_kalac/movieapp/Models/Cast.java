@@ -100,6 +100,6 @@ public class Cast {
    }
 
    public String getFullPosterPath() {
-      return "http://image.tmdb.org/t/p/" + "w92" + getProfile_path();
+      return "http://image.tmdb.org/t/p/" + "w500" + getProfile_path();
    }
 }

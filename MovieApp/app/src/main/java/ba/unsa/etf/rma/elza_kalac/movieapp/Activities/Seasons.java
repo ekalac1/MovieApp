@@ -53,7 +53,7 @@ public class Seasons extends AppCompatActivity {
         setContentView(R.layout.activity_seasons);
         tvshowID = getIntent().getIntExtra("id", 0);
 
-        final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+
 
         getSupportActionBar().setTitle(getIntent().getStringExtra("name"));
 
@@ -63,7 +63,7 @@ public class Seasons extends AppCompatActivity {
         final ListView episodesList = (ListView)findViewById(R.id.episode_list);
         seasons.setText(R.string.Seasons1);
 
-
+        final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<TvShow> call = apiService.getTvShowDetails(tvshowID, ApiClient.API_KEY, "credits");
         call.enqueue(new Callback<TvShow>() {
             @Override

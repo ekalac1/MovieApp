@@ -158,7 +158,7 @@ public class TVShowDetails extends AppCompatActivity {
                 if (tvshow.getCredits().getStars()!="")
                 {
                     stars.setText(tvshow.getCredits().getStars());
-                    CastGridAdapter mAdapter = new CastGridAdapter(tvshow.getCredits().getCast());
+                    CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), tvshow.getCredits().getCast());
                     LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
                     cast.setLayoutManager(mLayoutManager);
                     cast.setAdapter(mAdapter);

@@ -50,6 +50,8 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         final ImageView play = (ImageView)findViewById(R.id.star_vote);
 
 
+
+
         movieID = getIntent().getIntExtra("id", 0);
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
@@ -59,7 +61,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 movie = response.body();
-                movieId.setText(movie.getOriginalTitle());
+                movieId.setText(movie.getTitle());
                 if (movie.getReleaseDate()!=(""))
                 {
                     DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
@@ -103,7 +105,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 about.setText(movie.getOverview());
                 stars.setText(movie.getCredits().getStars());
                 votes.setText(String.valueOf(movie.getVoteAverage()));
-                CastGridAdapter mAdapter = new CastGridAdapter(movie.getCredits().getCast());
+                CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), movie.getCredits().getCast());
                 LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
                 recyclerView.setLayoutManager(mLayoutManager);
                 recyclerView.setAdapter(mAdapter);

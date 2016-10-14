@@ -89,6 +89,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
             Glide.with(context)
                     .load(movie.getFullPosterPath(getContext()))
                     .override(width / 2, 750)
+                    .fitCenter()
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .placeholder(R.drawable.movies)
                     .into((ImageView) newView.findViewById(R.id.imageView));
