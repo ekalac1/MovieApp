@@ -10,6 +10,7 @@
     <string name="api_key_missing">Please obtain your API KEY first from themoviedb.org</string>
     <string name="on_failure">Failed</string>
     <string name="news">News</string>
+    <string name="newsFeed">News Feed</string>
     <string name="movies">Movies</string>
     <string name="movie">Movie</string>
     <string name="tv_shows">TV shows</string>

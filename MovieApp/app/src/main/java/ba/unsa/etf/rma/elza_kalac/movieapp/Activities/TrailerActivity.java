@@ -4,6 +4,7 @@ package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -52,20 +53,24 @@ public class TrailerActivity extends YouTubeBaseActivity implements YouTubePlaye
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trailer);
 
-        Toolbar t = (Toolbar)findViewById(R.id.my_awesome_toolbar);
-        t.setTitle(R.string.movie);
+/*        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
+        setActionBar(toolbar); */
+
+      /*  Toolbar t = (Toolbar)findViewById(R.id.my_awesome_toolbar);
+       // t.setTitle(R.string.movie);
         setActionBar(t);
+
 
 
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setDisplayShowHomeEnabled(true);
+        getActionBar().setDisplayShowHomeEnabled(true); */
 
         youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
         youTubeView.initialize(ApiClient.YOUTUBE_API_KEY, this);
         movieID = getIntent().getIntExtra("id", 0);
-        name = (TextView)findViewById(R.id.trailer_name);
-        overview = (TextView)findViewById(R.id.trailer_overview);
+        name = (TextView) findViewById(R.id.trailer_name);
+        overview = (TextView) findViewById(R.id.trailer_overview);
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<Movie> call = apiService.getMovieDetails(movieID, ApiClient.API_KEY, "videos");
 
@@ -73,8 +78,8 @@ public class TrailerActivity extends YouTubeBaseActivity implements YouTubePlaye
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 movie = response.body();
-                if (movie.getVideos().getResults().size()!=0)
-                youtubeKey=movie.getVideos().getResults().get(0).getKey();
+                if (movie.getVideos().getResults().size() != 0)
+                    youtubeKey = movie.getVideos().getResults().get(0).getKey();
                 name.setText(movie.getTitle());
                 overview.setText(movie.getOverview());
 
@@ -90,9 +95,9 @@ public class TrailerActivity extends YouTubeBaseActivity implements YouTubePlaye
 
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
-        if (!wasRestored ) {
-            if (youtubeKey!=null)
-            player.cueVideo(youtubeKey);
+        if (!wasRestored) {
+            if (youtubeKey != null)
+                player.cueVideo(youtubeKey);
         }
     }
 

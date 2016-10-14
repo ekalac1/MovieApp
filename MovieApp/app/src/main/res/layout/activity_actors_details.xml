@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="start|bottom"
+    android:background="@color/colorPrimaryDark"
+    android:fillViewport="true">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="top"
+        tools:context=".Activities.ActorsDetails">
+
+
+        <ImageView
+            android:id="@+id/actor_image"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:focusableInTouchMode="true"/>
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@drawable/gradient" />
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.55" />
+
+
+            <TextView
+                android:id="@+id/actor_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginStart="16sp"
+                android:layout_marginEnd="16sp"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/birth_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="27dp"
+            android:layout_marginStart="16dp"
+            android:text="@string/directors"
+            android:layout_below="@+id/actor_image"
+            android:textSize="14sp"
+            android:textColor="@color/white_dark" />
+        <TextView
+            android:id="@+id/birth_date_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/lightgrey"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_alignTop="@+id/birth_date"
+            android:layout_toEndOf="@+id/birth_date"/>
+        <TextView
+            android:id="@+id/website"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/birth_date_data"
+            android:text="@string/writers"
+            android:layout_alignStart="@+id/birth_date"
+            android:textSize="14sp"
+            android:textColor="@color/white_dark" />
+        <TextView
+            android:id="@+id/website_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/birth_date_data"
+            android:textSize="14sp"
+            android:textColor="@color/lightgrey"
+            android:layout_alignTop="@+id/website"
+            android:layout_toEndOf="@+id/website"
+            android:layout_alignStart="@+id/birth_date_data"
+            android:layout_marginEnd="16dp"/>
+        <TextView
+            android:id="@+id/biography"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stars"
+            android:layout_below="@+id/website_data"
+            android:layout_alignStart="@+id/birth_date"
+            android:textSize="14sp"
+            android:textColor="@color/white_dark" />
+        <TextView
+            android:id="@+id/biography_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:textColor="@color/lightgrey"
+            android:layout_below="@+id/biography"
+            android:layout_marginEnd="16dp"/>
+    </RelativeLayout>
+</ScrollView>

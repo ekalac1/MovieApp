@@ -10,17 +10,15 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Entry;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.FeedItem;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
-public class NewsListAdapter extends ArrayAdapter<Entry> {
+public class NewsListAdapter extends ArrayAdapter<FeedItem> {
 
     int resource;
     Context context;
 
-
-
-    public NewsListAdapter(Context _context, int _resource, List<Entry> items) {
+    public NewsListAdapter(Context _context, int _resource, List<FeedItem> items) {
         super(_context, _resource, items);
         resource = _resource;
         context=_context;}
@@ -39,12 +37,12 @@ public class NewsListAdapter extends ArrayAdapter<Entry> {
         } else {
             newView = (LinearLayout) convertView;
         }
-        Entry news = getItem(position);
+        FeedItem news= getItem(position);
         TextView newsTitle = (TextView)newView.findViewById(R.id.news_title);
         TextView newsText = (TextView)newView.findViewById(R.id.news_text);
 
-        newsTitle.setText(news.getTitle());
-        newsText.setText(news.getDescription());
+        newsTitle.setText(news.getMtitle());
+         newsText.setText(news.getMlink());
 
         return newView;
     }

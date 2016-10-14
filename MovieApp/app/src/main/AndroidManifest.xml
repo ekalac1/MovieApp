@@ -24,10 +24,7 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!--
-                  ATTENTION: This data URL was auto-generated. We recommend that you use the HTTP scheme.
-                  TODO: Change the host or pathPrefix as necessary.
-                -->
+
                 <data
                     android:host="movieapp.elza_kalac.rma.etf.unsa.ba"
                     android:pathPrefix="/main"
@@ -48,8 +45,10 @@
         <activity
             android:name=".Activities.TVShowDetails"
             android:parentActivityName=".Activities.TVShows" />
-        <activity android:name=".Activities.Seasons"
-            android:parentActivityName=".Activities.TVShowDetails"/>
+        <activity
+            android:name=".Activities.Seasons"
+            android:parentActivityName=".Activities.TVShowDetails" />
+        <activity android:name=".Activities.ActorsDetails"></activity>
     </application>
 
 </manifest>

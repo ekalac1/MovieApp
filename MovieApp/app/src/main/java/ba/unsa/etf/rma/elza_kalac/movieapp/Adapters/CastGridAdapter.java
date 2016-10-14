@@ -1,6 +1,7 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.ActorsDetails;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Cast;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Review;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
 
@@ -24,6 +27,18 @@ public class CastGridAdapter extends RecyclerView.Adapter<CastGridAdapter.MyView
     private List<Cast> castsList;
     public View view;
     public Context c;
+
+    public interface OnItemClickListener {
+        void onItemClick(Review item);
+    }
+
+    private  List<Review> items;
+    private  OnItemClickListener listener;
+
+    public CastGridAdapter(List<Review> items, OnItemClickListener listener) {
+        this.items = items;
+        this.listener = listener;
+    }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public ImageView cast_image;
@@ -35,6 +50,16 @@ public class CastGridAdapter extends RecyclerView.Adapter<CastGridAdapter.MyView
             name=(TextView)view.findViewById(R.id.actors_name);
             character=(TextView)view.findViewById(R.id.character);
             cast_image=(ImageView)view.findViewById(R.id.cast_image);
+            view_.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int i =getAdapterPosition();
+                    //kreiraj intent i uzmi id glumca
+                 //   Intent i = new Intent(c, ActorsDetails.class);
+
+                    c.startActivity(new Intent(c, ActorsDetails.class));
+                }
+            });
         }
     }
 

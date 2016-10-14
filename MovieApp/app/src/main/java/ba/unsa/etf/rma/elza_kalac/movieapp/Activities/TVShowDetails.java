@@ -44,7 +44,6 @@ public class TVShowDetails extends AppCompatActivity {
         final Intent intent = new Intent(getApplicationContext(), Seasons.class);
         intent.putExtra("id", tvshowID);
 
-
         final TextView movieId = (TextView) findViewById(R.id.tv_show_detalis_title);
         final TextView date = (TextView) findViewById(R.id.tv_show_detalis_release_date);
         final TextView temp = (TextView) findViewById(R.id.tv_show_detalis_genres);
@@ -52,7 +51,7 @@ public class TVShowDetails extends AppCompatActivity {
         final TextView about = (TextView)findViewById(R.id.tv_show_about);
         final TextView writers = (TextView)findViewById(R.id.tv_show_writers_list);
         final TextView stars= (TextView)findViewById(R.id.tv_show_stars_list);
-        final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.tv_show_cast);
+        final RecyclerView cast = (RecyclerView) findViewById(R.id.tv_show_cast);
         final TextView votes = (TextView)findViewById(R.id.tv_show_votes);
         final TextView seasonsList = (TextView)findViewById(R.id.season_list);
         final TextView yearsList = (TextView)findViewById(R.id.years_list);
@@ -95,7 +94,7 @@ public class TVShowDetails extends AppCompatActivity {
                 }
                 seasonsList.setText(seasonList);
 
-                if (tvshow.getFirstAirDate()!=(""))
+                if (tvshow.getFirstAirDate()!=null)
                 {
                     DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
                     Date startDate=new Date();
@@ -111,7 +110,7 @@ public class TVShowDetails extends AppCompatActivity {
                     int startYear=Integer.parseInt(tempe);
                     String m = "-";
                     String temp2="";
-                    if (tvshow.getLastAirDate()!="")
+                    if (tvshow.getLastAirDate()!=null)
                     {
                         temp2=(new SimpleDateFormat("yyyy")).format(endDate).toString();
 
@@ -161,15 +160,15 @@ public class TVShowDetails extends AppCompatActivity {
                     stars.setText(tvshow.getCredits().getStars());
                     CastGridAdapter mAdapter = new CastGridAdapter(tvshow.getCredits().getCast());
                     LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-                    recyclerView.setLayoutManager(mLayoutManager);
-                    recyclerView.setAdapter(mAdapter);
+                    cast.setLayoutManager(mLayoutManager);
+                    cast.setAdapter(mAdapter);
                 }
                 else
                 {
                     stars.setVisibility(View.GONE);
                     TextView temp = (TextView)findViewById(R.id.tv_show_stars);
                     temp.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.GONE);
+                    cast.setVisibility(View.GONE);
                 }
                 votes.setText(String.valueOf(tvshow.getVoteAverage()));
 
