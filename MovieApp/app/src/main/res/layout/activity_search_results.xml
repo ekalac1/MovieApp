@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:background="@color/grey"
     android:theme="@style/AppTheme"
-    tools:context=".Activities.SearchResultsActivity">
+    tools:context=".Activities.SearchActivity">
 
     <GridView
         android:layout_width="match_parent"

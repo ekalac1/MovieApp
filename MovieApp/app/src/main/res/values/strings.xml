@@ -31,5 +31,10 @@
     <string name="Seasons">Seasons: </string>
     <string name="Years">Years: </string>
     <string name="Seasons1">Season</string>
+    <string name="Website">Website:</string>
+    <string name="birth_date">Date of birth:</string>
+    <string name="Biography">Biography:</string>
+    <string name="actor">Actor</string>
+    <string name="filmography">Filmography</string>
 
 </resources>

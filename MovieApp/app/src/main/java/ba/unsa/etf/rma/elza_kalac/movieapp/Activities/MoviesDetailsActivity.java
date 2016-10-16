@@ -37,6 +37,9 @@ public class MoviesDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_details);
+
+        getSupportActionBar().setTitle(R.string.movie);
+
         final TextView movieId = (TextView) findViewById(R.id.movies_detalis_title);
         final TextView date = (TextView) findViewById(R.id.movies_detalis_release_date);
         final TextView temp = (TextView) findViewById(R.id.movies_detalis_genres);
@@ -105,7 +108,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 about.setText(movie.getOverview());
                 stars.setText(movie.getCredits().getStars());
                 votes.setText(String.valueOf(movie.getVoteAverage()));
-                CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), movie.getCredits().getCast());
+                CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), movie.getCredits().getCast(), "movie");
                 LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
                 recyclerView.setLayoutManager(mLayoutManager);
                 recyclerView.setAdapter(mAdapter);

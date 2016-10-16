@@ -52,7 +52,8 @@ public interface ApiInterface {
     Call<Season> getSeasonEpisodes(@Path("tv_id") int id, @Path("season_number") int seasonNumber, @Query("api_key") String apiKey);
 
     @GET("person/{person_id}")
-    Call<Cast> getActor(@Path("person_id") int id, @Query("api_key") String apiKey);
+    Call<Cast> getActor(@Path("person_id") int id, @Query("api_key") String apiKey,  @Query("append_to_response") String append);
+
 
 
 }

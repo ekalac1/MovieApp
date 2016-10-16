@@ -206,10 +206,8 @@ public class Movie {
         return voteAverage;
     }
 
-    public String getFullPosterPath(Context c) {
-        String url =c.getString(R.string.MovieImageBaseAdress);
-        String url1=c.getString(R.string.MovieImageWidth500);
-        return url+url1 + getPosterPath();
+    public String getFullPosterPath(Context c) {;
+        return c.getString(R.string.MovieImageBaseAdress)+c.getString(R.string.MovieImageWidth500) + getPosterPath();
     }
 
 

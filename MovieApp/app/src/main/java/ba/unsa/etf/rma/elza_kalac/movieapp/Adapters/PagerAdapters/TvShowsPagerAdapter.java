@@ -1,4 +1,4 @@
-package ba.unsa.etf.rma.elza_kalac.movieapp.Adapters;
+package ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.PagerAdapters;
 
 
 

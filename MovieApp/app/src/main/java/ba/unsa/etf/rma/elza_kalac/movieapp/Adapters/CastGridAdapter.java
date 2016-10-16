@@ -25,13 +25,14 @@ public class CastGridAdapter extends RecyclerView.Adapter<CastGridAdapter.MyView
     private List<Cast> castsList;
     public View view;
     public Context context;
+    public String activity;
 
     public interface OnItemClickListener {
         void onItemClick(Review item);
     }
 
-    private List<Review> items;
-    private OnItemClickListener listener;
+    List<Review> items;
+    OnItemClickListener listener;
 
     public CastGridAdapter(List<Review> items, OnItemClickListener listener) {
         this.items = items;
@@ -52,40 +53,41 @@ public class CastGridAdapter extends RecyclerView.Adapter<CastGridAdapter.MyView
     }
 
 
-    public CastGridAdapter(Context context, List<Cast> castsList) {
-        this.context=context;
+    public CastGridAdapter(Context context, List<Cast> castsList, String activity) {
+        this.context = context;
         this.castsList = castsList;
+        this.activity = activity;
     }
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cast_element, parent, false);
-
         return new MyViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
         final Cast cast = castsList.get(position);
-        holder.name.setText(cast.getName());
+        if (cast.getName() != null)
+            holder.name.setText(cast.getName());
+        else holder.name.setText(cast.getTitle());
         holder.character.setText(cast.getCharacter_name());
         Glide.with(context)
-                .load(cast.getFullPosterPath())
-                .override(105 * 3, 130 * 3)
+                .load(cast.getFullPosterPath(context))
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(holder.cast_image);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Intent myIntent=new Intent(context, ActorDetails.class);
-                myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                myIntent.putExtra("id", cast.getId());
-                context.startActivity(myIntent);
-            }
-        });
+        if (activity != "actor")
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent myIntent = new Intent(context, ActorDetails.class);
+                    myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    myIntent.putExtra("id", cast.getId());
+                    context.startActivity(myIntent);
+                }
+            });
     }
 
     @Override

@@ -2,6 +2,7 @@ package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +33,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.CastGridAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.ReviewListAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.BuildConfig;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;
@@ -42,8 +44,8 @@ public class TrailerActivity extends YouTubeBaseActivity implements YouTubePlaye
 
     private static final int RECOVERY_REQUEST = 1;
     private YouTubePlayerView youTubeView;
-    public TextView name, overview;
-    public int movieID;
+    private TextView name, overview;
+    private int movieID;
     public Movie movie;
     public String youtubeKey;
     private static final String TAG = MovieActivity.class.getSimpleName();
@@ -53,18 +55,21 @@ public class TrailerActivity extends YouTubeBaseActivity implements YouTubePlaye
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trailer);
 
-/*        Toolbar toolbar = (Toolbar) findViewById(R.id.app_bar);
-        setActionBar(toolbar); */
+       if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP)
+       {
+           Toolbar toolbar = (Toolbar) findViewById(R.id.my_awesome_toolbar);
+           setActionBar(toolbar);
 
-      /*  Toolbar t = (Toolbar)findViewById(R.id.my_awesome_toolbar);
-       // t.setTitle(R.string.movie);
-        setActionBar(t);
-
-
+          Toolbar t = (Toolbar)findViewById(R.id.my_awesome_toolbar);
+          t.setTitle(R.string.movie);
+          setActionBar(t);
 
         getActionBar().setHomeButtonEnabled(true);
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        getActionBar().setDisplayShowHomeEnabled(true); */
+        getActionBar().setDisplayShowHomeEnabled(true);
+       }
+
+
 
         youTubeView = (YouTubePlayerView) findViewById(R.id.youtube_view);
         youTubeView.initialize(ApiClient.YOUTUBE_API_KEY, this);
@@ -82,17 +87,13 @@ public class TrailerActivity extends YouTubeBaseActivity implements YouTubePlaye
                     youtubeKey = movie.getVideos().getResults().get(0).getKey();
                 name.setText(movie.getTitle());
                 overview.setText(movie.getOverview());
-
             }
-
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
-                Log.e(TAG, t.toString());
                 Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
             }
         });
     }
-
     @Override
     public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer player, boolean wasRestored) {
         if (!wasRestored) {
@@ -106,7 +107,7 @@ public class TrailerActivity extends YouTubeBaseActivity implements YouTubePlaye
         if (errorReason.isUserRecoverableError()) {
             errorReason.getErrorDialog(this, RECOVERY_REQUEST).show();
         } else {
-            String error = String.format(getString(R.string.on_failure), errorReason.toString());
+            String error = String.format(getString(R.string.on_failure))+errorReason.toString();
             Toast.makeText(this, error, Toast.LENGTH_LONG).show();
         }
     }

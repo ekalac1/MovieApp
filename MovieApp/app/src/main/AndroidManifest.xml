@@ -35,7 +35,7 @@
             android:name=".Activities.MoviesDetailsActivity"
             android:parentActivityName=".Activities.MovieActivity" />
         <activity
-            android:name=".Activities.SearchResultsActivity"
+            android:name=".Activities.SearchActivity"
             android:parentActivityName=".Activities.MovieActivity" />
         <activity android:name=".Activities.NewsFeed" />
         <activity android:name=".Activities.TVShows" />
@@ -48,7 +48,10 @@
         <activity
             android:name=".Activities.Seasons"
             android:parentActivityName=".Activities.TVShowDetails" />
-        <activity android:name=".Activities.ActorDetails"></activity>
+        <activity android:name=".Activities.ActorDetails" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="23e7a64d301273a24eaad56605519cd65b6d0bee" />
     </application>
 
 </manifest>

@@ -40,6 +40,9 @@ public class TVShowDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tvshow_details);
+
+        getSupportActionBar().setTitle(R.string.tv_show);
+
         tvshowID = getIntent().getIntExtra("id", 0);
         final Intent intent = new Intent(getApplicationContext(), Seasons.class);
         intent.putExtra("id", tvshowID);
@@ -158,7 +161,7 @@ public class TVShowDetails extends AppCompatActivity {
                 if (tvshow.getCredits().getStars()!="")
                 {
                     stars.setText(tvshow.getCredits().getStars());
-                    CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), tvshow.getCredits().getCast());
+                    CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), tvshow.getCredits().getCast(), "tv");
                     LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
                     cast.setLayoutManager(mLayoutManager);
                     cast.setAdapter(mAdapter);

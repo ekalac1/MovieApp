@@ -1,9 +1,17 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Models;
 
+import android.content.Context;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
+import java.util.logging.StreamHandler;
+
+import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.CreditsResponse;
 
 
 public class Cast {
@@ -17,89 +25,78 @@ public class Cast {
     @SerializedName("credit_id")
     @Expose
     private String credit_id;
-   @SerializedName("id")
-   @Expose
+    @SerializedName("id")
+    @Expose
     private int id;
-   @SerializedName("name")
-   @Expose
-   private String name;
-   @SerializedName("order")
-   @Expose
-   private int order;
-   @SerializedName("profile_path")
-   @Expose
-   private String profile_path;
+    @SerializedName("name")
+    @Expose
+    private String name;
+    @SerializedName("order")
+    @Expose
+    private int order;
+    @SerializedName("profile_path")
+    @Expose
+    private String profile_path;
+    @SerializedName("birthday")
+    private String birthday;
+    @SerializedName("homepage")
+    private String homePage;
+    @SerializedName("biography")
+    private String biography;
+    @SerializedName("combined_credits")
+    private CreditsResponse cast;
+    @SerializedName("title")
+    private String title;
+    @SerializedName("poster_path")
+    private String posterPath;
+
+    public CreditsResponse getCast() {
+        return cast;
+    }
+
+    public String getHomePage() {
+        return homePage;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public String getBiography() {
+        return biography;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getCharacter_name() {
+        return character_name;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getProfile_path() {
+        return profile_path;
+    }
+
+    public String getPosterPath() {
+        return posterPath;
+    }
+
+    public String getFullPosterPath(Context c) {
+        if (getProfile_path() != null)
+            return c.getString(R.string.MovieImageBaseAdress) + c.getString(R.string.MovieImageWidth500) + getProfile_path();
+        else
+            return c.getString(R.string.MovieImageBaseAdress) + c.getString(R.string.MovieImageWidth500) + getPosterPath();
+
+    }
 
 
-
-
-   public void setCast_id(int cast_id) {
-      this.cast_id = cast_id;
-   }
-
-   public void setCharacter_name(String character_name) {
-      this.character_name = character_name;
-   }
-
-   public void setCredit_id(String credit_id) {
-      this.credit_id = credit_id;
-   }
-
-   public void setId(int id) {
-      this.id = id;
-   }
-
-   public void setName(String name) {
-      this.name = name;
-   }
-
-   public void setOrder(int order) {
-      this.order = order;
-   }
-
-   public void setProfile_path(String profile_path) {
-      this.profile_path = profile_path;
-   }
-
-   public Cast(int cast_id, String character_name, String credit_id, int id, String name, int order, String profile_path) {
-      this.cast_id = cast_id;
-      this.character_name = character_name;
-      this.credit_id = credit_id;
-      this.id = id;
-      this.name = name;
-      this.order = order;
-      this.profile_path = profile_path;
-   }
-
-   public int getCast_id() {
-      return cast_id;
-   }
-
-   public String getCharacter_name() {
-      return character_name;
-   }
-
-   public String getCredit_id() {
-      return credit_id;
-   }
-
-   public int getId() {
-      return id;
-   }
-
-   public String getName() {
-      return name;
-   }
-
-   public int getOrder() {
-      return order;
-   }
-
-   public String getProfile_path() {
-      return profile_path;
-   }
-
-   public String getFullPosterPath() {
-      return "http://image.tmdb.org/t/p/" + "w500" + getProfile_path();
-   }
 }
