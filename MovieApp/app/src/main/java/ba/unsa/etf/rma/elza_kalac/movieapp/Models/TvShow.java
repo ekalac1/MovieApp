@@ -4,9 +4,13 @@ import android.content.Context;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.CreditsResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.ReviewResponse;
+
 
 /**
  * Created by Laptop on 01.10.2016..
@@ -39,22 +43,45 @@ public class TvShow {
     private String name;
     @SerializedName("original_name")
     private String originalName;
+    @SerializedName("last_air_date")
+    private String lastAirDate;
+    public String getLastAirDate()
+    {return lastAirDate;}
+    @SerializedName("status")
+    private String status;
+    public String getStatus() {return  status;}
 
-    public TvShow(String backdropPath, List<Integer> genreIds, String firstAirDate, int id, String name, String originalLanguage, List<String> originCountry, String originalName, String overview, double popularity, String posterPath, double voteAverage, int voteCount) {
-        this.backdropPath = backdropPath;
-        this.genreIds = genreIds;
-        this.firstAirDate = firstAirDate;
-        this.id = id;
-        this.name = name;
-        this.originalLanguage = originalLanguage;
-        this.originCountry = originCountry;
-        this.originalName = originalName;
-        this.overview = overview;
-        this.popularity = popularity;
-        this.posterPath = posterPath;
-        this.voteAverage = voteAverage;
-        this.voteCount = voteCount;
+    @SerializedName("seasons")
+    private List<Season> seasons;
+    public List<Season> getSeasons() {return seasons;}
+    @SerializedName("genres")
+    private List<Genre> genresList = new ArrayList<Genre>();
+
+    public String getGenres() {
+        String genres = "";
+        for (Genre g : genresList) {
+            genres = genres + g.getGenre() + ", ";
+        }
+        if (genres.length()!=0)
+            genres = genres.substring(0, genres.length() - 2);
+        return genres;
     }
+
+    @SerializedName("credits")
+    private CreditsResponse credits;
+
+    public CreditsResponse getCredits() {
+        return credits;
+    }
+
+    public void setCredits(CreditsResponse credits) {
+        this.credits = credits;
+    }
+
+    private ReviewResponse reviews;
+
+    public void setReviews(ReviewResponse reviews) {this.reviews=reviews;}
+    public ReviewResponse getReviews() {return reviews;}
 
     public String getPosterPath() {
         return posterPath;
@@ -159,6 +186,7 @@ public class TvShow {
     public void setOriginalName(String originalName) {
         this.originalName = originalName;
     }
+
 
     public String getFullPosterPath(Context c)
     {

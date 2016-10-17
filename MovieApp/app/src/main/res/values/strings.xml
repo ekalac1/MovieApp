@@ -10,6 +10,7 @@
     <string name="api_key_missing">Please obtain your API KEY first from themoviedb.org</string>
     <string name="on_failure">Failed</string>
     <string name="news">News</string>
+    <string name="newsFeed">News Feed</string>
     <string name="movies">Movies</string>
     <string name="movie">Movie</string>
     <string name="tv_shows">TV shows</string>
@@ -26,5 +27,14 @@
     <string name="trailer_error">Trailer not available</string>
     <string name="MovieImageBaseAdress">http://image.tmdb.org/t/p/</string>
     <string name="MovieImageWidth500">w500</string>
+    <string name="SeeAll">See all ></string>
+    <string name="Seasons">Seasons: </string>
+    <string name="Years">Years: </string>
+    <string name="Seasons1">Season</string>
+    <string name="Website">Website:</string>
+    <string name="birth_date">Date of birth:</string>
+    <string name="Biography">Biography:</string>
+    <string name="actor">Actor</string>
+    <string name="filmography">Filmography</string>
 
 </resources>

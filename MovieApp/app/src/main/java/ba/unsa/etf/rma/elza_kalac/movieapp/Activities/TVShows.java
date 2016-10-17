@@ -2,6 +2,7 @@ package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.IdRes;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -13,11 +14,12 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.TvShowsPagerAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.PagerAdapters.TvShowsPagerAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
 public class TVShows extends AppCompatActivity {
@@ -41,7 +43,6 @@ public class TVShows extends AppCompatActivity {
         layoutParams.rightMargin = 40;
         imageView.setLayoutParams(layoutParams);
         actionBar.setCustomView(imageView);
-        actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM);
 
         actionBar.setDisplayShowTitleEnabled(true);
@@ -50,7 +51,7 @@ public class TVShows extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                startActivity(new Intent(getApplicationContext(), SearchResultsActivity.class));
+                startActivity(new Intent(getApplicationContext(), SearchActivity.class));
 
             }
         });
@@ -92,11 +93,15 @@ public class TVShows extends AppCompatActivity {
             public void onTabSelected(@IdRes int tabId) {
                 if (tabId == R.id.tab_news) {
                     Intent intent = new Intent(getApplicationContext(), NewsFeed.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
 
                 if (tabId == R.id.tab_movies) {
                     Intent intent = new Intent(getApplicationContext(), MovieActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                 }
 
@@ -125,5 +130,23 @@ public class TVShows extends AppCompatActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private Boolean exit = false;
+    @Override
+    public void onBackPressed() {
+        if (exit) {
+            finish(); // finish activity
+        } else {
+            Toast.makeText(this, "Press Back again to Exit.",
+                    Toast.LENGTH_SHORT).show();
+            exit = true;
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    exit = false;
+                }
+            }, 3 * 1000);
+        }
     }
 }

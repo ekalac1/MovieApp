@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -68,7 +69,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
             String year = movie.getReleaseDate();
             year=year.substring(0, 4);
             movieName.setText(movie.getTitle() + " (" + year + ")");
-            date.setText((new SimpleDateFormat("dd m yyyy")).format(startDate).toString());
+            date.setText((new SimpleDateFormat("dd MMMM yyyy")).format(startDate).toString());
         }
         else {
                 date.setText("");
@@ -87,7 +88,10 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
             int width = size.x;
             Glide.with(context)
                     .load(movie.getFullPosterPath(getContext()))
-                    .override(width/2, 750)
+                    .override(width / 2, 750)
+                    .fitCenter()
+                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                    .placeholder(R.drawable.movies)
                     .into((ImageView) newView.findViewById(R.id.imageView));
         }
         return newView;

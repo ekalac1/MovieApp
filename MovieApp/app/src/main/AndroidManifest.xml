@@ -3,6 +3,7 @@
     package="ba.unsa.etf.rma.elza_kalac.movieapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Permission to write to external storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -23,10 +24,7 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!--
-                  ATTENTION: This data URL was auto-generated. We recommend that you use the HTTP scheme.
-                  TODO: Change the host or pathPrefix as necessary.
-                -->
+
                 <data
                     android:host="movieapp.elza_kalac.rma.etf.unsa.ba"
                     android:pathPrefix="/main"
@@ -36,12 +34,24 @@
         <activity
             android:name=".Activities.MoviesDetailsActivity"
             android:parentActivityName=".Activities.MovieActivity" />
-        <activity android:name=".Activities.SearchResultsActivity"
-            android:parentActivityName=".Activities.MovieActivity"/>
+        <activity
+            android:name=".Activities.SearchActivity"
+            android:parentActivityName=".Activities.MovieActivity" />
         <activity android:name=".Activities.NewsFeed" />
         <activity android:name=".Activities.TVShows" />
         <activity
-            android:name=".Activities.TrailerActivity">
-        </activity>
+            android:name=".Activities.TrailerActivity"
+            android:parentActivityName=".Activities.MoviesDetailsActivity" />
+        <activity
+            android:name=".Activities.TVShowDetails"
+            android:parentActivityName=".Activities.TVShows" />
+        <activity
+            android:name=".Activities.Seasons"
+            android:parentActivityName=".Activities.TVShowDetails" />
+        <activity android:name=".Activities.ActorDetails" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="23e7a64d301273a24eaad56605519cd65b6d0bee" />
     </application>
+
 </manifest>

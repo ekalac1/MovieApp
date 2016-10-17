@@ -9,10 +9,10 @@
     <com.google.android.youtube.player.YouTubePlayerView
         android:id="@+id/youtube_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/my_awesome_toolbar"/>
+        android:layout_height="wrap_content" />
 
-    <android.widget.Toolbar
+
+ <!--   <android.widget.Toolbar
 
         android:id="@+id/my_awesome_toolbar"
         android:layout_height="60dp"
@@ -20,7 +20,7 @@
         android:minHeight="60dp"
         android:navigationIcon="@drawable/shape"
         android:titleTextColor="@color/white"
-        android:background="@color/trailer_bcg" />
+        android:background="@color/trailer_bcg" /> -->
 
     <TextView
         android:layout_width="wrap_content"

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -36,6 +37,9 @@ public class MoviesDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_details);
+
+        getSupportActionBar().setTitle(R.string.movie);
+
         final TextView movieId = (TextView) findViewById(R.id.movies_detalis_title);
         final TextView date = (TextView) findViewById(R.id.movies_detalis_release_date);
         final TextView temp = (TextView) findViewById(R.id.movies_detalis_genres);
@@ -49,6 +53,8 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         final ImageView play = (ImageView)findViewById(R.id.star_vote);
 
 
+
+
         movieID = getIntent().getIntExtra("id", 0);
 
         ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
@@ -58,7 +64,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 movie = response.body();
-                movieId.setText(movie.getOriginalTitle());
+                movieId.setText(movie.getTitle());
                 if (movie.getReleaseDate()!=(""))
                 {
                     DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
@@ -95,13 +101,14 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         .load(movie.getFullPosterPath(getApplicationContext()))
                         .override(360, 300)
                         .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .into((ImageView) findViewById(R.id.movies_detalis_image));
                 directors.setText(movie.getCredits().getDirectors());
                 writers.setText(movie.getCredits().getWriters());
                 about.setText(movie.getOverview());
                 stars.setText(movie.getCredits().getStars());
                 votes.setText(String.valueOf(movie.getVoteAverage()));
-                CastGridAdapter mAdapter = new CastGridAdapter(movie.getCredits().getCast());
+                CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), movie.getCredits().getCast(), "movie");
                 LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
                 recyclerView.setLayoutManager(mLayoutManager);
                 recyclerView.setAdapter(mAdapter);

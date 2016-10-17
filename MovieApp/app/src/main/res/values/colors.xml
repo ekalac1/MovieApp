@@ -12,9 +12,11 @@
     <color name="view_grey">#4c4c4c</color>
     <color name="white_dark">#cecece</color>
     <color name="gradient_start">#337b7b7b</color>
-    <color name="gradient_end">#fa000000</color>
+    <color name="gradient_end">#0f100f</color>
     <color name="movie_detalis_background">#0f100f</color>
     <color name="movie_separator">#1ad8d8d8</color>
     <color name="slide_menu">#27282a</color>
     <color name="trailer_bcg">#212121</color>
+    <color name="season_list">#191919</color>
+    <color name="black">#000000</color>
 </resources>

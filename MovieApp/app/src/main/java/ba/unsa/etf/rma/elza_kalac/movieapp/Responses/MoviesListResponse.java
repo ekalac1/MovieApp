@@ -1,29 +1,23 @@
-package ba.unsa.etf.rma.elza_kalac.movieapp.API;
+package ba.unsa.etf.rma.elza_kalac.movieapp.Responses;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 
 
-public class TvShowResponse  {
+public class MoviesListResponse {
 
     @SerializedName("page")
     private int page;
     @SerializedName("results")
-    private List<TvShow> results;
+    private List<Movie> results;
     @SerializedName("total_results")
     private int totalResults;
     @SerializedName("total_pages")
     private int totalPages;
 
-    public TvShowResponse(int page, List<TvShow> results, int totalResults, int totalPages) {
-        this.page = page;
-        this.results = results;
-        this.totalResults = totalResults;
-        this.totalPages = totalPages;
-    }
 
     public int getPage() {
         return page;
@@ -33,11 +27,11 @@ public class TvShowResponse  {
         this.page = page;
     }
 
-    public List<TvShow> getResults() {
+    public List<Movie> getResults() {
         return results;
     }
 
-    public void setResults(List<TvShow> results) {
+    public void setResults(List<Movie> results) {
         this.results = results;
     }
 
