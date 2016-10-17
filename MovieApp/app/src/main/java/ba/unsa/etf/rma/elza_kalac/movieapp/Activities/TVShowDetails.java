@@ -91,7 +91,7 @@ public class TVShowDetails extends AppCompatActivity {
                 movieId.setText(tvshow.getName());
                 intent.putExtra("name", tvshow.getName());
                 String seasonList="";
-                for (int i=1; i<=tvshow.getSeasons().size(); i++)
+                for (int i=1; i<tvshow.getSeasons().size(); i++)
                 {
                     seasonList=seasonList+String.valueOf(i)+" ";
                 }
@@ -137,7 +137,6 @@ public class TVShowDetails extends AppCompatActivity {
                 temp.setText(tvshow.getGenres());
                 Glide.with(getApplicationContext())
                         .load(tvshow.getFullPosterPath(getApplicationContext()))
-                        .override(360, 300)
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .into((ImageView) findViewById(R.id.tv_show_image));

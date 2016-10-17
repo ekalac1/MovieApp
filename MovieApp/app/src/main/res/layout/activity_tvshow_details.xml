@@ -13,8 +13,6 @@
         android:layout_gravity="top"
         android:orientation="vertical"
         tools:context=".Activities.TVShowDetails">
-
-
         <ImageView
             android:id="@+id/tv_show_image"
             android:layout_width="match_parent"
@@ -226,7 +224,6 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="70dp"
             android:id="@+id/years_list"
-            android:singleLine="false"
             android:textSize="12sp"
             android:textColor="@color/lightgrey"
             android:layout_marginBottom="16dp"
@@ -242,15 +239,6 @@
             android:layout_below="@+id/years_list"
             android:background="@color/view_grey" />
 
-        <ImageView
-            android:layout_width="30dp"
-            android:layout_height="180dp"
-            android:src="@drawable/right"
-            android:foregroundGravity="left"
-            android:contentDescription="@string/app_name"
-            android:layout_below="@+id/view_"
-            android:layout_alignParentEnd="true" />
-
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/tv_show_cast"
@@ -259,8 +247,16 @@
             android:layout_below="@+id/view_"
             android:layout_marginStart="16sp"
             android:layout_marginBottom="30dp"
-            android:layout_marginEnd="30dp"
+            android:layout_marginEnd="20dp"
             android:layout_marginTop="30dp" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/right"
+            android:contentDescription="@string/app_name"
+            android:layout_alignTop="@+id/tv_show_cast"
+            android:layout_alignParentEnd="true" />
 
     </RelativeLayout>
 </ScrollView>

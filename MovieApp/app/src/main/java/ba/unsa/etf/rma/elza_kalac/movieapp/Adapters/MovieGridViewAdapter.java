@@ -57,14 +57,14 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
 
         if (movie.getReleaseDate()!=(""))
         {
-            DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             Date startDate=new Date();
             try {
                 startDate = df.parse(movie.getReleaseDate());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            (new SimpleDateFormat("dd/mm/yyyy")).format(startDate);
+            (new SimpleDateFormat("dd/MM/yyyy")).format(startDate);
 
             String year = movie.getReleaseDate();
             year=year.substring(0, 4);
@@ -80,16 +80,8 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
 
         if (movie.getPosterPath()!=null)
         {
-
-            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            Display display = wm.getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            int width = size.x;
             Glide.with(context)
                     .load(movie.getFullPosterPath(getContext()))
-                    .override(width / 2, 750)
-                    .fitCenter()
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .placeholder(R.drawable.movies)
                     .into((ImageView) newView.findViewById(R.id.imageView));

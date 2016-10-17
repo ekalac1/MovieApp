@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu
-
     xmlns:android="http://schemas.android.com/apk/res/android">
-    <group
-        android:title="Proba">
 
+
+    <group
+        android:id="@+id/g1">
     <item android:id="@+id/open"
-        android:title="@string/movies"
+        android:title="@string/favourites"
         android:icon="@drawable/movie48" />
     <item android:id="@+id/save"
-        android:title="@string/Favourites"
+        android:title="@string/watchlist"
         android:icon="@drawable/rating48"/>
-
-    <item android:id="@+id/sett"
-        android:title="@string/Settings"
-        android:icon="@drawable/settings48"/>
+        <item android:id="@+id/sett"
+            android:title="@string/ratings"
+            android:icon="@drawable/settings48"/>
     </group>
+
+    <group
+        android:id="@+id/g2">
+        <item android:title="@string/Settings">
+        <menu>
+            <item android:id="@+id/settings"
+                android:title="@string/Settings"
+                android:icon="@drawable/settings48"/>
+        </menu>
+        </item>
+    </group>
+
+
+
 
 </menu>

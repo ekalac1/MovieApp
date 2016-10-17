@@ -3,10 +3,14 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">#000000</item>
+        <item name="colorPrimary">#212121</item>
+        <item name="actionMenuTextColor">@color/white</item>
         <item name="colorPrimaryDark">#000123</item>
+        <item name="android:textColor">@color/white</item>
         <item name="colorAccent">#f8ca00</item>
+        <item name="android:windowAnimationStyle">@null</item>
     </style>
+
 
 
 </resources>

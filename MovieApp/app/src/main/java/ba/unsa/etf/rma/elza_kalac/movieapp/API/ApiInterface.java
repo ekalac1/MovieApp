@@ -1,6 +1,7 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.API;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Cast;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Episode;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Season;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
@@ -54,6 +55,7 @@ public interface ApiInterface {
     @GET("person/{person_id}")
     Call<Cast> getActor(@Path("person_id") int id, @Query("api_key") String apiKey,  @Query("append_to_response") String append);
 
-
+    @GET("tv/{tv_id}/season/{season_number}/episode/{episode_number}")
+    Call<Episode> getEpisode(@Path("tv_id")int tvID, @Path("season_number") int seasonNumber, @Path("episode_number") int episodeNumber, @Query("api_key") String apiKey, @Query("append_to_response") String append);
 
 }

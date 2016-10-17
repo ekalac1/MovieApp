@@ -58,9 +58,9 @@ public class EpisodeAdapter extends ArrayAdapter<Episode> {
         episodeRate.setText(String.valueOf(df.format(episode.getVoteAverage())));
         episodeDate.setText(episode.getAirDate());
 
-        if (episode.getAirDate()!=(""))
+        if (episode.getAirDate()!=null)
         {
-            DateFormat d = new SimpleDateFormat("yyyy-mm-dd");
+            DateFormat d = new SimpleDateFormat("yyyy-MM-dd");
             Date startDate=new Date();
             try {
                 startDate = d.parse(episode.getAirDate());

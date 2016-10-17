@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- Permission to write to external storage -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -49,9 +48,15 @@
             android:name=".Activities.Seasons"
             android:parentActivityName=".Activities.TVShowDetails" />
         <activity android:name=".Activities.ActorDetails" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="23e7a64d301273a24eaad56605519cd65b6d0bee" />
+
+        <activity android:name=".Activities.EpisodeDetails"
+            android:parentActivityName=".Activities.Seasons">
+
+        </activity>
     </application>
 
 </manifest>
