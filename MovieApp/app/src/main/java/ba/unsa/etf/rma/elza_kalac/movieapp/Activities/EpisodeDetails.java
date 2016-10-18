@@ -59,9 +59,10 @@ public class EpisodeDetails extends AppCompatActivity {
             public void onResponse(Call<Episode> call, Response<Episode> response) {
 
                 Episode episode = response.body();
-                episodeTitle.setText(episode.getName());
                 if (episode.getAirDate()!=null)
                 {
+                    String year = episode.getAirDate().substring(0,4);
+                    episodeTitle.setText(episode.getName()+" ("+year+")");
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                     Date startDate=new Date();
                     try {
@@ -69,9 +70,9 @@ public class EpisodeDetails extends AppCompatActivity {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    episodeAirDate.setText((new SimpleDateFormat("dd. MMM yyyy.")).format(startDate).toString());
+                    episodeAirDate.setText((new SimpleDateFormat("dd. MMMM yyyy.")).format(startDate).toString());
                 }
-                episodeVote.setText(String.valueOf(episode.getVoteAverage()));
+                episodeVote.setText(String.valueOf(episode.getVoteAverage())+"/10");
                 episodeOverview.setText(episode.getOverview());
 
                 Glide.with(getApplicationContext())

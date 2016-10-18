@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="start|bottom"
     android:background="@color/colorPrimaryDark"
     android:fillViewport="true">
@@ -70,14 +71,15 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="15dp"
-                android:layout_height="15dp"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
                 android:src="@drawable/star_filled" />
 
             <TextView
                 android:id="@+id/episode_vote"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:textColor="@color/white_dark"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -120,10 +122,20 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"/>
 
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/right"
+            android:id="@+id/imageView4"
+            android:layout_below="@+id/view__"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@+id/episode_cast"/>
+
         <android.support.v7.widget.RecyclerView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/episode_cast"
+            android:layout_marginEnd="20dp"
             android:layout_below="@id/episode_cast_label"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="20dp"/>

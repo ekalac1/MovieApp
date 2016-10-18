@@ -32,7 +32,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SearchActivity extends AppCompatActivity {
-    private static final String TAG = MovieActivity.class.getSimpleName();
     public List<SearchResults> searchResult = new ArrayList<>();
     public String query;
 
@@ -122,7 +121,7 @@ public class SearchActivity extends AppCompatActivity {
         searchMenuItem.expandActionView();
         final GridView grid = (GridView) findViewById(R.id.gridView);
         searchView.setQuery(query, false);
-        searchView.setBackgroundResource(R.color.grey);
+        searchView.setBackgroundResource(R.color.trailer_bcg);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query1) {

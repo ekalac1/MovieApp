@@ -177,16 +177,29 @@
             android:layout_below="@+id/tv_show_about"
             android:background="@color/view_grey" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="end"
+            android:orientation="horizontal"
             android:id="@+id/see_all"
-            android:text="@string/SeeAll"
-            android:textSize="12sp"
-            android:textColor="@color/golden"
             android:layout_below="@+id/season_list"
-            android:layout_alignEnd="@+id/tv_show_about" />
+            android:layout_alignEnd="@+id/tv_show_about"
+            android:gravity="end">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/SeeAll"
+                android:textSize="12sp"
+                android:textColor="@color/golden" />
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:src="@drawable/arrow"/>
+
+        </LinearLayout>
+
+
 
         <TextView
             android:layout_width="wrap_content"

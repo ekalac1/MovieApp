@@ -98,7 +98,7 @@ public class ActorDetails extends AppCompatActivity {
                     }
                     actorBirth.setText(new SimpleDateFormat("dd. MMM yyyy").format(startDate).toString());
                 }
-                if (actor.getHomePage()==null)
+                if (actor.getHomePage().equals(""))
                 {
                     TextView temp = (TextView)findViewById(R.id.actor_web);
                     temp.setVisibility(View.GONE);
