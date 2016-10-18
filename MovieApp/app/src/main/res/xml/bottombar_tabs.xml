@@ -1,0 +1,20 @@
+<tabs>
+    <tab
+        id="@+id/tab_news"
+        icon="@drawable/newsicon"
+        title="@string/news"
+        inActiveColor="@color/white"
+        activeColor="@color/golden"/>
+    <tab
+        id="@+id/tab_movies"
+        icon="@drawable/movieicon"
+        title="@string/movies"
+        inActiveColor="@color/white"
+        activeColor="@color/golden"/>
+    <tab
+        id="@+id/tab_tvshows"
+        icon="@drawable/series"
+        title="@string/tv_shows"
+        inActiveColor="@color/white"
+        activeColor="@color/golden"/>
+</tabs>

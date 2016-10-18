@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    tools:context="ba.unsa.etf.rma.elza_kalac.movieapp.Activities.ActorDetails">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:context="ba.unsa.etf.rma.elza_kalac.movieapp.Activities.ActorDetails">
+
+        <ImageView
+            android:id="@+id/actor_detalis_image"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:focusableInTouchMode="true" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@drawable/gradient" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.55" />
+
+            <TextView
+                android:id="@+id/actor_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_marginEnd="16sp"
+                android:layout_marginStart="16sp"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/actor_date"
+            android:layout_below="@+id/actor_detalis_image"
+            android:layout_marginEnd="16sp"
+            android:layout_marginStart="16sp"
+            android:text="@string/birth_date"
+            android:textSize="14sp"
+            android:textColor="@color/white_dark"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/actor_birthday_date"
+            android:layout_alignTop="@+id/actor_date"
+            android:layout_toEndOf="@+id/actor_date"
+            android:layout_below="@+id/actor_detalis_image"
+            android:layout_marginEnd="16sp"
+            android:layout_marginStart="16sp"
+            android:textSize="14sp"
+            android:textColor="@color/lightgrey"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/actor_web"
+            android:layout_below="@+id/actor_birthday_date"
+            android:layout_marginEnd="16sp"
+            android:layout_marginStart="16sp"
+            android:text="@string/Website"
+            android:textSize="14sp"
+            android:textColor="@color/white_dark"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/actor_website"
+            android:textColor="@color/lightgrey"
+            android:textSize="14sp"
+            android:layout_marginEnd="16sp"
+            android:layout_below="@+id/actor_birthday_date"
+            android:layout_alignStart="@+id/actor_birthday_date"
+            android:layout_alignTop="@+id/actor_web"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/actor_biograpy_label"
+            android:layout_alignWithParentIfMissing="true"
+            android:text="@string/Biography"
+            android:textColor="@color/white_dark"
+            android:textSize="14sp"
+            android:layout_below="@+id/actor_website"
+            android:layout_marginTop="25dp"
+            android:layout_marginStart="16dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/actor_biograpy"
+            android:textColor="@color/white_dark"
+            android:textSize="14sp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_below="@+id/actor_biograpy_label"
+            android:layout_marginTop="10dp"
+            android:maxLines="5" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/actor_read_more_label"
+            android:layout_alignWithParentIfMissing="true"
+            android:text="@string/Read_more"
+            android:textSize="14sp"
+            android:textColor="@color/golden_transparent"
+            android:layout_below="@+id/actor_biograpy"
+            android:paddingTop="15dp"
+            android:paddingStart="16dp"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:id="@+id/view_"
+            android:layout_alignWithParentIfMissing="true"
+            android:background="@color/view_grey"
+            android:layout_below="@id/actor_read_more_label"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/actor_cast_label"
+            android:text="@string/filmography"
+            android:layout_marginStart="16dp"
+            android:textColor="@color/white_dark"
+            android:textSize="14sp"
+            android:layout_below="@+id/view_"
+            android:layout_marginBottom="25dp"/>
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/right"
+            android:id="@+id/imageView4"
+            android:layout_below="@+id/view_"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@+id/actor_roles"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/actor_roles"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_below="@+id/view_"
+            android:layout_marginEnd="20dp"
+            android:layout_alignStart="@+id/actor_cast_label"
+            android:layout_marginTop="22dp"
+            android:layout_marginBottom="22dp"/>
+
+
+    </RelativeLayout>
+
+</ScrollView>
