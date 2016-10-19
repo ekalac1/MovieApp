@@ -103,7 +103,6 @@ public class ActorDetails extends AppCompatActivity {
                     TextView temp = (TextView)findViewById(R.id.actor_web);
                     temp.setVisibility(View.GONE);
                 }
-
                 actorWeb.setText(actor.getHomePage());
                 actorBiography.setText(actor.getBiography());
 

@@ -42,10 +42,6 @@ public class SeasonsAdapter extends RecyclerView.Adapter<SeasonsAdapter.MyViewHo
                     selectedPos = getLayoutPosition();
                     notifyItemChanged(selectedPos);
 
-                  /*  EpisodeAdapter eAd=new EpisodeAdapter(c, R.layout.episode_element, reviewList.get(selectedPos).getEpisodes());
-                    e.setAdapter(eAd); */
-
-
                 }
             });
         }

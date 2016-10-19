@@ -110,6 +110,7 @@
             android:textColor="@color/white_dark"
             android:textSize="14sp"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
             android:layout_alignWithParentIfMissing="true"
             android:layout_below="@+id/actor_biograpy_label"
             android:layout_marginTop="10dp"
@@ -124,8 +125,8 @@
             android:textSize="14sp"
             android:textColor="@color/golden_transparent"
             android:layout_below="@+id/actor_biograpy"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="16dp"/>
+            android:paddingTop="15dp"
+            android:paddingStart="16dp"/>
 
         <View
             android:layout_width="match_parent"
@@ -149,12 +150,13 @@
             android:layout_marginBottom="25dp"/>
 
         <ImageView
-            android:layout_width="wrap_content"
+            android:layout_width="20dp"
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/right"
             android:id="@+id/imageView4"
             android:layout_below="@+id/view_"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@+id/actor_roles"/>
 
         <android.support.v7.widget.RecyclerView
             android:layout_width="match_parent"
@@ -162,9 +164,10 @@
             android:id="@+id/actor_roles"
             android:layout_alignWithParentIfMissing="true"
             android:layout_below="@+id/view_"
-            android:layout_marginEnd="30dp"
+            android:layout_marginEnd="20dp"
             android:layout_alignStart="@+id/actor_cast_label"
-            android:layout_marginTop="22dp" />
+            android:layout_marginTop="22dp"
+            android:layout_marginBottom="22dp"/>
 
 
     </RelativeLayout>

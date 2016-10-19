@@ -26,9 +26,6 @@ import java.util.List;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
-/**
- * Created by Laptop on 01.10.2016..
- */
 public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
 
     int resource;
@@ -61,14 +58,14 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
         TextView voteAverage = (TextView)newView.findViewById(R.id.tvShowAverage);
 
         if (tvShow.getFirstAirDate() != ("")) {
-            DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+            DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
             Date startDate = new Date();
             try {
                 startDate = df.parse(tvShow.getFirstAirDate());
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            (new SimpleDateFormat("dd/mm/yyyy")).format(startDate);
+            (new SimpleDateFormat("dd/MM/yyyy")).format(startDate);
 
             String year = tvShow.getFirstAirDate();
             year = year.substring(0, 4);
@@ -84,14 +81,8 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
 
         if (tvShow.getPosterPath()!=("")) {
 
-            WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-            Display display = wm.getDefaultDisplay();
-            Point size = new Point();
-            display.getSize(size);
-            int width = size.x;
             Glide.with(getContext())
                     .load(tvShow.getFullPosterPath(getContext()))
-                    .override(width / 2, 750)
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .placeholder(R.drawable.movies)
                     .into((ImageView) newView.findViewById(R.id.tvShowImageView));

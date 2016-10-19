@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.TransitionValues;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -30,7 +31,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MoviesDetailsActivity extends AppCompatActivity {
-    private static final String TAG = MovieActivity.class.getSimpleName();
     public Movie movie;
     public int movieID;
     @Override
@@ -65,16 +65,16 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 movie = response.body();
                 movieId.setText(movie.getTitle());
-                if (movie.getReleaseDate()!=(""))
+                if (movie.getReleaseDate()!=null)
                 {
-                    DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
+                    DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                     Date startDate=new Date();
                     try {
                         startDate = df.parse(movie.getReleaseDate());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    date.setText((new SimpleDateFormat("dd m yyyy")).format(startDate).toString());
+                    date.setText((new SimpleDateFormat("dd. MMM yyyy.")).format(startDate).toString());
                 }
                 else {
                     date.setText("");
@@ -88,21 +88,16 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                     View v = (View)findViewById(R.id.view___);
                     v.setVisibility(View.INVISIBLE);
                 }
-               /* if (movie.getCredits().getCast().isEmpty())
-                {
-                    View v = (View)findViewById(R.id.view__);
-                    v.setVisibility(View.GONE);
-                    recyclerView.setVisibility(View.GONE);
-                } */
                 if (movie.getVideos().getResults().size()==0)
                     play.setVisibility(View.INVISIBLE);
+
                 temp.setText(movie.getGenres());
                 Glide.with(getApplicationContext())
                         .load(movie.getFullPosterPath(getApplicationContext()))
-                        .override(360, 300)
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .into((ImageView) findViewById(R.id.movies_detalis_image));
+
                 directors.setText(movie.getCredits().getDirectors());
                 writers.setText(movie.getCredits().getWriters());
                 about.setText(movie.getOverview());
@@ -122,8 +117,6 @@ public class MoviesDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
-                // Log error here since request failed
-                Log.e(TAG, t.toString());
                 Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
             }
         });

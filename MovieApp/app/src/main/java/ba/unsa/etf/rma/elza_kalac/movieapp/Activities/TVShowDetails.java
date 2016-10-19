@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,7 +59,7 @@ public class TVShowDetails extends AppCompatActivity {
         final TextView votes = (TextView)findViewById(R.id.tv_show_votes);
         final TextView seasonsList = (TextView)findViewById(R.id.season_list);
         final TextView yearsList = (TextView)findViewById(R.id.years_list);
-        final TextView seeAll = (TextView)findViewById(R.id.see_all);
+        final LinearLayout seeAll = (LinearLayout) findViewById(R.id.see_all);
 
         yearsList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +92,7 @@ public class TVShowDetails extends AppCompatActivity {
                 movieId.setText(tvshow.getName());
                 intent.putExtra("name", tvshow.getName());
                 String seasonList="";
-                for (int i=1; i<=tvshow.getSeasons().size(); i++)
+                for (int i=1; i<tvshow.getSeasons().size(); i++)
                 {
                     seasonList=seasonList+String.valueOf(i)+" ";
                 }
@@ -137,7 +138,6 @@ public class TVShowDetails extends AppCompatActivity {
                 temp.setText(tvshow.getGenres());
                 Glide.with(getApplicationContext())
                         .load(tvshow.getFullPosterPath(getApplicationContext()))
-                        .override(360, 300)
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .into((ImageView) findViewById(R.id.tv_show_image));

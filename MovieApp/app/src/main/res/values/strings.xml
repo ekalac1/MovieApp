@@ -22,12 +22,11 @@
     <string name="Read_more">Read more</string>
     <string name="Hide">Hide</string>
     <string name="Reviews">Reviews: </string>
-    <string name="Favourites">Favourites</string>
     <string name="Settings">Settings</string>
     <string name="trailer_error">Trailer not available</string>
     <string name="MovieImageBaseAdress">http://image.tmdb.org/t/p/</string>
     <string name="MovieImageWidth500">w500</string>
-    <string name="SeeAll">See all ></string>
+    <string name="SeeAll">See all  </string>
     <string name="Seasons">Seasons: </string>
     <string name="Years">Years: </string>
     <string name="Seasons1">Season</string>
@@ -36,5 +35,10 @@
     <string name="Biography">Biography:</string>
     <string name="actor">Actor</string>
     <string name="filmography">Filmography</string>
+    <string name="favourites">Your Favorites</string>
+    <string name="watchlist">Your Watchlist</string>
+    <string name="ratings">Your Raitings</string>
+    <string name="cast">Cast: </string>
+
 
 </resources>

@@ -15,6 +15,8 @@ public class CreditsResponse {
     public List<Cast> getCast() {return cast; }
     @SerializedName("crew")
     private List<Crew> crew;
+    @SerializedName("guest_stars")
+    private List<Cast> guestStars;
 
     public String getDirectors()
     {
@@ -50,7 +52,13 @@ public class CreditsResponse {
         if (stars.length()!=0)
             return stars.substring(0, stars.length()-2);
         else return "";
+    }
 
+    public List<Cast> getEpisodeCast()
+    {
+        List<Cast> result=cast;
+        result.addAll(guestStars);
+        return result;
     }
 
 

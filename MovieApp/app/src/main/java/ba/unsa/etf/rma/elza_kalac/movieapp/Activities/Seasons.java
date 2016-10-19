@@ -1,5 +1,6 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 
+import android.content.Intent;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -33,6 +34,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.CastGridAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.EpisodeAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.SeasonsAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.SeasonsGridAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Episode;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.SearchResults;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Season;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
@@ -44,23 +46,37 @@ import retrofit2.Response;
 public class Seasons extends AppCompatActivity {
 
     private static final String TAG = MovieActivity.class.getSimpleName();
-    public TvShow tvshow;
+    TvShow tvshow;
     int tvshowID;
+    List<Episode> episodeList;
+    String tvShowName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seasons);
         tvshowID = getIntent().getIntExtra("id", 0);
-
-
-
-        getSupportActionBar().setTitle(getIntent().getStringExtra("name"));
+        tvShowName=getIntent().getStringExtra("name");
+        getSupportActionBar().setTitle(tvShowName);
 
         final TextView seasons = (TextView)findViewById(R.id.seasons_text);
         final GridView seasonsList = (GridView)findViewById(R.id.list);
         final TextView seasonYear = (TextView)findViewById(R.id.seasons_year);
         final ListView episodesList = (ListView)findViewById(R.id.episode_list);
+
+        episodesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent (getApplicationContext(), EpisodeDetails.class);
+
+                intent.putExtra("tvID", tvshowID);
+                intent.putExtra("seasonID", episodeList.get(position).getSeasonNumber());
+                intent.putExtra("episodeID", position+1);
+                intent.putExtra("name", tvShowName);
+                startActivity(intent);
+            }
+        });
+
         seasons.setText(R.string.Seasons1);
 
         final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
@@ -90,6 +106,7 @@ public class Seasons extends AppCompatActivity {
                 Season season = response.body();
                 EpisodeAdapter e = new EpisodeAdapter(getApplicationContext(), R.layout.episode_element, season.getEpisodes());
                 episodesList.setAdapter(e);
+                episodeList=season.getEpisodes();
                 seasonYear.setText("Season 1 ("+season.getAir_date().substring(0,4)+")");
             }
 
@@ -111,6 +128,7 @@ public class Seasons extends AppCompatActivity {
                         Season season = response.body();
                         EpisodeAdapter e = new EpisodeAdapter(getApplicationContext(), R.layout.episode_element, season.getEpisodes());
                         episodesList.setAdapter(e);
+                        episodeList=season.getEpisodes();
                         seasonYear.setText("Season " + String.valueOf(position+1)+" ("+ season.getAir_date().substring(0, 4)+")");
 
                     }
