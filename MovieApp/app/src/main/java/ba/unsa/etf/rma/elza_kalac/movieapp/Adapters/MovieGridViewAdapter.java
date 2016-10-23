@@ -64,12 +64,10 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            (new SimpleDateFormat("dd/MM/yyyy")).format(startDate);
-
             String year = movie.getReleaseDate();
             year=year.substring(0, 4);
             movieName.setText(movie.getTitle() + " (" + year + ")");
-            date.setText((new SimpleDateFormat("dd MMMM yyyy")).format(startDate).toString());
+            date.setText((new SimpleDateFormat("d MMMM yyyy")).format(startDate).toString());
         }
         else {
                 date.setText("");

@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-    xmlns:android="http://schemas.android.com/apk/res/android">
-
-
-    <group
-        android:id="@+id/g1">
-    <item android:id="@+id/open"
-        android:title="@string/favourites"
-        android:icon="@drawable/movie48" />
-    <item android:id="@+id/save"
-        android:title="@string/watchlist"
-        android:icon="@drawable/rating48"/>
-        <item android:id="@+id/sett"
-            android:title="@string/ratings"
-            android:icon="@drawable/settings48"/>
-    </group>
-
-    <group
-        android:id="@+id/g2">
-        <item android:title="@string/Settings">
-        <menu>
-            <item android:id="@+id/settings"
-                android:title="@string/Settings"
-                android:icon="@drawable/settings48"/>
-        </menu>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/g1">
+        <item android:title="@string/more">
+            <menu>
+                <item
+                    android:id="@+id/favorites"
+                    android:icon="@drawable/movie48"
+                    android:title="@string/favourites" />
+                <item
+                    android:id="@+id/watchlist"
+                    android:icon="@drawable/rating48"
+                    android:title="@string/watchlist" />
+                <item
+                    android:id="@+id/ratings"
+                    android:icon="@drawable/settings48"
+                    android:title="@string/ratings" />
+            </menu>
         </item>
     </group>
 
-
+    <group android:id="@+id/g2">
+        <item android:title="@string/more">
+            <menu>
+                <item
+                    android:id="@+id/settings"
+                    android:icon="@drawable/settings48"
+                    android:title="@string/Settings" />
+            </menu>
+        </item>
+    </group>
 
 
 </menu>

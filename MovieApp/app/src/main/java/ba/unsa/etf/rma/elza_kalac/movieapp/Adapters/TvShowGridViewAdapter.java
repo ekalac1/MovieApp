@@ -65,12 +65,10 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-            (new SimpleDateFormat("dd/MM/yyyy")).format(startDate);
-
             String year = tvShow.getFirstAirDate();
             year = year.substring(0, 4);
             tvShowName.setText(tvShow.getName() + " (" + year + ")");
-            date.setText((new SimpleDateFormat("dd MMM yyyy")).format(startDate).toString());
+            date.setText((new SimpleDateFormat("d MMM yyyy")).format(startDate).toString());
         } else {
             date.setText("");
             tvShowName.setText(tvShow.getName());

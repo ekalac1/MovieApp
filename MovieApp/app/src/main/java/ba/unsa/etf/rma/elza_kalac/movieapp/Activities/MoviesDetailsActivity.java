@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionValues;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -133,7 +134,15 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), R.string.trailer_error, Toast.LENGTH_LONG).show();
             }
         });
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
 
-
+        return super.onOptionsItemSelected(item);
     }
 }
