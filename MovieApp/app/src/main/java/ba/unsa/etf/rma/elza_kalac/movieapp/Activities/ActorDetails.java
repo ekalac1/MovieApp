@@ -13,8 +13,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-import org.w3c.dom.Text;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,7 +42,7 @@ public class ActorDetails extends AppCompatActivity {
         actorID=getIntent().getIntExtra("id", 0);
 
         final TextView actorName =(TextView)findViewById(R.id.actor_name);
-        final TextView actorBirth = (TextView)findViewById(R.id.actor_birthday_date);
+        final TextView actorBirth = (TextView)findViewById(R.id.actor_birthday);
         final TextView actorWeb = (TextView)findViewById(R.id.actor_website);
         final TextView actorBiography = (TextView)findViewById(R.id.actor_biograpy);
         final TextView actorReadMore = (TextView)findViewById(R.id.actor_read_more_label);
@@ -100,7 +98,7 @@ public class ActorDetails extends AppCompatActivity {
                 }
                 if (actor.getHomePage().equals(""))
                 {
-                    TextView temp = (TextView)findViewById(R.id.actor_web);
+                    TextView temp = (TextView)findViewById(R.id.actor_web_label);
                     temp.setVisibility(View.GONE);
                 }
                 actorWeb.setText(actor.getHomePage());

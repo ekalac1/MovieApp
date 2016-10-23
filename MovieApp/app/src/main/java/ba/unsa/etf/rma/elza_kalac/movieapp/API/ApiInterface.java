@@ -1,10 +1,13 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.API;
 
+import android.support.design.widget.TabLayout;
+
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Cast;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Episode;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Season;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.AuthentificationResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.SearchResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TvShowResponse;
@@ -57,5 +60,15 @@ public interface ApiInterface {
 
     @GET("tv/{tv_id}/season/{season_number}/episode/{episode_number}")
     Call<Episode> getEpisode(@Path("tv_id")int tvID, @Path("season_number") int seasonNumber, @Path("episode_number") int episodeNumber, @Query("api_key") String apiKey, @Query("append_to_response") String append);
+
+    @GET("authentication/token/new")
+    Call<AuthentificationResponse> getToken(@Query("api_key") String apiKey);
+
+    @GET("authentication/token/validate_with_login")
+    Call<AuthentificationResponse> Login(@Query("api_key") String apiKey, @Query("username") String username, @Query("password") String password, @Query("request_token")  String requestToken);
+
+    @GET("authentication/session/new")
+    Call<AuthentificationResponse> CreateSession(@Query("api_key") String apiKey, @Query("request_token") String requestToken);
+
 
 }

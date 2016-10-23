@@ -52,7 +52,7 @@ public class SearchActivity extends AppCompatActivity {
                     searchResult = response.body().getResults();
                     for (int i = 0; i < searchResult.size(); i++) {
 
-                        if (searchResult.get(i).getMediaType().equals("person") || (searchResult.get(i).getMediaType().equals("tv") & searchResult.get(i).getPopularity()==1))
+                        if (searchResult.get(i).getMediaType().equals("person") )
                             searchResult.remove(i);
                     }
                     final SearchResultsAdapter adapter = new SearchResultsAdapter(getApplicationContext(), R.layout.search_view_element, searchResult);
@@ -94,7 +94,7 @@ public class SearchActivity extends AppCompatActivity {
                     public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
                         List<SearchResults> temp = response.body().getResults();
                         for (int i = 0; i < temp.size(); i++) {
-                            if (temp.get(i).getMediaType().equals("person") || (temp.get(i).getMediaType().equals("tv") & temp.get(i).getPopularity()==1))
+                            if (temp.get(i).getMediaType().equals("person") )
                                 temp.remove(i);
                         }
                         searchResult.addAll(temp);
@@ -137,6 +137,11 @@ public class SearchActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
                             searchResult = response.body().getResults();
+                            for (int i = 0; i < searchResult.size(); i++) {
+
+                                if (searchResult.get(i).getMediaType().equals("person") )
+                                    searchResult.remove(i);
+                            }
                             final SearchResultsAdapter adapter = new SearchResultsAdapter(getApplicationContext(), R.layout.search_view_element, searchResult);
                             grid.setAdapter(adapter);
                         }

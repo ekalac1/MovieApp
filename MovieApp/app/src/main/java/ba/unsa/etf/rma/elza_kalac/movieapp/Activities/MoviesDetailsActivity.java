@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.TransitionValues;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -44,10 +42,10 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         final TextView movieId = (TextView) findViewById(R.id.movies_detalis_title);
         final TextView date = (TextView) findViewById(R.id.movies_detalis_release_date);
         final TextView temp = (TextView) findViewById(R.id.movies_detalis_genres);
-        final TextView directors = (TextView)findViewById(R.id.directors_name);
+        final TextView directors = (TextView)findViewById(R.id.directors);
         final TextView about = (TextView)findViewById(R.id.about);
-        final TextView writers = (TextView)findViewById(R.id.writers_list);
-        final TextView stars= (TextView)findViewById(R.id.stars_list);
+        final TextView writers = (TextView)findViewById(R.id.writers);
+        final TextView stars= (TextView)findViewById(R.id.stars);
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         final RecyclerView review = (RecyclerView)findViewById(R.id.reviews);
         final TextView votes = (TextView)findViewById(R.id.votes);
@@ -84,7 +82,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
 
                 if (movie.getReviews().getResults().size()==0)
                 {
-                    TextView r = (TextView)findViewById(R.id.reviewtext);
+                    TextView r = (TextView)findViewById(R.id.review_label);
                     r.setVisibility(View.INVISIBLE);
                     View v = (View)findViewById(R.id.view___);
                     v.setVisibility(View.INVISIBLE);

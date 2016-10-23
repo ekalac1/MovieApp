@@ -16,11 +16,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
@@ -52,13 +48,13 @@ public class TVShowDetails extends AppCompatActivity {
         final TextView movieId = (TextView) findViewById(R.id.tv_show_detalis_title);
         final TextView date = (TextView) findViewById(R.id.tv_show_detalis_release_date);
         final TextView temp = (TextView) findViewById(R.id.tv_show_detalis_genres);
-        final TextView directors = (TextView)findViewById(R.id.tv_show_directors_name);
+        final TextView directors = (TextView)findViewById(R.id.tv_show_directors);
         final TextView about = (TextView)findViewById(R.id.tv_show_about);
-        final TextView writers = (TextView)findViewById(R.id.tv_show_writers_list);
-        final TextView stars= (TextView)findViewById(R.id.tv_show_stars_list);
+        final TextView writers = (TextView)findViewById(R.id.tv_show_writers);
+        final TextView stars= (TextView)findViewById(R.id.tv_show_stars);
         final RecyclerView cast = (RecyclerView) findViewById(R.id.tv_show_cast);
         final TextView votes = (TextView)findViewById(R.id.tv_show_votes);
-        final TextView seasonsList = (TextView)findViewById(R.id.season_list);
+        final TextView seasonsList = (TextView)findViewById(R.id.seasons);
         final TextView yearsList = (TextView)findViewById(R.id.years_list);
         final LinearLayout seeAll = (LinearLayout) findViewById(R.id.see_all);
 
@@ -101,23 +97,13 @@ public class TVShowDetails extends AppCompatActivity {
 
                 if (tvshow.getFirstAirDate()!=null)
                 {
-                    DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
-                    Date startDate=new Date();
-                    Date endDate = new Date();
-                    try {
-                        startDate = df.parse(tvshow.getFirstAirDate());
-                        if (tvshow.getLastAirDate()!="")
-                            endDate=df.parse(tvshow.getLastAirDate());
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-                    String tempe=((new SimpleDateFormat("yyyy")).format(startDate).toString());
+                    String tempe=tvshow.getFirstAirDate().substring(0,4);
                     int startYear=Integer.parseInt(tempe);
                     String m = "-";
                     String temp2="";
                     if (tvshow.getLastAirDate()!=null)
                     {
-                        temp2=(new SimpleDateFormat("yyyy")).format(endDate).toString();
+                        temp2=tvshow.getLastAirDate().substring(0,4);
 
                         int endYear=Integer.parseInt(temp2);
                         List<Integer> yearList = new ArrayList<Integer>();
@@ -148,14 +134,14 @@ public class TVShowDetails extends AppCompatActivity {
                 else
                 {
                     directors.setVisibility(View.GONE);
-                    TextView temp = (TextView)findViewById(R.id.tv_show_directors);
+                    TextView temp = (TextView)findViewById(R.id.tv_show_directors_label);
                     temp.setVisibility(View.GONE);
                 }
                 if ((tvshow.getCredits().getWriters()!=""))
                 writers.setText(tvshow.getCredits().getWriters());
                 else {
                     writers.setVisibility(View.GONE);
-                    TextView temp = (TextView)findViewById(R.id.tv_show_writers);
+                    TextView temp = (TextView)findViewById(R.id.tv_show_writers_label);
                     temp.setVisibility(View.GONE);
                 }
                 about.setText(tvshow.getOverview());
@@ -170,9 +156,11 @@ public class TVShowDetails extends AppCompatActivity {
                 else
                 {
                     stars.setVisibility(View.GONE);
-                    TextView temp = (TextView)findViewById(R.id.tv_show_stars);
+                    TextView temp = (TextView)findViewById(R.id.tv_show_stars_label);
                     temp.setVisibility(View.GONE);
                     cast.setVisibility(View.GONE);
+                    ImageView tempImage =(ImageView)findViewById(R.id.cast_navigation);
+                    tempImage.setVisibility(View.GONE);
                 }
                 votes.setText(String.valueOf(tvshow.getVoteAverage()));
 

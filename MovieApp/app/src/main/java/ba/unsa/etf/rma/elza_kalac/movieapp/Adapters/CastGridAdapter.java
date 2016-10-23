@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -67,7 +68,7 @@ public class CastGridAdapter extends RecyclerView.Adapter<CastGridAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         final Cast cast = castsList.get(position);
         if (cast.getName() != null)
             holder.name.setText(cast.getName());
@@ -79,15 +80,15 @@ public class CastGridAdapter extends RecyclerView.Adapter<CastGridAdapter.MyView
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(holder.cast_image);
         if (activity != "actor")
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent myIntent = new Intent(context, ActorDetails.class);
-                    myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    myIntent.putExtra("id", cast.getId());
-                    context.startActivity(myIntent);
-                }
-            });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent myIntent = new Intent(context, ActorDetails.class);
+                myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                myIntent.putExtra("id", cast.getId());
+                context.startActivity(myIntent);
+            }
+        });
     }
 
     @Override
