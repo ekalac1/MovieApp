@@ -73,11 +73,10 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    date.setText((new SimpleDateFormat("dd. MMM yyyy.")).format(startDate).toString());
+                    date.setText((new SimpleDateFormat("d. MMM yyyy.")).format(startDate).toString());
                 }
                 else {
                     date.setText("");
-
                 }
 
                 if (movie.getReviews().getResults().size()==0)
@@ -97,8 +96,32 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .into((ImageView) findViewById(R.id.movies_detalis_image));
 
-                directors.setText(movie.getCredits().getDirectors());
-                writers.setText(movie.getCredits().getWriters());
+                if (movie.getCredits().getDirectors().equals(""))
+                {
+                    TextView temp =( TextView) findViewById(R.id.directors_label);
+                    temp.setVisibility(View.INVISIBLE);
+                }
+                else
+                {
+                    directors.setText(movie.getCredits().getDirectors());
+                    TextView temp =( TextView) findViewById(R.id.directors_label);
+                    temp.setText(R.string.directors);
+                }
+
+
+                if (movie.getCredits().getWriters().equals(""))
+                {
+                    writers.setVisibility(View.GONE);
+                    TextView temp =( TextView) findViewById(R.id.writers_label);
+                    temp.setVisibility(View.GONE);
+                }
+                else
+                {
+                    writers.setText(movie.getCredits().getWriters());
+                    TextView temp =( TextView) findViewById(R.id.writers_label);
+                    temp.setText(R.string.writers);
+                }
+
                 about.setText(movie.getOverview());
                 stars.setText(movie.getCredits().getStars());
                 votes.setText(String.valueOf(movie.getVoteAverage()));
@@ -110,8 +133,16 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 RecyclerView.LayoutManager reviewLayoutManager = new LinearLayoutManager(getApplicationContext());
                 review.setLayoutManager(reviewLayoutManager);
                 review.setAdapter(reviewListAdapter);
-
-
+                ImageView moviesImage = (ImageView)findViewById(R.id.movies_detalis_image);
+                if (movie.getVideos().getResults().size() != 0)
+                    moviesImage.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            Intent i = new Intent(getApplicationContext(), TrailerActivity.class);
+                            i.putExtra("id", movieID);
+                            startActivity(i);
+                        }
+                    });
             }
 
             @Override
@@ -120,18 +151,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             }
         });
 
-        ImageView moviesImage = (ImageView)findViewById(R.id.movies_detalis_image);
-        moviesImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(getApplicationContext(), TrailerActivity.class);
-                i.putExtra("id", movieID);
-                if (movie.getVideos().getResults().size() != 0)
-                    startActivity(i);
-                else
-                    Toast.makeText(getApplicationContext(), R.string.trailer_error, Toast.LENGTH_LONG).show();
-            }
-        });
+
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

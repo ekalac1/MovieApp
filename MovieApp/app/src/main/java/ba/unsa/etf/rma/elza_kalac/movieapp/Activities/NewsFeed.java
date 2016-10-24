@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IdRes;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -37,11 +39,38 @@ public class NewsFeed extends AppCompatActivity {
     public ListView entrysList;
     public Feed proba;
     private ActionBarDrawerToggle mToogle;
+    NavigationView slideMenu;
+    DrawerLayout mDrawerLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_feed);
+
+        slideMenu = (NavigationView)findViewById(R.id.navigationSlide);
+
+        slideMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item) {
+
+                switch (item.getItemId())
+                {
+                    case R.id.settings :
+                        startActivity(new Intent(getApplicationContext(), Settings.class));
+                        break;
+                    case R.id.favorites :
+                        startActivity(new Intent(getApplicationContext(), UsersList.class));
+                        break;
+                    case R.id.watchlist :
+                        startActivity(new Intent(getApplicationContext(), UsersList.class));
+                        break;
+                    case R.id.ratings :
+                        startActivity(new Intent(getApplicationContext(), UsersList.class));
+                        break;
+                }
+                return false;
+            }
+        });
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.newsFeed);
@@ -65,7 +94,7 @@ public class NewsFeed extends AppCompatActivity {
             }
         });
 
-        DrawerLayout mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mToogle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name);
 
         mDrawerLayout.addDrawerListener(mToogle);
@@ -137,18 +166,22 @@ public class NewsFeed extends AppCompatActivity {
     private Boolean exit = false;
     @Override
     public void onBackPressed() {
-        if (exit) {
-            finish(); // finish activity
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(Gravity.LEFT);
         } else {
-            Toast.makeText(this, "Press Back again to Exit.",
-                    Toast.LENGTH_SHORT).show();
-            exit = true;
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    exit = false;
-                }
-            }, 3 * 1000);
+            if (exit) {
+                finish(); // finish activity
+            } else {
+                Toast.makeText(this, "Press Back again to Exit.",
+                        Toast.LENGTH_SHORT).show();
+                exit = true;
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        exit = false;
+                    }
+                }, 3 * 1000);
+            }
         }
     }
 }

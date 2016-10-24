@@ -75,7 +75,6 @@
             android:layout_below="@+id/tv_show_image"
             android:layout_marginStart="16sp"
             android:layout_marginTop="27dp"
-            android:text="@string/directors"
             android:textColor="@color/white_dark"
             android:textSize="14sp" />
 
@@ -98,7 +97,6 @@
             android:layout_alignWithParentIfMissing="true"
             android:layout_marginStart="16sp"
             android:layout_below="@+id/tv_show_directors"
-            android:text="@string/writers"
             android:textColor="@color/white_dark"
             android:textSize="14sp" />
 
@@ -112,8 +110,6 @@
             android:layout_alignTop="@+id/tv_show_writers_label"
             android:layout_toEndOf="@+id/tv_show_writers_label"
             android:textSize="14sp" />
-
-
         <TextView
             android:id="@+id/tv_show_stars_label"
             android:layout_width="wrap_content"
@@ -121,10 +117,8 @@
             android:layout_marginStart="16sp"
             android:layout_below="@+id/tv_show_writers_label"
             android:layout_alignWithParentIfMissing="true"
-            android:text="@string/stars"
             android:textColor="@color/white_dark"
             android:textSize="14sp" />
-
         <TextView
             android:id="@+id/tv_show_stars"
             android:layout_width="wrap_content"
@@ -146,7 +140,6 @@
             android:layout_marginTop="25dp"
             android:contentDescription="@string/app_name"
             android:src="@drawable/star_filled" />
-
         <TextView
             android:id="@+id/tv_show_votes"
             android:layout_alignWithParentIfMissing="true"
@@ -175,6 +168,7 @@
             android:id="@+id/view__"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
+            android:layout_alignWithParentIfMissing="true"
             android:layout_below="@+id/tv_show_about"
             android:background="@color/view_grey" />
 
@@ -182,11 +176,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:layout_alignWithParentIfMissing="true"
             android:id="@+id/see_all"
-            android:layout_below="@+id/seasons"
+            android:layout_below="@+id/tv_show_seasons_label"
             android:layout_alignEnd="@+id/tv_show_about"
             android:gravity="end">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -205,12 +199,13 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/Seasons"
+            android:id="@+id/tv_show_seasons_label"
+            android:text="@string/Seasons1"
             android:layout_marginStart="16sp"
             android:layout_marginTop="16sp"
-            android:id="@+id/tv_show_seasons_label"
             android:layout_below="@+id/view__"
             android:textColor="@color/white_dark"
+            android:layout_alignWithParentIfMissing="true"
             android:textSize="12sp"/>
         <TextView
             android:layout_width="wrap_content"
@@ -219,6 +214,7 @@
             android:id="@+id/seasons"
             android:layout_below="@+id/view__"
             android:layout_marginEnd="70dp"
+            android:layout_alignWithParentIfMissing="true"
             android:layout_toEndOf="@+id/tv_show_seasons_label"
             android:layout_alignTop="@+id/tv_show_seasons_label"
             android:textColor="@color/lightgrey"
@@ -227,8 +223,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16sp"
-            android:id="@+id/tv_shows_years_label"
             android:text="@string/Years"
+            android:id="@+id/tv_shows_years_label"
+            android:layout_alignWithParentIfMissing="true"
             android:layout_marginBottom="16sp"
             android:layout_below="@id/seasons"
             android:textColor="@color/white_dark"
@@ -245,15 +242,15 @@
             android:layout_below="@+id/seasons"
             android:layout_toEndOf="@+id/tv_shows_years_label"
             android:layout_alignTop="@+id/tv_shows_years_label"
+            android:layout_alignWithParentIfMissing="true"
             />
         <View
             android:id="@+id/view_"
+            android:layout_alignWithParentIfMissing="true"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:layout_below="@+id/years_list"
             android:background="@color/view_grey" />
-
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/tv_show_cast"
             android:layout_width="match_parent"
@@ -262,7 +259,9 @@
             android:layout_marginStart="16sp"
             android:layout_marginBottom="30dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginTop="30dp" />
+            android:layout_marginTop="30dp"
+            android:layout_alignWithParentIfMissing="true"
+            />
 
         <ImageView
             android:layout_width="20dp"
@@ -271,7 +270,9 @@
             android:src="@drawable/right"
             android:contentDescription="@string/app_name"
             android:layout_alignTop="@+id/tv_show_cast"
-            android:layout_alignParentEnd="true" />
+            android:layout_alignParentEnd="true"
+            android:layout_alignWithParentIfMissing="true"
+            />
 
     </RelativeLayout>
 </ScrollView>

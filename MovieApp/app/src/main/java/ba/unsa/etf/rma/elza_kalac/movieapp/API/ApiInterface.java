@@ -7,6 +7,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Episode;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Season;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.Account;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.AuthentificationResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.SearchResponse;
@@ -27,9 +28,6 @@ public interface ApiInterface {
 
     @GET("movie/top_rated")
     Call<MoviesListResponse> getTopRatedMovies(@Query("api_key") String apiKey,  @Query("page") int page);
-
-    @GET("search/movie")
-    Call<MoviesListResponse> getSearchedMovies(@Query("api_key") String apiKey, @Query("query") String query, @Query("page") int page );
 
    @GET("movie/{id}")
     Call<Movie> getMovieDetails(@Path("id") int id, @Query("api_key") String apiKey, @Query("append_to_response") String append);
@@ -69,6 +67,12 @@ public interface ApiInterface {
 
     @GET("authentication/session/new")
     Call<AuthentificationResponse> CreateSession(@Query("api_key") String apiKey, @Query("request_token") String requestToken);
+
+    @GET("account")
+    Call<Account> GetAccount(@Query("api_key") String apiKey, @Query("session_id") String session_id);
+
+    @GET("account/{account_id}/favorite/movies")
+    Call<MoviesListResponse>  getFavorites(@Path("account_id") Integer accountId, @Query("api_key") String apiKey, @Query("session_id") String session_id);
 
 
 }

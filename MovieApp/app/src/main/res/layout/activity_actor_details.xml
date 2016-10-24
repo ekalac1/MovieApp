@@ -54,7 +54,6 @@
             android:layout_below="@+id/actor_detalis_image"
             android:layout_marginEnd="16sp"
             android:layout_marginStart="16sp"
-            android:text="@string/birth_date"
             android:textSize="14sp"
             android:textColor="@color/white_dark"/>
 
@@ -77,7 +76,6 @@
             android:layout_below="@+id/actor_birthday"
             android:layout_marginEnd="16sp"
             android:layout_marginStart="16sp"
-            android:text="@string/Website"
             android:textSize="14sp"
             android:textColor="@color/white_dark"/>
         <TextView
@@ -96,10 +94,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/actor_biograpy_label"
             android:layout_alignWithParentIfMissing="true"
-            android:text="@string/Biography"
             android:textColor="@color/white_dark"
             android:textSize="14sp"
-            android:layout_below="@+id/actor_website"
+            android:layout_below="@+id/actor_web_label"
             android:layout_marginTop="25dp"
             android:layout_marginStart="16dp"/>
 
@@ -121,7 +118,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/actor_read_more_label"
             android:layout_alignWithParentIfMissing="true"
-            android:text="@string/Read_more"
             android:textSize="14sp"
             android:textColor="@color/golden_transparent"
             android:layout_below="@+id/actor_biograpy"

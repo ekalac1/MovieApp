@@ -48,7 +48,6 @@ public class TrailerActivity extends YouTubeBaseActivity implements YouTubePlaye
     private int movieID;
     public Movie movie;
     public String youtubeKey;
-    private static final String TAG = MovieActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

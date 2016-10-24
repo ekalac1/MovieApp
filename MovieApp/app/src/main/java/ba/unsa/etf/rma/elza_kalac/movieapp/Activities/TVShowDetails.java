@@ -30,9 +30,8 @@ import retrofit2.Response;
 
 public class TVShowDetails extends AppCompatActivity {
 
-    private static final String TAG = MovieActivity.class.getSimpleName();
-    public TvShow tvshow;
-    public int tvshowID;
+     TvShow tvshow;
+     int tvshowID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,12 +88,13 @@ public class TVShowDetails extends AppCompatActivity {
                 movieId.setText(tvshow.getName());
                 intent.putExtra("name", tvshow.getName());
                 String seasonList="";
+                if (tvshow.getSeasons().size()==1) seasonList=String.valueOf(1);
+                else
                 for (int i=1; i<tvshow.getSeasons().size(); i++)
                 {
                     seasonList=seasonList+String.valueOf(i)+" ";
                 }
                 seasonsList.setText(seasonList);
-
                 if (tvshow.getFirstAirDate()!=null)
                 {
                     String tempe=tvshow.getFirstAirDate().substring(0,4);
@@ -104,16 +104,15 @@ public class TVShowDetails extends AppCompatActivity {
                     if (tvshow.getLastAirDate()!=null)
                     {
                         temp2=tvshow.getLastAirDate().substring(0,4);
-
                         int endYear=Integer.parseInt(temp2);
                         List<Integer> yearList = new ArrayList<Integer>();
                         String list = "";
-                        for (int i=startYear; i<endYear; i++)
+                        for (int i=startYear; i<=endYear; i++)
                         {
                             yearList.add(i);
                             list=list+String.valueOf(i)+" ";
                         }
-                        yearsList.setText(list);
+                            yearsList.setText(list);
                     }
                     if (tvshow.getStatus().equals("Returning Series"))
                     date.setText("Tv Series ("+tempe+m+" )");
@@ -121,6 +120,22 @@ public class TVShowDetails extends AppCompatActivity {
                 }
                 else {
                     date.setText("");
+                    {
+                        TextView temp = (TextView)findViewById(R.id.tv_show_seasons_label);
+                        temp.setVisibility(View.GONE);
+                    }
+                    {
+                        TextView temp = (TextView)findViewById(R.id.tv_shows_years_label);
+                        temp.setVisibility(View.GONE);
+                    }
+                    {
+                        LinearLayout temp = (LinearLayout)findViewById(R.id.see_all);
+                        temp.setVisibility(View.GONE);
+                    }
+                    {
+                        View temp = (View)findViewById(R.id.view_);
+                        temp.setVisibility(View.GONE);
+                    }
                 }
                 temp.setText(tvshow.getGenres());
                 Glide.with(getApplicationContext())
@@ -130,7 +145,12 @@ public class TVShowDetails extends AppCompatActivity {
                         .into((ImageView) findViewById(R.id.tv_show_image));
 
                 if (tvshow.getCredits().getDirectors()!="")
-                directors.setText(tvshow.getCredits().getDirectors());
+                {
+                    TextView temp = (TextView)findViewById(R.id.tv_show_directors_label);
+                    temp.setText(R.string.directors);
+                    directors.setText(tvshow.getCredits().getDirectors());
+                }
+
                 else
                 {
                     directors.setVisibility(View.GONE);
@@ -138,7 +158,12 @@ public class TVShowDetails extends AppCompatActivity {
                     temp.setVisibility(View.GONE);
                 }
                 if ((tvshow.getCredits().getWriters()!=""))
-                writers.setText(tvshow.getCredits().getWriters());
+                {
+                    TextView temp = (TextView)findViewById(R.id.tv_show_writers_label);
+                    temp.setText(R.string.writers);
+                    writers.setText(tvshow.getCredits().getWriters());
+                }
+
                 else {
                     writers.setVisibility(View.GONE);
                     TextView temp = (TextView)findViewById(R.id.tv_show_writers_label);
@@ -147,6 +172,8 @@ public class TVShowDetails extends AppCompatActivity {
                 about.setText(tvshow.getOverview());
                 if (tvshow.getCredits().getStars()!="")
                 {
+                    TextView temp = (TextView)findViewById(R.id.tv_show_stars_label);
+                    temp.setText(R.string.stars);
                     stars.setText(tvshow.getCredits().getStars());
                     CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), tvshow.getCredits().getCast(), "tv");
                     LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -163,13 +190,9 @@ public class TVShowDetails extends AppCompatActivity {
                     tempImage.setVisibility(View.GONE);
                 }
                 votes.setText(String.valueOf(tvshow.getVoteAverage()));
-
             }
-
             @Override
             public void onFailure(Call<TvShow> call, Throwable t) {
-                // Log error here since request failed
-                Log.e(TAG, t.toString());
                 Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
             }
         });
@@ -181,7 +204,6 @@ public class TVShowDetails extends AppCompatActivity {
                 finish();
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

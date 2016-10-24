@@ -74,9 +74,6 @@ public class ActorDetails extends AppCompatActivity {
                 }
             }
         });
-
-
-
         final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<Cast> call = apiService.getActor(actorID, ApiClient.API_KEY, "combined_credits");
         call.enqueue(new Callback<Cast>() {
@@ -94,15 +91,49 @@ public class ActorDetails extends AppCompatActivity {
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-                    actorBirth.setText(new SimpleDateFormat("dd. MMM yyyy").format(startDate).toString());
+                    TextView temp= (TextView)findViewById(R.id.actor_date_label);
+                    temp.setText(R.string.birth_date);
+                    actorBirth.setText(new SimpleDateFormat("d. MMM yyyy").format(startDate).toString());
                 }
-                if (actor.getHomePage().equals(""))
+                else
+                {
+                    actorBirth.setVisibility(View.GONE);
+                    TextView temp= (TextView)findViewById(R.id.actor_date_label);
+                    temp.setVisibility(View.GONE);
+
+                }
+                if (actor.getHomePage()==null || actor.getHomePage().equals(""))
                 {
                     TextView temp = (TextView)findViewById(R.id.actor_web_label);
                     temp.setVisibility(View.GONE);
+                    actorWeb.setVisibility(View.GONE);
                 }
-                actorWeb.setText(actor.getHomePage());
-                actorBiography.setText(actor.getBiography());
+                else {
+                    actorWeb.setText(actor.getHomePage());
+                    TextView temp = (TextView)findViewById(R.id.actor_web_label);
+                    temp.setText(R.string.Website);
+                }
+                if (actor.getBiography()==null || actor.getBiography().equals(""))
+                {
+                    actorBiography.setVisibility(View.GONE);
+                    TextView temp = (TextView)findViewById(R.id.actor_biograpy_label);
+                    TextView readMore = (TextView)findViewById(R.id.actor_read_more_label);
+                    readMore.setVisibility(View.GONE);
+                    temp.setVisibility(View.GONE);
+                }
+                else
+                {
+                    actorBiography.setText(actor.getBiography());
+                    TextView temp = (TextView)findViewById(R.id.actor_biograpy_label);
+                    TextView readMore = (TextView)findViewById(R.id.actor_read_more_label);
+                    readMore.setText(R.string.Read_more);
+                    temp.setText(R.string.Biography);
+                }
+
+
+
+
+
 
                 Glide.with(getApplicationContext())
                         .load(actor.getFullPosterPath(getApplicationContext()))
