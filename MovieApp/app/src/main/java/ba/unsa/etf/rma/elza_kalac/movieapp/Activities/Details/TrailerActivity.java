@@ -1,4 +1,4 @@
-package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
+package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details;
 
 
 import android.content.Intent;
@@ -35,6 +35,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.CastGridAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.ReviewListAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.BuildConfig;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
+import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,11 +49,16 @@ public class TrailerActivity extends YouTubeBaseActivity implements YouTubePlaye
     private int movieID;
     public Movie movie;
     public String youtubeKey;
+    ApiInterface apiService;
+    MovieApplication mApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trailer);
+
+        mApp=(MovieApplication)getApplicationContext();
+        apiService = mApp.getApiService();
 
        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP)
        {
@@ -75,9 +81,8 @@ public class TrailerActivity extends YouTubeBaseActivity implements YouTubePlaye
         movieID = getIntent().getIntExtra("id", 0);
         name = (TextView) findViewById(R.id.trailer_name);
         overview = (TextView) findViewById(R.id.trailer_overview);
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<Movie> call = apiService.getMovieDetails(movieID, ApiClient.API_KEY, "videos");
 
+        Call<Movie> call = apiService.getMovieDetails(movieID, ApiClient.API_KEY, "videos");
         call.enqueue(new Callback<Movie>() {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:id="@+id/g1">
-        <item android:title="@string/more">
+        <item android:title="@string/your_list">
             <menu>
                 <item
                     android:id="@+id/favorites"
@@ -26,6 +26,10 @@
                     android:id="@+id/settings"
                     android:icon="@drawable/settings48"
                     android:title="@string/Settings" />
+                <item
+                    android:id="@+id/logout"
+                    android:icon="@drawable/settings48"
+                    android:title="@string/logout" />
             </menu>
         </item>
     </group>

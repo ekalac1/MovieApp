@@ -1,11 +1,10 @@
-package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
+package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,6 +22,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.CastGridAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
+import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,11 +32,16 @@ public class TVShowDetails extends AppCompatActivity {
 
      TvShow tvshow;
      int tvshowID;
+    ApiInterface apiService;
+    MovieApplication mApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tvshow_details);
+
+        mApp=(MovieApplication)getApplicationContext();
+        apiService = mApp.getApiService();
 
         getSupportActionBar().setTitle(R.string.tv_show);
 
@@ -78,7 +83,6 @@ public class TVShowDetails extends AppCompatActivity {
             }
         });
 
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<TvShow> call = apiService.getTvShowDetails(tvshowID, ApiClient.API_KEY, "credits");
 
         call.enqueue(new Callback<TvShow>() {

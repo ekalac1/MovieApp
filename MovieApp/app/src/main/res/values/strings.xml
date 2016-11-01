@@ -40,6 +40,20 @@
     <string name="ratings">Your Raitings</string>
     <string name="cast">Cast: </string>
     <string name="more">MORE</string>
+    <string name="Sign_in">Sign in to Popular Movies</string>
+    <string name="message">Sign in to rate movies, manage your Watchlist, and more.</string>
+    <string name="not_now">NOT NOW</string>
+    <string name="sign">SIGN IN</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">LOGIN</string>
+    <string name="logout">Logout</string>
+    <string name="newacc">Create a new account</string>
+    <string name="details">Forgot your details?</string>
+    <string name="your_list">YOUR LIST</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

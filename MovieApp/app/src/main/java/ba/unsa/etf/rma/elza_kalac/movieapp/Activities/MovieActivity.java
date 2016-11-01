@@ -1,5 +1,6 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -22,7 +24,9 @@ import com.crashlytics.android.Crashlytics;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MoviesDetailsActivity;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.PagerAdapters.MoviesPagerAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import io.fabric.sdk.android.Fabric;
 
@@ -32,12 +36,15 @@ public class MovieActivity extends AppCompatActivity {
     private ActionBarDrawerToggle mToogle;
     NavigationView slideMenu;
     DrawerLayout mDrawerLayout;
+    MovieApplication mApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
+
+        mApp=(MovieApplication)getApplicationContext();
 
         ActionBar actionBar = getSupportActionBar();
 
@@ -51,7 +58,6 @@ public class MovieActivity extends AppCompatActivity {
         layoutParams.rightMargin = 40;
         imageView.setLayoutParams(layoutParams);
         actionBar.setCustomView(imageView);
-        actionBar.setDisplayShowTitleEnabled(true);
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 
         actionBar.setDisplayShowTitleEnabled(true);
@@ -80,16 +86,34 @@ public class MovieActivity extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.settings:
+                        if (mApp.getAccount()==null) Alert();
+                        else
                         startActivity(new Intent(getApplicationContext(), Settings.class));
                         break;
                     case R.id.favorites:
-                        startActivity(new Intent(getApplicationContext(), UsersList.class));
+                        if (mApp.getAccount()==null) Alert();
+                        else
+                        startActivity(new Intent(getApplicationContext(), Favorites.class));
                         break;
                     case R.id.watchlist:
-                        startActivity(new Intent(getApplicationContext(), UsersList.class));
+                        if (mApp.getAccount()==null) Alert();
+                        else
+                        startActivity(new Intent(getApplicationContext(), Watchlist.class));
                         break;
                     case R.id.ratings:
-                        startActivity(new Intent(getApplicationContext(), UsersList.class));
+                        if (mApp.getAccount()==null) Alert();
+                        else
+                        startActivity(new Intent(getApplicationContext(), Ratings.class));
+                        break;
+                    case R.id.logout:
+
+                        mApp.setAccount(null);
+                        mDrawerLayout.closeDrawer(Gravity.LEFT);
+                        Toast.makeText(getApplicationContext(), "Logout done", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(), MovieActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                         break;
                 }
                 return false;
@@ -187,5 +211,23 @@ public class MovieActivity extends AppCompatActivity {
                 }, 3 * 1000);
             }
         }
+    }
+
+    private void Alert()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MovieActivity.this);
+        builder.setMessage(R.string.message)
+                .setTitle(R.string.Sign_in)
+                .setPositiveButton(R.string.sign, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(getApplicationContext(), Login.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                }).show();
     }
 }

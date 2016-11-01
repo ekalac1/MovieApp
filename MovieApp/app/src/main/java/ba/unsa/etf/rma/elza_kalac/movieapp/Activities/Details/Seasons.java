@@ -1,60 +1,49 @@
-package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
+package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details;
 
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.CastGridAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.EpisodeDetails;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.EpisodeAdapter;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.SeasonsAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.SeasonsGridAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Episode;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.SearchResults;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Season;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
+import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Seasons extends AppCompatActivity {
-
-    private static final String TAG = MovieActivity.class.getSimpleName();
     TvShow tvshow;
     int tvshowID;
     List<Episode> episodeList;
     String tvShowName;
+    ApiInterface apiService;
+    MovieApplication mApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seasons);
+
+        mApp=(MovieApplication)getApplicationContext();
+        apiService = mApp.getApiService();
+
         tvshowID = getIntent().getIntExtra("id", 0);
         tvShowName=getIntent().getStringExtra("name");
         getSupportActionBar().setTitle(tvShowName);
@@ -79,8 +68,8 @@ public class Seasons extends AppCompatActivity {
 
         seasons.setText(R.string.Seasons1);
 
-        final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-        Call<TvShow> call = apiService.getTvShowDetails(tvshowID, ApiClient.API_KEY, "credits");
+
+        Call<TvShow> call = mApp.getApiService().getTvShowDetails(tvshowID, ApiClient.API_KEY, "credits");
         call.enqueue(new Callback<TvShow>() {
             @Override
             public void onResponse(Call<TvShow> call, Response<TvShow> response) {
@@ -92,8 +81,6 @@ public class Seasons extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<TvShow> call, Throwable t) {
-                // Log error here since request failed
-                Log.e(TAG, t.toString());
                 Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
             }
         });
@@ -112,8 +99,6 @@ public class Seasons extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Season> call, Throwable t) {
-                // Log error here since request failed
-                Log.e(TAG, t.toString());
                 Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
             }
         });
@@ -135,8 +120,6 @@ public class Seasons extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<Season> call, Throwable t) {
-                        // Log error here since request failed
-                        Log.e(TAG, t.toString());
                         Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
                     }
                 });
@@ -144,10 +127,7 @@ public class Seasons extends AppCompatActivity {
 
             }
         });
-
-
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -156,10 +136,8 @@ public class Seasons extends AppCompatActivity {
                 finish();
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
-
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
     }

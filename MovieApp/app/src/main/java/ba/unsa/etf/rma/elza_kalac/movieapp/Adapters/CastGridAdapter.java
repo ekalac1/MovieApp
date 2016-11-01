@@ -8,14 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.ActorDetails;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.ActorDetails;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Cast;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Review;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;

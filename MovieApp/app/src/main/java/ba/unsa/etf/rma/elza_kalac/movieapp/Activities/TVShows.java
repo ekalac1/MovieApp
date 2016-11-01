@@ -22,6 +22,7 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.PagerAdapters.TvShowsPagerAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
 public class TVShows extends AppCompatActivity {
@@ -35,25 +36,34 @@ public class TVShows extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tvshows);
 
-        slideMenu = (NavigationView)findViewById(R.id.navigationSlide);
+        slideMenu = (NavigationView) findViewById(R.id.navigationSlide);
 
         slideMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
 
-                switch (item.getItemId())
-                {
-                    case R.id.settings :
+                switch (item.getItemId()) {
+                    case R.id.settings:
                         startActivity(new Intent(getApplicationContext(), Settings.class));
                         break;
-                    case R.id.favorites :
-                        startActivity(new Intent(getApplicationContext(), UsersList.class));
+                    case R.id.favorites:
+                        startActivity(new Intent(getApplicationContext(), Favorites.class));
                         break;
-                    case R.id.watchlist :
-                        startActivity(new Intent(getApplicationContext(), UsersList.class));
+                    case R.id.watchlist:
+                        startActivity(new Intent(getApplicationContext(), Watchlist.class));
                         break;
-                    case R.id.ratings :
-                        startActivity(new Intent(getApplicationContext(), UsersList.class));
+                    case R.id.ratings:
+                        startActivity(new Intent(getApplicationContext(), Ratings.class));
+                        break;
+                    case R.id.logout:
+                        MovieApplication mApp=(MovieApplication)getApplicationContext();
+                        mApp.setAccount(null);
+                        mDrawerLayout.closeDrawer(Gravity.LEFT);
+                        Toast.makeText(getApplicationContext(), "Logout done", Toast.LENGTH_LONG).show();
+                        Intent intent = new Intent(getApplicationContext(), MovieActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                         break;
                 }
                 return false;

@@ -1,4 +1,4 @@
-package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
+package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,13 +22,16 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.CastGridAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Cast;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
+import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ActorDetails extends AppCompatActivity {
-    public int actorID;
+    int actorID;
+    ApiInterface apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +77,8 @@ public class ActorDetails extends AppCompatActivity {
                 }
             }
         });
-        final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        MovieApplication mApp = (MovieApplication)getApplicationContext();
+        apiService = mApp.getApiService();
         Call<Cast> call = apiService.getActor(actorID, ApiClient.API_KEY, "combined_credits");
         call.enqueue(new Callback<Cast>() {
             @Override

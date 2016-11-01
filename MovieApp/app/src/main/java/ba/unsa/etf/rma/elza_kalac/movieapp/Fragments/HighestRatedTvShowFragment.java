@@ -15,9 +15,9 @@ import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
+import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TvShowResponse;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.MovieActivity;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.TVShowDetails;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.TVShowDetails;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.TvShowGridViewAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.EndlessScrollListener;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
@@ -28,7 +28,9 @@ import retrofit2.Response;
 
 public class HighestRatedTvShowFragment extends Fragment {
 
-    public List<TvShow> tvShow;
+    List<TvShow> tvShow;
+    ApiInterface apiService;
+    MovieApplication mApp;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -36,7 +38,8 @@ public class HighestRatedTvShowFragment extends Fragment {
 
         final GridView grid = (GridView) view.findViewById(R.id.highest_rated_tv_shows);
 
-        final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        mApp = (MovieApplication)getActivity().getApplicationContext();
+        apiService = mApp.getApiService();
 
         Call<TvShowResponse> call = apiService.getHighestRatedTvShows(ApiClient.API_KEY, 1);
         call.enqueue(new Callback<TvShowResponse>() {

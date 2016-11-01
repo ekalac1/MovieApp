@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="top"
-        tools:context=".Activities.MoviesDetailsActivity">
+        tools:context=".Activities.Details.MoviesDetailsActivity">
             <ImageView
                 android:id="@+id/movies_detalis_image"
                 android:layout_width="match_parent"
@@ -36,8 +36,9 @@
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:id="@+id/star_vote"
+                    android:id="@+id/play"
                     android:layout_marginTop="80dp"
+                    android:visibility="invisible"
                     android:layout_marginStart="160dp"
                     android:src="@drawable/playvideo"
                     android:layout_marginBottom="60dp" />
@@ -151,6 +152,18 @@
             android:layout_marginStart="3dp"
             android:textColor="@color/white"
             android:layout_alignTop="@id/vote_star"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rate_this_label"
+            android:layout_toEndOf="@+id/votes"
+            android:layout_alignTop="@id/vote_star"
+            android:textSize="14sp"
+            android:text="Rate this"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/white"
+            />
 
         <TextView
             android:id="@+id/about"

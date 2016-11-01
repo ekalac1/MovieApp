@@ -6,11 +6,11 @@
     android:layout_height="match_parent"
     tools:context="ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UsersList">
 
-    <TextView
+    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/favourites"
-        android:textSize="20sp"
-        android:gravity="center"/>
+        android:id="@+id/logout"
+        android:text="LOGOUT"
+        android:layout_centerInParent="true"/>
 
 </RelativeLayout>

@@ -2,6 +2,7 @@ package ba.unsa.etf.rma.elza_kalac.movieapp.Responses;
 
 
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.internal.Streams;
 
 public class AuthentificationResponse {
     @SerializedName("success")

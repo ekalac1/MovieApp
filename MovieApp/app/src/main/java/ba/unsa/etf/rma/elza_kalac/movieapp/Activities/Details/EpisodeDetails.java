@@ -1,4 +1,4 @@
-package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
+package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +22,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.CastGridAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Episode;
+import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,6 +32,7 @@ public class EpisodeDetails extends AppCompatActivity {
 
     int tvShowId, seasonID, episodeID;
     String tvShowTitle;
+    ApiInterface apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +53,8 @@ public class EpisodeDetails extends AppCompatActivity {
         final TextView episodeOverview = (TextView) findViewById(R.id.episode_overview);
         final RecyclerView episodeCast = (RecyclerView) findViewById(R.id.episode_cast);
 
-
-        final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+        MovieApplication mApp = (MovieApplication)getApplicationContext();
+        apiService = mApp.getApiService();
         Call<Episode> call = apiService.getEpisode(tvShowId, seasonID, episodeID, ApiClient.API_KEY, "credits");
         call.enqueue(new Callback<Episode>() {
             @Override

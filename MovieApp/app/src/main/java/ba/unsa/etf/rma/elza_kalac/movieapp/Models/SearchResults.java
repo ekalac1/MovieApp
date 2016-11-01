@@ -10,9 +10,6 @@ import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
-/**
- * Created by Laptop on 03.10.2016..
- */
 public class SearchResults {
 
     @SerializedName("budget")

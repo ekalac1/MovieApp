@@ -8,6 +8,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".MovieApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -32,7 +33,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Activities.MoviesDetailsActivity"
+            android:name=".Activities.Details.MoviesDetailsActivity"
             android:parentActivityName=".Activities.MovieActivity" />
         <activity
             android:name=".Activities.SearchActivity"
@@ -40,25 +41,40 @@
         <activity android:name=".Activities.NewsFeed" />
         <activity android:name=".Activities.TVShows" />
         <activity
-            android:name=".Activities.TrailerActivity"
-            android:parentActivityName=".Activities.MoviesDetailsActivity" />
+            android:name=".Activities.Details.TrailerActivity"
+            android:parentActivityName=".Activities.Details.MoviesDetailsActivity" />
         <activity
-            android:name=".Activities.TVShowDetails"
+            android:name=".Activities.Details.TVShowDetails"
             android:parentActivityName=".Activities.TVShows" />
         <activity
-            android:name=".Activities.Seasons"
-            android:parentActivityName=".Activities.TVShowDetails" />
-        <activity android:name=".Activities.ActorDetails" />
+            android:name=".Activities.Details.Seasons"
+            android:parentActivityName=".Activities.Details.TVShowDetails" />
+        <activity android:name=".Activities.Details.ActorDetails" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="23e7a64d301273a24eaad56605519cd65b6d0bee" />
 
         <activity
-            android:name=".Activities.EpisodeDetails"
-            android:parentActivityName=".Activities.Seasons" />
-        <activity android:name=".Activities.Settings" />
-        <activity android:name=".Activities.UsersList"></activity>
+            android:name=".Activities.Details.EpisodeDetails"
+            android:parentActivityName=".Activities.Details.Seasons" />
+        <activity
+            android:name=".Activities.Settings"
+            android:parentActivityName=".Activities.MovieActivity" />
+        <activity
+            android:name=".Activities.Login"
+            android:parentActivityName=".Activities.MovieActivity"
+            android:windowSoftInputMode="stateAlwaysVisible|adjustResize" />
+        <activity
+            android:name=".Activities.Favorites"
+            android:parentActivityName=".Activities.MovieActivity" />
+        <activity
+            android:name=".Activities.Watchlist"
+            android:parentActivityName=".Activities.MovieActivity" />
+        <activity
+            android:name=".Activities.Ratings"
+            android:parentActivityName=".Activities.MovieActivity" />
+        <activity android:name=".Activities.Rating"></activity>
     </application>
 
 </manifest>

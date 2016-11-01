@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +21,9 @@ import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MoviesDetailsActivity;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.TVShowDetails;
+import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.SearchResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.SearchResultsAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.EndlessScrollListener;
@@ -32,8 +34,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SearchActivity extends AppCompatActivity {
-    public List<SearchResults> searchResult = new ArrayList<>();
-    public String query;
+    List<SearchResults> searchResult = new ArrayList<>();
+    String query;
+    ApiInterface apiService;
+    MovieApplication mApp;
 
 
     @Override
@@ -44,7 +48,8 @@ public class SearchActivity extends AppCompatActivity {
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         query = sharedPref.getString("idSet", "");
         if (query != "") {
-            ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+            mApp = (MovieApplication)getApplicationContext();
+            apiService = mApp.getApiService();
             Call<SearchResponse> call = apiService.getSearchedItems(ApiClient.API_KEY, query, 1);
             call.enqueue(new Callback<SearchResponse>() {
                 @Override
@@ -86,8 +91,8 @@ public class SearchActivity extends AppCompatActivity {
         grid.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
-                ApiInterface apiService =
-                        ApiClient.getClient().create(ApiInterface.class);
+
+                apiService = mApp.getApiService();
                 Call<SearchResponse> call = apiService.getSearchedItems(ApiClient.API_KEY, query, page);
                 call.enqueue(new Callback<SearchResponse>() {
                     @Override

@@ -1,10 +1,14 @@
-package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
+package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -21,10 +25,15 @@ import java.util.Date;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
+import ba.unsa.etf.rma.elza_kalac.movieapp.API.PostBody;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Login;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Rating;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.CastGridAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.ReviewListAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
+import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,12 +41,73 @@ import retrofit2.Response;
 public class MoviesDetailsActivity extends AppCompatActivity {
     public Movie movie;
     public int movieID;
+    ApiInterface apiService;
+    MovieApplication mApp;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_details);
 
+        mApp=(MovieApplication)getApplicationContext();
+        apiService = mApp.getApiService();
+
+        ActionBar actionBar = getSupportActionBar();
+
         getSupportActionBar().setTitle(R.string.movie);
+
+        actionBar.setTitle(R.string.movies);
+        ImageView imageView = new ImageView(actionBar.getThemedContext());
+        imageView.setScaleType(ImageView.ScaleType.CENTER);
+        imageView.setImageResource(android.R.drawable.ic_menu_view);
+        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
+                ActionBar.LayoutParams.WRAP_CONTENT,
+                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT | Gravity.CENTER_VERTICAL);
+        layoutParams.rightMargin = 40;
+        imageView.setLayoutParams(layoutParams);
+        actionBar.setCustomView(imageView);
+        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setDisplayShowTitleEnabled(true);
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mApp.getAccount()==null)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(MoviesDetailsActivity.this);
+                    builder.setMessage(R.string.message)
+                            .setTitle(R.string.Sign_in)
+                            .setPositiveButton(R.string.sign, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    Intent intent = new Intent(getApplicationContext(), Login.class);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    startActivity(intent);
+                                }
+                            })
+                            .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                }
+                            }).show();
+                }
+                else
+                {
+                    PostBody post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
+                    Call<PostResponse> call = apiService.MarkWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY,  mApp.getAccount().getSessionId(), post);
+                    call.enqueue(new Callback<PostResponse>() {
+                        @Override
+                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                            if (response.body().getStatusCode()==1)
+                                Toast.makeText(getApplicationContext(), "Movie added to watchlist", Toast.LENGTH_LONG).show();
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<PostResponse> call, Throwable t) {
+                        }
+                    });
+                }
+
+            }
+        });
 
         final TextView movieId = (TextView) findViewById(R.id.movies_detalis_title);
         final TextView date = (TextView) findViewById(R.id.movies_detalis_release_date);
@@ -49,14 +119,11 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         final RecyclerView review = (RecyclerView)findViewById(R.id.reviews);
         final TextView votes = (TextView)findViewById(R.id.votes);
-        final ImageView play = (ImageView)findViewById(R.id.star_vote);
-
-
-
+        final ImageView play = (ImageView)findViewById(R.id.play);
+        final TextView rate = (TextView)findViewById(R.id.rate_this_label);
 
         movieID = getIntent().getIntExtra("id", 0);
 
-        ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
         Call<Movie> call = apiService.getMovieDetails(movieID, ApiClient.API_KEY, "credits,reviews,videos");
 
         call.enqueue(new Callback<Movie>() {
@@ -64,6 +131,35 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 movie = response.body();
                 movieId.setText(movie.getTitle());
+                rate.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mApp.getAccount()!=null)
+                        {
+                            Intent intent = (new Intent(getApplicationContext(), Rating.class));
+                            intent.putExtra("movieID", movieID);
+                            startActivity(intent);
+                        }
+                        else
+                        {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(MoviesDetailsActivity.this);
+                            builder.setMessage(R.string.message)
+                                    .setTitle(R.string.Sign_in)
+                                    .setPositiveButton(R.string.sign, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            Intent intent = new Intent(getApplicationContext(), Login.class);
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                            startActivity(intent);
+                                        }
+                                    })
+                                    .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                        }
+                                    }).show();
+                        }
+
+                    }
+                });
                 if (movie.getReleaseDate()!=null)
                 {
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -86,8 +182,9 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                     View v = (View)findViewById(R.id.view___);
                     v.setVisibility(View.INVISIBLE);
                 }
-                if (movie.getVideos().getResults().size()==0)
-                    play.setVisibility(View.INVISIBLE);
+                if (movie.getVideos().getResults().size()!=0)
+
+                    play.setVisibility(View.VISIBLE);
 
                 temp.setText(movie.getGenres());
                 Glide.with(getApplicationContext())
