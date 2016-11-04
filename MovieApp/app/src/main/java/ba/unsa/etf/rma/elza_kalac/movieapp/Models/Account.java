@@ -6,9 +6,14 @@ import com.google.gson.annotations.SerializedName;
 public class Account {
     @SerializedName("username")
     private String username;
+    @SerializedName("name")
+    private String name;
     @SerializedName("id")
     private int accountId;
     private String sessionId;
+
+
+    public String getName(){ return name; }
 
     public String getSessionId() {
         return sessionId;

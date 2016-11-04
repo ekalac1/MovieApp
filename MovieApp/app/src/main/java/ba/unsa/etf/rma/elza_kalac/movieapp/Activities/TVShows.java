@@ -1,5 +1,6 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -21,6 +23,10 @@ import android.widget.Toast;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Favorites;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Ratings;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Settings;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Watchlist;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.PagerAdapters.TvShowsPagerAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
@@ -30,11 +36,14 @@ public class TVShows extends AppCompatActivity {
     private ActionBarDrawerToggle mToogle;
     NavigationView slideMenu;
     DrawerLayout mDrawerLayout;
+    MovieApplication mApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tvshows);
+
+        mApp=(MovieApplication)getApplicationContext();
 
         slideMenu = (NavigationView) findViewById(R.id.navigationSlide);
 
@@ -44,22 +53,30 @@ public class TVShows extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.settings:
+                        if (mApp.getAccount()==null) Alert();
+                        else
                         startActivity(new Intent(getApplicationContext(), Settings.class));
                         break;
                     case R.id.favorites:
+                        if (mApp.getAccount()==null) Alert();
+                        else
                         startActivity(new Intent(getApplicationContext(), Favorites.class));
                         break;
                     case R.id.watchlist:
+                        if (mApp.getAccount()==null) Alert();
+                        else
                         startActivity(new Intent(getApplicationContext(), Watchlist.class));
                         break;
                     case R.id.ratings:
+                        if (mApp.getAccount()==null) Alert();
+                        else
                         startActivity(new Intent(getApplicationContext(), Ratings.class));
                         break;
                     case R.id.logout:
                         MovieApplication mApp=(MovieApplication)getApplicationContext();
                         mApp.setAccount(null);
                         mDrawerLayout.closeDrawer(Gravity.LEFT);
-                        Toast.makeText(getApplicationContext(), "Logout done", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.logout_done, Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getApplicationContext(), MovieActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -180,8 +197,7 @@ public class TVShows extends AppCompatActivity {
             if (exit) {
                 finish(); // finish activity
             } else {
-                Toast.makeText(this, "Press Back again to Exit.",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.exit, Toast.LENGTH_SHORT).show();
                 exit = true;
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -191,5 +207,22 @@ public class TVShows extends AppCompatActivity {
                 }, 3 * 1000);
             }
         }
+    }
+    private void Alert()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(TVShows.this);
+        builder.setMessage(R.string.message)
+                .setTitle(R.string.Sign_in)
+                .setPositiveButton(R.string.sign, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(getApplicationContext(), Login.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                }).show();
     }
 }

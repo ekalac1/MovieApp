@@ -1,38 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:id="@+id/g1">
-        <item android:title="@string/your_list">
+        <item
+            android:id="@+id/g1"
+            android:title="@string/your_list">
             <menu>
                 <item
                     android:id="@+id/favorites"
-                    android:icon="@drawable/movie48"
+                    android:icon="@drawable/favorite"
                     android:title="@string/favourites" />
                 <item
                     android:id="@+id/watchlist"
-                    android:icon="@drawable/rating48"
+                    android:icon="@drawable/watchlist"
                     android:title="@string/watchlist" />
                 <item
                     android:id="@+id/ratings"
-                    android:icon="@drawable/settings48"
+                    android:icon="@drawable/ratings"
                     android:title="@string/ratings" />
             </menu>
         </item>
-    </group>
 
-    <group android:id="@+id/g2">
-        <item android:title="@string/more">
+        <item
+            android:id="@+id/g2"
+            android:title="@string/more">
             <menu>
                 <item
                     android:id="@+id/settings"
-                    android:icon="@drawable/settings48"
+                    android:icon="@drawable/settings"
                     android:title="@string/Settings" />
                 <item
                     android:id="@+id/logout"
-                    android:icon="@drawable/settings48"
+                    android:icon="@drawable/login"
                     android:title="@string/logout" />
             </menu>
         </item>
-    </group>
-
-
 </menu>

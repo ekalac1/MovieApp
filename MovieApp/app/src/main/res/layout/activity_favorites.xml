@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/grey"
     app:theme="@style/AppTheme"
-    tools:context="ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Favorites">
+    tools:context="ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Favorites">
     <android.support.design.widget.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="match_parent"

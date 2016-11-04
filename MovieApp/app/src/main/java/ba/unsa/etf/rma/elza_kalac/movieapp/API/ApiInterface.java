@@ -18,7 +18,6 @@ import retrofit2.http.POST;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
-
 public interface ApiInterface {
 
     @GET("movie/popular")
@@ -73,22 +72,22 @@ public interface ApiInterface {
     Call<Account> GetAccount(@Query("api_key") String apiKey, @Query("session_id") String session_id);
 
     @GET("account/{account_id}/favorite/movies")
-    Call<MoviesListResponse> getFavoritesMovies(@Path("account_id") Integer accountId, @Query("api_key") String apiKey, @Query("session_id") String session_id);
+    Call<MoviesListResponse> getFavoritesMovies(@Path("account_id") Integer accountId, @Query("api_key") String apiKey, @Query("session_id") String session_id, @Query("sort_by") String sortBy);
 
     @GET("account/{account_id}/watchlist/movies")
-    Call<MoviesListResponse> getMoviesWatchList(@Path("account_id") Integer accountId, @Query("api_key") String apiKey, @Query("session_id") String session_id);
+    Call<MoviesListResponse> getMoviesWatchList(@Path("account_id") Integer accountId, @Query("api_key") String apiKey, @Query("session_id") String session_id, @Query("sort_by") String sortBy);
 
     @GET("account/{account_id}/rated/movies")
-    Call<MoviesListResponse> getMoviesRatings(@Path("account_id") Integer accountId, @Query("api_key") String apiKey, @Query("session_id") String session_id);
+    Call<MoviesListResponse> getMoviesRatings(@Path("account_id") Integer accountId, @Query("api_key") String apiKey, @Query("session_id") String session_id, @Query("sort_by") String sortBy);
 
     @GET("account/{account_id}/favorite/tv")
-    Call<MoviesListResponse> getFavoritesTvShows(@Path("account_id") Integer accountId, @Query("api_key") String apiKey, @Query("session_id") String session_id);
+    Call<TvShowResponse> getFavoritesTvShows(@Path("account_id") Integer accountId, @Query("api_key") String apiKey, @Query("session_id") String session_id,  @Query("sort_by") String sortBy);
 
     @GET("account/{account_id}/watchlist/tv")
-    Call<MoviesListResponse> getTvShowWatchList(@Path("account_id") Integer accountId, @Query("api_key") String apiKey, @Query("session_id") String session_id);
+    Call<TvShowResponse> getTvShowWatchList(@Path("account_id") Integer accountId, @Query("api_key") String apiKey, @Query("session_id") String session_id, @Query("sort_by") String sortBy);
 
     @GET("account/{account_id}/rated/tv")
-    Call<MoviesListResponse> getTvShowRatings(@Path("account_id") Integer accountId, @Query("api_key") String apiKey, @Query("session_id") String session_id);
+    Call<TvShowResponse> getTvShowRatings(@Path("account_id") Integer accountId, @Query("api_key") String apiKey, @Query("session_id") String session_id,  @Query("sort_by") String sortBy);
 
     @POST("account/{account_id}/favorite")
     Call<PostResponse> PostFavorite(@Path("account_id") Integer accountId, @Query("api_key") String apiKey, @Query("session_id") String session_id, @Body PostBody body);

@@ -24,12 +24,14 @@ import com.crashlytics.android.Crashlytics;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MoviesDetailsActivity;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Favorites;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Ratings;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Settings;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Watchlist;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.PagerAdapters.MoviesPagerAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import io.fabric.sdk.android.Fabric;
-
 
 public class MovieActivity extends AppCompatActivity {
 
@@ -80,6 +82,20 @@ public class MovieActivity extends AppCompatActivity {
 
         slideMenu = (NavigationView) findViewById(R.id.navigationSlide);
 
+        if (mApp.getAccount()==null)
+        {
+            slideMenu.getMenu().getItem(0).setVisible(false);
+            slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(false);
+            slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.login);
+        }
+        else
+        {
+            slideMenu.getMenu().getItem(0).setVisible(true);
+            slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(true);
+            slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.logout);
+        }
+
+
         slideMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(MenuItem item) {
@@ -106,10 +122,11 @@ public class MovieActivity extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), Ratings.class));
                         break;
                     case R.id.logout:
+                        if (mApp.getAccount()==null) Alert();
 
                         mApp.setAccount(null);
                         mDrawerLayout.closeDrawer(Gravity.LEFT);
-                        Toast.makeText(getApplicationContext(), "Logout done", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.logout_done, Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getApplicationContext(), MovieActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -155,7 +172,6 @@ public class MovieActivity extends AppCompatActivity {
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
-                if (true) {
                     if (tabId == R.id.tab_news) {
                         Intent intent = new Intent(getApplicationContext(), NewsFeed.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -169,8 +185,6 @@ public class MovieActivity extends AppCompatActivity {
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                     }
-
-                }
             }
         });
     }
@@ -178,6 +192,18 @@ public class MovieActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        if (mApp.getAccount()==null)
+        {
+            slideMenu.getMenu().getItem(0).setVisible(false);
+            slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(false);
+            slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.login);
+        }
+        else
+        {
+            slideMenu.getMenu().getItem(0).setVisible(true);
+            slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(true);
+            slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.logout);
+        }
         final BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.selectTabWithId(R.id.tab_movies);
     }
@@ -200,8 +226,7 @@ public class MovieActivity extends AppCompatActivity {
             if (exit) {
                 finish(); // finish activity
             } else {
-                Toast.makeText(this, "Press Back again to Exit.",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.exit, Toast.LENGTH_SHORT).show();
                 exit = true;
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -212,6 +237,7 @@ public class MovieActivity extends AppCompatActivity {
             }
         }
     }
+
 
     private void Alert()
     {
@@ -230,4 +256,5 @@ public class MovieActivity extends AppCompatActivity {
                     }
                 }).show();
     }
+
 }

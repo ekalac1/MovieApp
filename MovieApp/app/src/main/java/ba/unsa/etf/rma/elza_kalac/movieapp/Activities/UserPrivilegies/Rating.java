@@ -1,8 +1,8 @@
-package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
+package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies;
 
+import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,7 +11,6 @@ import android.widget.Toast;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.PostBody;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
@@ -20,7 +19,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class Rating extends AppCompatActivity {
-    int starNum, movieID;
+    int starNum, movieID, tvShowID;
     ApiInterface apiService;
     MovieApplication mApp;
 
@@ -29,16 +28,17 @@ public class Rating extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rating);
 
-        movieID=getIntent().getIntExtra("movieID", 0);
-        mApp=(MovieApplication)getApplicationContext();
-        apiService=mApp.getApiService();
+        movieID = getIntent().getIntExtra("movieID", 0);
+        tvShowID = getIntent().getIntExtra("tvID", 0);
+        mApp = (MovieApplication) getApplicationContext();
+        apiService = mApp.getApiService();
 
         ActionBar actionBar = getSupportActionBar();
 
         actionBar.setTitle(R.string.movies);
         ImageView imageView = new ImageView(actionBar.getThemedContext());
         imageView.setScaleType(ImageView.ScaleType.CENTER);
-        imageView.setImageResource(android.R.drawable.checkbox_on_background);
+        imageView.setImageResource(R.drawable.rate);
         ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
                 300,
                 300, Gravity.END | Gravity.CENTER_VERTICAL);
@@ -51,47 +51,62 @@ public class Rating extends AppCompatActivity {
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (starNum==0)
-                {
-                    Toast.makeText(getApplicationContext(), "Morate ocjeniti !", Toast.LENGTH_LONG).show();
-                }
-                else
-                {
+                if (starNum == 0) {
+                    Toast.makeText(getApplicationContext(), R.string.empty_rate, Toast.LENGTH_LONG).show();
+                } else {
                     PostBody rate = new PostBody(starNum);
-                    Call<PostResponse> call = apiService.RateMovie(movieID, ApiClient.API_KEY, mApp.getAccount().getSessionId(), rate);
-                    call.enqueue(new Callback<PostResponse>() {
-                        @Override
-                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                            if (response.body().getStatusCode()==12)
-                                Toast.makeText(getApplicationContext(), "Rate added", Toast.LENGTH_LONG).show();
-                        }
-                        @Override
-                        public void onFailure(Call<PostResponse> call, Throwable t) {
+                    if (movieID != 0) {
+                        Call<PostResponse> call = apiService.RateMovie(movieID, ApiClient.API_KEY, mApp.getAccount().getSessionId(), rate);
+                        call.enqueue(new Callback<PostResponse>() {
+                            @Override
+                            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                                if (response.body().getStatusCode() == 1) {
+                                    Toast.makeText(getApplicationContext(), R.string.sucess_rate, Toast.LENGTH_LONG).show();
+                                    onBackPressed();
+                                }
+                            }
 
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<PostResponse> call, Throwable t) {
 
+                            }
+                        });
+                    } else if (tvShowID != 0) {
+                        Call<PostResponse> call = apiService.RateTvshow(tvShowID, ApiClient.API_KEY, mApp.getAccount().getSessionId(), rate);
+                        call.enqueue(new Callback<PostResponse>() {
+                            @Override
+                            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                                if (response.body().getStatusCode() == 1) {
+                                    Toast.makeText(getApplicationContext(), R.string.sucess_rate, Toast.LENGTH_LONG).show();
+                                    onBackPressed();
+                                }
+                            }
+                            @Override
+                            public void onFailure(Call<PostResponse> call, Throwable t) {
+
+                            }
+                        });
+                    }
                 }
-
             }
         });
 
-        final ImageView rating1=(ImageView)findViewById(R.id.rating1);
-        final ImageView rating2=(ImageView)findViewById(R.id.rating2);
-        final ImageView rating3=(ImageView)findViewById(R.id.rating3);
-        final ImageView rating4=(ImageView)findViewById(R.id.rating4);
-        final ImageView rating5=(ImageView)findViewById(R.id.rating5);
-        final ImageView rating6=(ImageView)findViewById(R.id.rating6);
-        final ImageView rating7=(ImageView)findViewById(R.id.rating7);
-        final ImageView rating8=(ImageView)findViewById(R.id.rating8);
-        final ImageView rating9=(ImageView)findViewById(R.id.rating9);
-        final ImageView rating10=(ImageView)findViewById(R.id.rating10);
+        final ImageView rating1 = (ImageView) findViewById(R.id.rating1);
+        final ImageView rating2 = (ImageView) findViewById(R.id.rating2);
+        final ImageView rating3 = (ImageView) findViewById(R.id.rating3);
+        final ImageView rating4 = (ImageView) findViewById(R.id.rating4);
+        final ImageView rating5 = (ImageView) findViewById(R.id.rating5);
+        final ImageView rating6 = (ImageView) findViewById(R.id.rating6);
+        final ImageView rating7 = (ImageView) findViewById(R.id.rating7);
+        final ImageView rating8 = (ImageView) findViewById(R.id.rating8);
+        final ImageView rating9 = (ImageView) findViewById(R.id.rating9);
+        final ImageView rating10 = (ImageView) findViewById(R.id.rating10);
 
 
         rating1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                starNum=1;
+                starNum = 1;
                 rating1.setImageResource(R.drawable.star_filled);
                 rating2.setImageResource(R.drawable.star_empty);
                 rating3.setImageResource(R.drawable.star_empty);
@@ -109,7 +124,7 @@ public class Rating extends AppCompatActivity {
         rating2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                starNum=2;
+                starNum = 2;
                 rating1.setImageResource(R.drawable.star_filled);
                 rating2.setImageResource(R.drawable.star_filled);
                 rating3.setImageResource(R.drawable.star_empty);
@@ -125,7 +140,7 @@ public class Rating extends AppCompatActivity {
         rating3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                starNum=3;
+                starNum = 3;
                 rating1.setImageResource(R.drawable.star_filled);
                 rating2.setImageResource(R.drawable.star_filled);
                 rating3.setImageResource(R.drawable.star_filled);
@@ -141,7 +156,7 @@ public class Rating extends AppCompatActivity {
         rating4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                starNum=4;
+                starNum = 4;
                 rating1.setImageResource(R.drawable.star_filled);
                 rating2.setImageResource(R.drawable.star_filled);
                 rating3.setImageResource(R.drawable.star_filled);
@@ -157,7 +172,7 @@ public class Rating extends AppCompatActivity {
         rating5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                starNum=5;
+                starNum = 5;
                 rating1.setImageResource(R.drawable.star_filled);
                 rating2.setImageResource(R.drawable.star_filled);
                 rating3.setImageResource(R.drawable.star_filled);
@@ -173,7 +188,7 @@ public class Rating extends AppCompatActivity {
         rating6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                starNum=6;
+                starNum = 6;
                 rating1.setImageResource(R.drawable.star_filled);
                 rating2.setImageResource(R.drawable.star_filled);
                 rating3.setImageResource(R.drawable.star_filled);
@@ -189,7 +204,7 @@ public class Rating extends AppCompatActivity {
         rating7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                starNum=7;
+                starNum = 7;
                 rating1.setImageResource(R.drawable.star_filled);
                 rating2.setImageResource(R.drawable.star_filled);
                 rating3.setImageResource(R.drawable.star_filled);
@@ -205,7 +220,7 @@ public class Rating extends AppCompatActivity {
         rating8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                starNum=8;
+                starNum = 8;
                 rating1.setImageResource(R.drawable.star_filled);
                 rating2.setImageResource(R.drawable.star_filled);
                 rating3.setImageResource(R.drawable.star_filled);
@@ -221,7 +236,7 @@ public class Rating extends AppCompatActivity {
         rating9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                starNum=9;
+                starNum = 9;
                 rating1.setImageResource(R.drawable.star_filled);
                 rating2.setImageResource(R.drawable.star_filled);
                 rating3.setImageResource(R.drawable.star_filled);
@@ -237,7 +252,7 @@ public class Rating extends AppCompatActivity {
         rating10.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                starNum=10;
+                starNum = 10;
                 rating1.setImageResource(R.drawable.star_filled);
                 rating2.setImageResource(R.drawable.star_filled);
                 rating3.setImageResource(R.drawable.star_filled);
@@ -250,11 +265,6 @@ public class Rating extends AppCompatActivity {
                 rating10.setImageResource(R.drawable.star_filled);
             }
         });
-
-
-
-
-
 
 
     }

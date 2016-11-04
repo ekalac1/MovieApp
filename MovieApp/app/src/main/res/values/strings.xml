@@ -51,9 +51,18 @@
     <string name="newacc">Create a new account</string>
     <string name="details">Forgot your details?</string>
     <string name="your_list">YOUR LIST</string>
+    <string name="rate_label">Rate this</string>
+    <string name="login_error">Wrong username or password</string>
+    <string name="logout_done">Logout done</string>
+    <string name="exit">Press Back again to Exit.</string>
+    <string name="empty_rate">You need to rate this !</string>
+    <string name="sucess_rate">Rate added</string>
+    <string name="account">Account</string>
+    <string name="notification">Account Notification</string>
+    <string name="name">Name : </string>
+    <string name="tv_notificattion">Tv shows notification</string>
+    <string name="m_notificattion">Movies notification</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

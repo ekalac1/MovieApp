@@ -1,22 +1,13 @@
-package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
+package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies;
 
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.Toast;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.PagerAdapters.FavoritesPagerAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.PagerAdapters.WatchListPagerAdapter;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Account;
-import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class Watchlist extends AppCompatActivity {
 

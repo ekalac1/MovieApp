@@ -84,9 +84,7 @@ public class ActorDetails extends AppCompatActivity {
             @Override
             public void onResponse(Call<Cast> call, Response<Cast> response) {
                 Cast actor=response.body();
-
                 actorName.setText(actor.getName());
-
                 if (actor.getBirthday()!=null) {
                     DateFormat df = new SimpleDateFormat("yyyy-mm-dd");
                     Date startDate = new Date();

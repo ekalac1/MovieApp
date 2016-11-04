@@ -8,7 +8,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -27,100 +27,50 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.PostBody;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Login;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Rating;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Rating;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.CastGridAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.ReviewListAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication.order;
 
 public class MoviesDetailsActivity extends AppCompatActivity {
     public Movie movie;
     public int movieID;
     ApiInterface apiService;
     MovieApplication mApp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movies_details);
 
-        mApp=(MovieApplication)getApplicationContext();
+        mApp = (MovieApplication) getApplicationContext();
         apiService = mApp.getApiService();
 
         ActionBar actionBar = getSupportActionBar();
 
-        getSupportActionBar().setTitle(R.string.movie);
-
         actionBar.setTitle(R.string.movies);
-        ImageView imageView = new ImageView(actionBar.getThemedContext());
-        imageView.setScaleType(ImageView.ScaleType.CENTER);
-        imageView.setImageResource(android.R.drawable.ic_menu_view);
-        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
-                ActionBar.LayoutParams.WRAP_CONTENT,
-                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT | Gravity.CENTER_VERTICAL);
-        layoutParams.rightMargin = 40;
-        imageView.setLayoutParams(layoutParams);
-        actionBar.setCustomView(imageView);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        actionBar.setDisplayShowTitleEnabled(true);
-
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mApp.getAccount()==null)
-                {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MoviesDetailsActivity.this);
-                    builder.setMessage(R.string.message)
-                            .setTitle(R.string.Sign_in)
-                            .setPositiveButton(R.string.sign, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    Intent intent = new Intent(getApplicationContext(), Login.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    startActivity(intent);
-                                }
-                            })
-                            .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                }
-                            }).show();
-                }
-                else
-                {
-                    PostBody post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
-                    Call<PostResponse> call = apiService.MarkWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY,  mApp.getAccount().getSessionId(), post);
-                    call.enqueue(new Callback<PostResponse>() {
-                        @Override
-                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                            if (response.body().getStatusCode()==1)
-                                Toast.makeText(getApplicationContext(), "Movie added to watchlist", Toast.LENGTH_LONG).show();
-
-                        }
-
-                        @Override
-                        public void onFailure(Call<PostResponse> call, Throwable t) {
-                        }
-                    });
-                }
-
-            }
-        });
 
         final TextView movieId = (TextView) findViewById(R.id.movies_detalis_title);
         final TextView date = (TextView) findViewById(R.id.movies_detalis_release_date);
         final TextView temp = (TextView) findViewById(R.id.movies_detalis_genres);
-        final TextView directors = (TextView)findViewById(R.id.directors);
-        final TextView about = (TextView)findViewById(R.id.about);
-        final TextView writers = (TextView)findViewById(R.id.writers);
-        final TextView stars= (TextView)findViewById(R.id.stars);
+        final TextView directors = (TextView) findViewById(R.id.directors);
+        final TextView about = (TextView) findViewById(R.id.about);
+        final TextView writers = (TextView) findViewById(R.id.writers);
+        final TextView stars = (TextView) findViewById(R.id.stars);
         final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        final RecyclerView review = (RecyclerView)findViewById(R.id.reviews);
-        final TextView votes = (TextView)findViewById(R.id.votes);
-        final ImageView play = (ImageView)findViewById(R.id.play);
-        final TextView rate = (TextView)findViewById(R.id.rate_this_label);
+        final RecyclerView review = (RecyclerView) findViewById(R.id.reviews);
+        final TextView votes = (TextView) findViewById(R.id.votes);
+        final ImageView play = (ImageView) findViewById(R.id.play);
+        final TextView rate = (TextView) findViewById(R.id.rate_this_label);
 
         movieID = getIntent().getIntExtra("id", 0);
 
@@ -134,55 +84,33 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 rate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if (mApp.getAccount()!=null)
-                        {
+                        if (mApp.getAccount() != null) {
                             Intent intent = (new Intent(getApplicationContext(), Rating.class));
                             intent.putExtra("movieID", movieID);
                             startActivity(intent);
-                        }
-                        else
-                        {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(MoviesDetailsActivity.this);
-                            builder.setMessage(R.string.message)
-                                    .setTitle(R.string.Sign_in)
-                                    .setPositiveButton(R.string.sign, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            Intent intent = new Intent(getApplicationContext(), Login.class);
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            startActivity(intent);
-                                        }
-                                    })
-                                    .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                        }
-                                    }).show();
-                        }
-
+                        } else Alert();
                     }
                 });
-                if (movie.getReleaseDate()!=null)
-                {
+                if (movie.getReleaseDate() != null) {
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                    Date startDate=new Date();
+                    Date startDate = new Date();
                     try {
                         startDate = df.parse(movie.getReleaseDate());
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
                     date.setText((new SimpleDateFormat("d. MMM yyyy.")).format(startDate).toString());
-                }
-                else {
+                } else {
                     date.setText("");
                 }
 
-                if (movie.getReviews().getResults().size()==0)
-                {
-                    TextView r = (TextView)findViewById(R.id.review_label);
+                if (movie.getReviews().getResults().size() == 0) {
+                    TextView r = (TextView) findViewById(R.id.review_label);
                     r.setVisibility(View.INVISIBLE);
-                    View v = (View)findViewById(R.id.view___);
+                    View v = (View) findViewById(R.id.view___);
                     v.setVisibility(View.INVISIBLE);
                 }
-                if (movie.getVideos().getResults().size()!=0)
+                if (movie.getVideos().getResults().size() != 0)
 
                     play.setVisibility(View.VISIBLE);
 
@@ -193,29 +121,23 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .into((ImageView) findViewById(R.id.movies_detalis_image));
 
-                if (movie.getCredits().getDirectors().equals(""))
-                {
-                    TextView temp =( TextView) findViewById(R.id.directors_label);
+                if (movie.getCredits().getDirectors().equals("")) {
+                    TextView temp = (TextView) findViewById(R.id.directors_label);
                     temp.setVisibility(View.INVISIBLE);
-                }
-                else
-                {
+                } else {
                     directors.setText(movie.getCredits().getDirectors());
-                    TextView temp =( TextView) findViewById(R.id.directors_label);
+                    TextView temp = (TextView) findViewById(R.id.directors_label);
                     temp.setText(R.string.directors);
                 }
 
 
-                if (movie.getCredits().getWriters().equals(""))
-                {
+                if (movie.getCredits().getWriters().equals("")) {
                     writers.setVisibility(View.GONE);
-                    TextView temp =( TextView) findViewById(R.id.writers_label);
+                    TextView temp = (TextView) findViewById(R.id.writers_label);
                     temp.setVisibility(View.GONE);
-                }
-                else
-                {
+                } else {
                     writers.setText(movie.getCredits().getWriters());
-                    TextView temp =( TextView) findViewById(R.id.writers_label);
+                    TextView temp = (TextView) findViewById(R.id.writers_label);
                     temp.setText(R.string.writers);
                 }
 
@@ -230,7 +152,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 RecyclerView.LayoutManager reviewLayoutManager = new LinearLayoutManager(getApplicationContext());
                 review.setLayoutManager(reviewLayoutManager);
                 review.setAdapter(reviewListAdapter);
-                ImageView moviesImage = (ImageView)findViewById(R.id.movies_detalis_image);
+                ImageView moviesImage = (ImageView) findViewById(R.id.movies_detalis_image);
                 if (movie.getVideos().getResults().size() != 0)
                     moviesImage.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -241,23 +163,131 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         }
                     });
             }
-
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
             }
         });
-
-
     }
+
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.watchlist:
+                if (mApp.getAccount() == null) Alert();
+                else {
+                    PostBody post;
+                    if (item.getIcon().getConstantState().equals(getDrawable(R.drawable.watchlist).getConstantState()))
+                    post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
+                    else  post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
+                    Call<PostResponse> call = apiService.MarkWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), post);
+                    call.enqueue(new Callback<PostResponse>() {
+                        @Override
+                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                            if (response.body().getStatusCode() == 1)
+                                item.setIcon(R.drawable.watchlist_active);
+                            else if (response.body().getStatusCode()==13)
+                                item.setIcon(R.drawable.watchlist);
+                            Call<MoviesListResponse> call1=apiService.getMoviesWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
+                            call1.enqueue(new Callback<MoviesListResponse>() {
+                                @Override
+                                public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+                                    mApp.setWatchListMovies(response.body().getResults());
+                                }
+                                @Override
+                                public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+
+                                }
+                            });
+                        }
+                        @Override
+                        public void onFailure(Call<PostResponse> call, Throwable t) {
+                        }
+                    });
+                }
+                break;
+            case R.id.favorite:
+                if (mApp.getAccount() == null) Alert();
+                else {
+                    PostBody post;
+                    if (item.getIcon().getConstantState().equals(getDrawable(R.drawable.favorite).getConstantState()))
+                        post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
+                    else post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
+                    Call<PostResponse> call = apiService.PostFavorite(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), post);
+                    call.enqueue(new Callback<PostResponse>() {
+                        @Override
+                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                            if (response.body().getStatusCode() == 1)
+                               item.setIcon(R.drawable.favorite_active);
+                            else if (response.body().getStatusCode()==13)
+                            item.setIcon(R.drawable.favorite);
+                            Call<MoviesListResponse> call1 = apiService.getFavoritesMovies(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
+                            call1.enqueue(new Callback<MoviesListResponse>() {
+                                @Override
+                                public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+                                    mApp.setFavoriteMovies(response.body().getResults());
+                                }
+
+                                @Override
+                                public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        public void onFailure(Call<PostResponse> call, Throwable t) {
+                        }
+                    });
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.icons, menu);
+        if (mApp.getAccount()!=null)
+        {
+            for(Movie m: mApp.getWatchListMovies())
+                if (m.getId()==movieID)
+                {
+                    MenuItem ma = menu.getItem(0);
+                    ma.setIcon(R.drawable.watchlist_active);
+                }
+
+            for(Movie m: mApp.getFavoriteMovies())
+                if (m.getId()==movieID)
+                {
+
+                    MenuItem ma = menu.getItem(1);
+                    ma.setIcon(R.drawable.favorite_active);
+                }
         }
 
-        return super.onOptionsItemSelected(item);
+
+        return true;
+    }
+
+    private void Alert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MoviesDetailsActivity.this);
+        builder.setMessage(R.string.message)
+                .setTitle(R.string.Sign_in)
+                .setPositiveButton(R.string.sign, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(getApplicationContext(), Login.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                }).show();
     }
 }

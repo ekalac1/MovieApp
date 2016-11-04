@@ -21,6 +21,7 @@ import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.ActorDetails;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MoviesDetailsActivity;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.TVShowDetails;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
@@ -39,7 +40,6 @@ public class SearchActivity extends AppCompatActivity {
     ApiInterface apiService;
     MovieApplication mApp;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +55,6 @@ public class SearchActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
                     searchResult = response.body().getResults();
-                    for (int i = 0; i < searchResult.size(); i++) {
-
-                        if (searchResult.get(i).getMediaType().equals("person") )
-                            searchResult.remove(i);
-                    }
                     final SearchResultsAdapter adapter = new SearchResultsAdapter(getApplicationContext(), R.layout.search_view_element, searchResult);
                     grid.setAdapter(adapter);
                 }
@@ -70,8 +65,6 @@ public class SearchActivity extends AppCompatActivity {
                 }
             });
         }
-
-
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -83,6 +76,12 @@ public class SearchActivity extends AppCompatActivity {
                 else if (searchResult.get(position).getMediaType().equals("tv"))
                 {
                     Intent tvIntent = new Intent(getApplicationContext(), TVShowDetails.class);
+                    tvIntent.putExtra("id", searchResult.get(position).getId());
+                    startActivity(tvIntent);
+                }
+                else if (searchResult.get(position).getMediaType().equals("person"))
+                {
+                    Intent tvIntent = new Intent(getApplicationContext(), ActorDetails.class);
                     tvIntent.putExtra("id", searchResult.get(position).getId());
                     startActivity(tvIntent);
                 }
@@ -98,10 +97,6 @@ public class SearchActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
                         List<SearchResults> temp = response.body().getResults();
-                        for (int i = 0; i < temp.size(); i++) {
-                            if (temp.get(i).getMediaType().equals("person") )
-                                temp.remove(i);
-                        }
                         searchResult.addAll(temp);
                         ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
                     }
@@ -142,11 +137,6 @@ public class SearchActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
                             searchResult = response.body().getResults();
-                            for (int i = 0; i < searchResult.size(); i++) {
-
-                                if (searchResult.get(i).getMediaType().equals("person") )
-                                    searchResult.remove(i);
-                            }
                             final SearchResultsAdapter adapter = new SearchResultsAdapter(getApplicationContext(), R.layout.search_view_element, searchResult);
                             grid.setAdapter(adapter);
                         }

@@ -150,7 +150,25 @@
             android:layout_toEndOf="@id/vote_star"
             android:textColor="@color/white"
             android:textSize="14sp" />
-
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginStart="10dp"
+            android:src="@drawable/star_empty"
+            android:id="@+id/star_rate"
+            android:layout_toEndOf="@+id/tv_show_votes"
+            android:layout_alignTop="@id/vote_star"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rate_this_label"
+            android:layout_toEndOf="@+id/star_rate"
+            android:layout_alignTop="@id/vote_star"
+            android:textSize="14sp"
+            android:text="@string/rate_label"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/white"
+            />
         <TextView
             android:id="@+id/tv_show_about"
             android:layout_width="wrap_content"

@@ -47,7 +47,7 @@ public class HighestRatedTvShowFragment extends Fragment {
             public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
 
                 tvShow = response.body().getResults();
-                final TvShowGridViewAdapter adapter = new TvShowGridViewAdapter(getActivity().getApplicationContext(), R.layout.tv_show_element, tvShow);
+                final TvShowGridViewAdapter adapter = new TvShowGridViewAdapter(getActivity().getApplicationContext(), R.layout.tv_show_element, tvShow, mApp);
                 grid.setAdapter(adapter);
             }
 

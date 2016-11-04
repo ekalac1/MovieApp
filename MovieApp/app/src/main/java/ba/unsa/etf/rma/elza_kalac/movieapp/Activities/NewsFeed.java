@@ -1,5 +1,6 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -23,6 +25,10 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.RssAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Favorites;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Ratings;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Settings;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Watchlist;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.NewsListAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Feed;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
@@ -38,15 +44,18 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 public class NewsFeed extends AppCompatActivity {
 
     public ListView entrysList;
-    public Feed proba;
+    public Feed feed;
     private ActionBarDrawerToggle mToogle;
     NavigationView slideMenu;
     DrawerLayout mDrawerLayout;
+    MovieApplication mApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_feed);
+
+        mApp=(MovieApplication)getApplicationContext();
 
         slideMenu = (NavigationView) findViewById(R.id.navigationSlide);
 
@@ -56,22 +65,30 @@ public class NewsFeed extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.settings:
+                        if (mApp.getAccount()==null) Alert();
+                        else
                         startActivity(new Intent(getApplicationContext(), Settings.class));
                         break;
                     case R.id.favorites:
+                        if (mApp.getAccount()==null) Alert();
+                        else
                         startActivity(new Intent(getApplicationContext(), Favorites.class));
                         break;
                     case R.id.watchlist:
+                        if (mApp.getAccount()==null) Alert();
+                        else
                         startActivity(new Intent(getApplicationContext(), Watchlist.class));
                         break;
                     case R.id.ratings:
+                        if (mApp.getAccount()==null) Alert();
+                        else
                         startActivity(new Intent(getApplicationContext(), Ratings.class));
                         break;
                     case R.id.logout:
                         MovieApplication mApp=(MovieApplication)getApplicationContext();
                         mApp.setAccount(null);
                         mDrawerLayout.closeDrawer(Gravity.LEFT);
-                        Toast.makeText(getApplicationContext(), "Logout done", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(), R.string.logout_done, Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(getApplicationContext(), MovieActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -146,8 +163,8 @@ public class NewsFeed extends AppCompatActivity {
         call.enqueue(new Callback<Feed>() {
             @Override
             public void onResponse(Call<Feed> call, Response<Feed> response) {
-                proba = response.body();
-                NewsListAdapter n = new NewsListAdapter(getApplicationContext(), R.layout.news_element, proba.getmChannel().getFeedItems());
+                feed = response.body();
+                NewsListAdapter n = new NewsListAdapter(getApplicationContext(), R.layout.news_element, feed.getmChannel().getFeedItems());
                 entrysList.setAdapter(n);
             }
 
@@ -159,7 +176,7 @@ public class NewsFeed extends AppCompatActivity {
         entrysList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(proba.getmChannel().getFeedItems().get(position).getMlink()));
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(feed.getmChannel().getFeedItems().get(position).getMlink()));
                 startActivity(browserIntent);
             }
         });
@@ -182,8 +199,7 @@ public class NewsFeed extends AppCompatActivity {
             if (exit) {
                 finish(); // finish activity
             } else {
-                Toast.makeText(this, "Press Back again to Exit.",
-                        Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.exit, Toast.LENGTH_SHORT).show();
                 exit = true;
                 new Handler().postDelayed(new Runnable() {
                     @Override
@@ -193,5 +209,22 @@ public class NewsFeed extends AppCompatActivity {
                 }, 3 * 1000);
             }
         }
+    }
+    private void Alert()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(NewsFeed.this);
+        builder.setMessage(R.string.message)
+                .setTitle(R.string.Sign_in)
+                .setPositiveButton(R.string.sign, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(getApplicationContext(), Login.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
+                    }
+                })
+                .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                    }
+                }).show();
     }
 }

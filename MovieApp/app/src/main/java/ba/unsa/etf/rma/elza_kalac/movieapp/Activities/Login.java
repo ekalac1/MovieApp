@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
@@ -18,15 +19,17 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Account;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.AuthentificationResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TvShowResponse;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication.order;
 
 public class Login extends AppCompatActivity {
 
     AuthentificationResponse token, login, session;
     String sessionId;
-    int accountId;
     ApiInterface apiService;
     MovieApplication mApp;
 
@@ -41,17 +44,18 @@ public class Login extends AppCompatActivity {
         final EditText password = (EditText) findViewById(R.id.password);
         username.setText("vanderwoodsen");
         password.setText("ekalac1");
+        final
         Button loginButton = (Button) findViewById(R.id.login);
         TextView newAcc = (TextView) findViewById(R.id.new_acc);
         TextView forgot = (TextView) findViewById(R.id.forgot_details);
 
+        loginButton.setBackground(getDrawable(R.color.golden));
+
         newAcc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.themoviedb.org/account/signup"));
                 startActivity(browserIntent);
-
             }
         });
 
@@ -69,6 +73,7 @@ public class Login extends AppCompatActivity {
 
                 mApp = (MovieApplication) getApplicationContext();
                 apiService = mApp.getApiService();
+                loginButton.setBackground(getDrawable(R.color.pressed));
 
                 Call<AuthentificationResponse> call = apiService.getToken(ApiClient.API_KEY);
 
@@ -82,10 +87,9 @@ public class Login extends AppCompatActivity {
                                 @Override
                                 public void onResponse(Call<AuthentificationResponse> call, Response<AuthentificationResponse> response) {
                                     if (response.errorBody() != null) {
-                                        Toast.makeText(getApplicationContext(), "Wrong username or password", Toast.LENGTH_LONG).show();
+                                        Toast.makeText(getApplicationContext(), R.string.login_error, Toast.LENGTH_LONG).show();
                                         password.setText("");
-                                    }
-                                    else {
+                                    } else {
                                         login = response.body();
                                         if (login.isSuccess()) {
                                             Call<AuthentificationResponse> call2 = apiService.CreateSession(ApiClient.API_KEY, login.getRequestToken());
@@ -99,28 +103,56 @@ public class Login extends AppCompatActivity {
                                                     call4.enqueue(new Callback<Account>() {
                                                         @Override
                                                         public void onResponse(Call<Account> call, Response<Account> response) {
-                                                            accountId = response.body().getAccountId();
-                                                            if (response.body().getAccountId() != 0) {
-                                                                Call<MoviesListResponse> call3 = apiService.getFavoritesMovies(accountId, ApiClient.API_KEY, sessionId);
-                                                                call3.enqueue(new Callback<MoviesListResponse>() {
-                                                                    @Override
-                                                                    public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                                                                        Account a = new Account();
-                                                                        a.setUsername(username.getText().toString());
-                                                                        a.setSessionId(sessionId);
-                                                                        mApp.setAccount(a);
+                                                            Account a = response.body();
+                                                            a.setSessionId(sessionId);
+                                                            mApp.setAccount(a);
+                                                            Call<MoviesListResponse> call3 = mApp.getApiService().getFavoritesMovies(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
+                                                            call3.enqueue(new Callback<MoviesListResponse>() {
+                                                                @Override
+                                                                public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+                                                                    mApp.setFavoriteMovies(response.body().getResults());
+                                                                    Call<MoviesListResponse> call1 = mApp.getApiService().getMoviesWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
+                                                                    call1.enqueue(new Callback<MoviesListResponse>() {
+                                                                        @Override
+                                                                        public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+                                                                            mApp.setWatchListMovies(response.body().getResults());
+                                                                            Call<TvShowResponse> call1 = mApp.getApiService().getFavoritesTvShows(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
+                                                                            call1.enqueue(new Callback<TvShowResponse>() {
+                                                                                @Override
+                                                                                public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
+                                                                                    mApp.setFavoriteTvShows(response.body().getResults());
+                                                                                    Call<TvShowResponse> call1 = mApp.getApiService().getTvShowWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
+                                                                                    call1.enqueue(new Callback<TvShowResponse>() {
+                                                                                        @Override
+                                                                                        public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
+                                                                                            mApp.setWatchListTvShow(response.body().getResults());
+                                                                                            onBackPressed();
+                                                                                        }
+                                                                                        @Override
+                                                                                        public void onFailure(Call<TvShowResponse> call, Throwable t) {
+                                                                                        }
+                                                                                    });
+                                                                                }
 
-                                                                      /*  SharedPreferences sharedPref = getApplication().getSharedPreferences("username", getApplicationContext().MODE_PRIVATE);
-                                                                        SharedPreferences.Editor editor = sharedPref.edit();
-                                                                        editor.putString("username", username.getText().toString());
-                                                                        editor.apply(); */
-                                                                        onBackPressed();
-                                                                    }
-                                                                    @Override
-                                                                    public void onFailure(Call<MoviesListResponse> call, Throwable t) {
-                                                                    }
-                                                                });
-                                                            }
+                                                                                @Override
+                                                                                public void onFailure(Call<TvShowResponse> call, Throwable t) {
+                                                                                }
+                                                                            });
+
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+
+                                                                        }
+                                                                    });
+
+                                                                }
+
+                                                                @Override
+                                                                public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+                                                                }
+                                                            });
                                                         }
 
                                                         @Override
@@ -147,7 +179,6 @@ public class Login extends AppCompatActivity {
                                 }
                             });
                         }
-
                     }
 
                     @Override
@@ -155,11 +186,10 @@ public class Login extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
                     }
                 });
-
-
             }
         });
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -167,7 +197,6 @@ public class Login extends AppCompatActivity {
                 finish();
                 return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }
