@@ -195,7 +195,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                             call1.enqueue(new Callback<MoviesListResponse>() {
                                 @Override
                                 public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                                    mApp.setWatchListMovies(response.body().getResults());
+                                    mApp.getAccount().setWatchListMovies(response.body().getResults());
                                 }
                                 @Override
                                 public void onFailure(Call<MoviesListResponse> call, Throwable t) {
@@ -228,7 +228,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                             call1.enqueue(new Callback<MoviesListResponse>() {
                                 @Override
                                 public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                                    mApp.setFavoriteMovies(response.body().getResults());
+                                    mApp.getAccount().setFavoriteMovies(response.body().getResults());
                                 }
 
                                 @Override
@@ -254,14 +254,14 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.icons, menu);
         if (mApp.getAccount()!=null)
         {
-            for(Movie m: mApp.getWatchListMovies())
+            for(Movie m: mApp.getAccount().getWatchListMovies())
                 if (m.getId()==movieID)
                 {
                     MenuItem ma = menu.getItem(0);
                     ma.setIcon(R.drawable.watchlist_active);
                 }
 
-            for(Movie m: mApp.getFavoriteMovies())
+            for(Movie m: mApp.getAccount().getFavoriteMovies())
                 if (m.getId()==movieID)
                 {
 

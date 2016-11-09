@@ -6,11 +6,11 @@
             <menu>
                 <item
                     android:id="@+id/favorites"
-                    android:icon="@drawable/favorite"
+                    android:icon="@drawable/favorite_active"
                     android:title="@string/favourites" />
                 <item
                     android:id="@+id/watchlist"
-                    android:icon="@drawable/watchlist"
+                    android:icon="@drawable/watchlist_active"
                     android:title="@string/watchlist" />
                 <item
                     android:id="@+id/ratings"
@@ -29,7 +29,7 @@
                     android:title="@string/Settings" />
                 <item
                     android:id="@+id/logout"
-                    android:icon="@drawable/login"
+                    android:icon="@drawable/logout"
                     android:title="@string/logout" />
             </menu>
         </item>

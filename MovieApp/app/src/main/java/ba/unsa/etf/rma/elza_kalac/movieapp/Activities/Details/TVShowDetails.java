@@ -235,7 +235,7 @@ public class TVShowDetails extends AppCompatActivity {
                             call1.enqueue(new Callback<TvShowResponse>() {
                                 @Override
                                 public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
-                                    mApp.setWatchListTvShow(response.body().getResults());
+                                    mApp.getAccount().setWatchListTvShow(response.body().getResults());
                                 }
 
                                 @Override
@@ -270,7 +270,7 @@ public class TVShowDetails extends AppCompatActivity {
                                 call1.enqueue(new Callback<TvShowResponse>() {
                                     @Override
                                     public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
-                                        mApp.setFavoriteTvShows(response.body().getResults());
+                                        mApp.getAccount().setFavoriteTvShows(response.body().getResults());
                                     }
                                     @Override
                                     public void onFailure(Call<TvShowResponse> call, Throwable t) {
@@ -291,12 +291,12 @@ public class TVShowDetails extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.icons, menu);
         if (mApp.getAccount() != null) {
-            for (TvShow m : mApp.getFavoriteTvShows())
+            for (TvShow m : mApp.getAccount().getFavoriteTvShows())
                 if (m.getId() == tvshowID) {
                     MenuItem ma = menu.getItem(1);
                     ma.setIcon(R.drawable.favorite_active);
                 }
-            for (TvShow m : mApp.getWatchListTvShow())
+            for (TvShow m : mApp.getAccount().getWatchListTvShow())
                 if (m.getId() == tvshowID) {
 
                     MenuItem ma = menu.getItem(0);

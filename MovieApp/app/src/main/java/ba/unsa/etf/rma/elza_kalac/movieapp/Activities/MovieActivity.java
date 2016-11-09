@@ -2,6 +2,7 @@ package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IdRes;
@@ -15,6 +16,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -46,31 +49,11 @@ public class MovieActivity extends AppCompatActivity {
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
 
-        mApp=(MovieApplication)getApplicationContext();
+        mApp = (MovieApplication) getApplicationContext();
 
         ActionBar actionBar = getSupportActionBar();
 
         actionBar.setTitle(R.string.movies);
-        ImageView imageView = new ImageView(actionBar.getThemedContext());
-        imageView.setScaleType(ImageView.ScaleType.CENTER);
-        imageView.setImageResource(android.R.drawable.ic_menu_search);
-        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
-                ActionBar.LayoutParams.WRAP_CONTENT,
-                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT | Gravity.CENTER_VERTICAL);
-        layoutParams.rightMargin = 40;
-        imageView.setLayoutParams(layoutParams);
-        actionBar.setCustomView(imageView);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-
-        actionBar.setDisplayShowTitleEnabled(true);
-
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(), SearchActivity.class));
-            }
-        });
-
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mToogle = new ActionBarDrawerToggle(this, mDrawerLayout, R.string.app_name, R.string.app_name);
@@ -82,17 +65,17 @@ public class MovieActivity extends AppCompatActivity {
 
         slideMenu = (NavigationView) findViewById(R.id.navigationSlide);
 
-        if (mApp.getAccount()==null)
-        {
+        if (mApp.getAccount() == null) {
             slideMenu.getMenu().getItem(0).setVisible(false);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(false);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.login);
-        }
-        else
-        {
+            slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setIcon(R.drawable.login);
+
+        } else {
             slideMenu.getMenu().getItem(0).setVisible(true);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(true);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.logout);
+            slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setIcon(R.drawable.logout);
         }
 
 
@@ -102,35 +85,37 @@ public class MovieActivity extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.settings:
-                        if (mApp.getAccount()==null) Alert();
+                        if (mApp.getAccount() == null) Alert();
                         else
-                        startActivity(new Intent(getApplicationContext(), Settings.class));
+                            startActivity(new Intent(getApplicationContext(), Settings.class));
                         break;
                     case R.id.favorites:
-                        if (mApp.getAccount()==null) Alert();
+                        if (mApp.getAccount() == null) Alert();
                         else
-                        startActivity(new Intent(getApplicationContext(), Favorites.class));
+                            startActivity(new Intent(getApplicationContext(), Favorites.class));
                         break;
                     case R.id.watchlist:
-                        if (mApp.getAccount()==null) Alert();
+                        if (mApp.getAccount() == null) Alert();
                         else
-                        startActivity(new Intent(getApplicationContext(), Watchlist.class));
+                            startActivity(new Intent(getApplicationContext(), Watchlist.class));
                         break;
                     case R.id.ratings:
-                        if (mApp.getAccount()==null) Alert();
+                        if (mApp.getAccount() == null) Alert();
                         else
-                        startActivity(new Intent(getApplicationContext(), Ratings.class));
+                            startActivity(new Intent(getApplicationContext(), Ratings.class));
                         break;
                     case R.id.logout:
-                        if (mApp.getAccount()==null) Alert();
+                        if (mApp.getAccount() == null) Alert();
+                        else {
+                            mApp.setAccount(null);
+                            mDrawerLayout.closeDrawer(GravityCompat.START);
+                            Toast.makeText(getApplicationContext(), R.string.logout_done, Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(getApplicationContext(), MovieActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }
 
-                        mApp.setAccount(null);
-                        mDrawerLayout.closeDrawer(Gravity.LEFT);
-                        Toast.makeText(getApplicationContext(), R.string.logout_done, Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getApplicationContext(), MovieActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
                         break;
                 }
                 return false;
@@ -172,19 +157,19 @@ public class MovieActivity extends AppCompatActivity {
         bottomBar.setOnTabSelectListener(new OnTabSelectListener() {
             @Override
             public void onTabSelected(@IdRes int tabId) {
-                    if (tabId == R.id.tab_news) {
-                        Intent intent = new Intent(getApplicationContext(), NewsFeed.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    }
+                if (tabId == R.id.tab_news) {
+                    Intent intent = new Intent(getApplicationContext(), NewsFeed.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
 
-                    if (tabId == R.id.tab_tvshows) {
-                        Intent intent = new Intent(getApplicationContext(), TVShows.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    }
+                if (tabId == R.id.tab_tvshows) {
+                    Intent intent = new Intent(getApplicationContext(), TVShows.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -192,14 +177,11 @@ public class MovieActivity extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        if (mApp.getAccount()==null)
-        {
+        if (mApp.getAccount() == null) {
             slideMenu.getMenu().getItem(0).setVisible(false);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(false);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.login);
-        }
-        else
-        {
+        } else {
             slideMenu.getMenu().getItem(0).setVisible(true);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(true);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.logout);
@@ -209,9 +191,20 @@ public class MovieActivity extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search, menu);
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mToogle.onOptionsItemSelected(item)) {
             return true;
+        }
+        else if (item.getItemId()==R.id.search)
+        {
+            startActivity(new Intent(getApplicationContext(), SearchActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
@@ -239,8 +232,7 @@ public class MovieActivity extends AppCompatActivity {
     }
 
 
-    private void Alert()
-    {
+    private void Alert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(MovieActivity.this);
         builder.setMessage(R.string.message)
                 .setTitle(R.string.Sign_in)
@@ -257,4 +249,19 @@ public class MovieActivity extends AppCompatActivity {
                 }).show();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SharedPreferences settings = getSharedPreferences("account", 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean("accInfo", mApp.getAccount()!= null);
+        if (mApp.getAccount()!= null) {
+            editor.putString("accUserName", mApp.getAccount().getUsername());
+            editor.putString("accSession", mApp.getAccount().getSessionId());
+            editor.putInt("accId", mApp.getAccount().getAccountId());
+            editor.putString("accName", mApp.getAccount().getName());
+        }
+        // Commit the edits!
+        editor.commit();
+    }
 }

@@ -16,7 +16,6 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
         mApp=(MovieApplication)getApplicationContext();
-
         TextView name = (TextView)findViewById(R.id.name);
         name.setText(mApp.getAccount().getName());
         TextView username = (TextView)findViewById(R.id.username);

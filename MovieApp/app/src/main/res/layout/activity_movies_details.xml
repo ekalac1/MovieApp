@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="start|bottom"
     android:background="@color/colorPrimaryDark"
     android:fillViewport="true">
@@ -138,39 +138,43 @@
             android:layout_width="16sp"
             android:layout_height="16sp"
             android:id="@+id/vote_star"
-            android:layout_alignStart="@+id/directors_label"
             android:src="@drawable/star_filled"
-            android:layout_marginTop="25dp"
-            android:layout_below="@id/stars"/>
+            android:layout_marginTop="24dp"
+            android:layout_below="@+id/stars_label"
+            android:layout_alignStart="@+id/about" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/star_empty"
+            android:id="@+id/star_rate"
+            android:layout_toLeftOf="@+id/rate_this_label"
+            android:layout_alignTop="@+id/vote_star"
+             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/vote_star"
             android:id="@+id/votes"
+            android:layout_below="@+id/stars"
             android:textSize="14sp"
             android:layout_marginStart="3dp"
             android:textColor="@color/white"
             android:layout_alignTop="@id/vote_star"/>
 
 
-        <ImageView
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginStart="80dp"
-            android:src="@drawable/star_empty"
-            android:id="@+id/star_rate"
-            android:layout_toEndOf="@+id/votes"
-            android:layout_alignTop="@id/vote_star"/>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/rate_this_label"
-            android:layout_toEndOf="@+id/star_rate"
+            android:layout_alignEnd="@+id/about"
+            android:layout_below="@+id/stars"
             android:layout_alignTop="@id/vote_star"
             android:textSize="14sp"
+            android:layout_alignParentEnd="true"
             android:text="@string/rate_label"
+            android:layout_marginEnd="20dp"
             android:layout_marginStart="10dp"
             android:textColor="@color/white"
             />
@@ -241,5 +245,7 @@
             android:layout_marginBottom="20dp"
             android:layout_below="@+id/review_label">
         </android.support.v7.widget.RecyclerView>
+
+
     </RelativeLayout>
 </ScrollView>

@@ -18,6 +18,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.MovieGridViewAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.TvShowGridViewAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Account;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.User;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
@@ -35,7 +36,7 @@ public class FavoritesTvShows extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View newView=inflater.inflate(R.layout.fragment_favorite_tv_show, container, false);
         final MovieApplication mApp = (MovieApplication)getActivity().getApplication();
-        Account a;
+        User a;
         a=mApp.getAccount();
 
         final GridView favoriteMovies = (GridView)newView.findViewById(R.id.favorite_tv_shows);

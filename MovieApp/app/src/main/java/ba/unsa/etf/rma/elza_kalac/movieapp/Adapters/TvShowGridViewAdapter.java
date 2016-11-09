@@ -71,7 +71,7 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
         final ImageView watchlist = (ImageView) newView.findViewById(R.id.watchlist_tv);
         if (mApp.getAccount() != null) {
             boolean ind=true;
-            for (TvShow m : mApp.getFavoriteTvShows())
+            for (TvShow m : mApp.getAccount().getFavoriteTvShows())
                 if (m.getId() == tvShow.getId())
                 {
                     ind=false;
@@ -80,7 +80,7 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
             if (ind) favorite.setImageResource(R.drawable.favorite);
 
             ind=true;
-            for (TvShow m : mApp.getWatchListTvShow())
+            for (TvShow m : mApp.getAccount().getWatchListTvShow())
                 if (m.getId() == tvShow.getId())
                 {
                     ind=false;
@@ -105,13 +105,13 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
                         public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                             if (response.body().getStatusCode() == 1)
                                 favorite.setImageResource(R.drawable.favorite_active);
-                            else  if (response.body().getStatusCode() == 1)
+                            else  if (response.body().getStatusCode() == 13)
                                 favorite.setImageResource(R.drawable.favorite);
                                 Call<TvShowResponse> call1=mApp.getApiService().getFavoritesTvShows(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
                                 call1.enqueue(new Callback<TvShowResponse>() {
                                     @Override
                                     public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
-                                        mApp.setFavoriteTvShows(response.body().getResults());
+                                        mApp.getAccount().setFavoriteTvShows(response.body().getResults());
                                     }
                                     @Override
                                     public void onFailure(Call<TvShowResponse> call, Throwable t) {
@@ -145,13 +145,13 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
                         public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                             if (response.body().getStatusCode() == 1)
                                 watchlist.setImageResource(R.drawable.watchlist_active);
-                            else if (response.body().getStatusCode() == 1)
+                            else if (response.body().getStatusCode() == 13)
                                 watchlist.setImageResource(R.drawable.watchlist);
                                 Call<TvShowResponse> call1 = mApp.getApiService().getTvShowWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
                                 call1.enqueue(new Callback<TvShowResponse>() {
                                     @Override
                                     public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
-                                    mApp.setWatchListTvShow(response.body().getResults());
+                                    mApp.getAccount().setWatchListTvShow(response.body().getResults());
                                     }
 
                                     @Override
@@ -200,6 +200,7 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
         }
         return newView;
     }
+
 
     private void Alert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(newView.getRootView().getContext(), R.style.AppTheme));

@@ -15,6 +15,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -73,14 +75,16 @@ public class TVShows extends AppCompatActivity {
                         startActivity(new Intent(getApplicationContext(), Ratings.class));
                         break;
                     case R.id.logout:
-                        MovieApplication mApp=(MovieApplication)getApplicationContext();
-                        mApp.setAccount(null);
-                        mDrawerLayout.closeDrawer(Gravity.LEFT);
-                        Toast.makeText(getApplicationContext(), R.string.logout_done, Toast.LENGTH_LONG).show();
-                        Intent intent = new Intent(getApplicationContext(), MovieActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
+                        if (mApp.getAccount()==null) Alert();
+                        else {
+                            mApp.setAccount(null);
+                            mDrawerLayout.closeDrawer(GravityCompat.START);
+                            Toast.makeText(getApplicationContext(), R.string.logout_done, Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(getApplicationContext(), MovieActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        }
                         break;
                 }
                 return false;
@@ -90,27 +94,6 @@ public class TVShows extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
 
         actionBar.setTitle(R.string.tv_shows);
-        ImageView imageView = new ImageView(actionBar.getThemedContext());
-        imageView.setScaleType(ImageView.ScaleType.CENTER);
-        imageView.setImageResource(android.R.drawable.ic_menu_search);
-        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
-                ActionBar.LayoutParams.WRAP_CONTENT,
-                ActionBar.LayoutParams.WRAP_CONTENT, Gravity.RIGHT | Gravity.CENTER_VERTICAL);
-        layoutParams.rightMargin = 40;
-        imageView.setLayoutParams(layoutParams);
-        actionBar.setCustomView(imageView);
-        actionBar.setDisplayOptions( ActionBar.DISPLAY_SHOW_CUSTOM);
-
-        actionBar.setDisplayShowTitleEnabled(true);
-
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                startActivity(new Intent(getApplicationContext(), SearchActivity.class));
-
-            }
-        });
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tvtab_layout);
         tabLayout.addTab(tabLayout.newTab().setText(R.string.tab_1_name));
@@ -179,13 +162,40 @@ public class TVShows extends AppCompatActivity {
         super.onResume();
         final BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.selectTabWithId(R.id.tab_tvshows);
+        {
+            if (mApp.getAccount()==null)
+            {
+                slideMenu.getMenu().getItem(0).setVisible(false);
+                slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(false);
+                slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.login);
+                slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setIcon(R.drawable.login);
+            }
+            else
+            {
+                slideMenu.getMenu().getItem(0).setVisible(true);
+                slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(true);
+                slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.logout);
+                slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setIcon(R.drawable.logout);
+            }
+        }
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mToogle.onOptionsItemSelected(item)) {
             return true;
         }
+        else if (item.getItemId()==R.id.search)
+        {
+            startActivity(new Intent(getApplicationContext(), SearchActivity.class));
+        }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search, menu);
+        return true;
     }
 
     private Boolean exit = false;

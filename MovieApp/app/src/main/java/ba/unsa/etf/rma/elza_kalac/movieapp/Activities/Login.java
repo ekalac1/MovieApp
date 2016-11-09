@@ -110,22 +110,22 @@ public class Login extends AppCompatActivity {
                                                             call3.enqueue(new Callback<MoviesListResponse>() {
                                                                 @Override
                                                                 public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                                                                    mApp.setFavoriteMovies(response.body().getResults());
+                                                                    mApp.getAccount().setFavoriteMovies(response.body().getResults());
                                                                     Call<MoviesListResponse> call1 = mApp.getApiService().getMoviesWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
                                                                     call1.enqueue(new Callback<MoviesListResponse>() {
                                                                         @Override
                                                                         public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                                                                            mApp.setWatchListMovies(response.body().getResults());
+                                                                            mApp.getAccount().setWatchListMovies(response.body().getResults());
                                                                             Call<TvShowResponse> call1 = mApp.getApiService().getFavoritesTvShows(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
                                                                             call1.enqueue(new Callback<TvShowResponse>() {
                                                                                 @Override
                                                                                 public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
-                                                                                    mApp.setFavoriteTvShows(response.body().getResults());
+                                                                                    mApp.getAccount().setFavoriteTvShows(response.body().getResults());
                                                                                     Call<TvShowResponse> call1 = mApp.getApiService().getTvShowWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
                                                                                     call1.enqueue(new Callback<TvShowResponse>() {
                                                                                         @Override
                                                                                         public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
-                                                                                            mApp.setWatchListTvShow(response.body().getResults());
+                                                                                            mApp.getAccount().setWatchListTvShow(response.body().getResults());
                                                                                             onBackPressed();
                                                                                         }
                                                                                         @Override

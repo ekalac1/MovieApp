@@ -71,7 +71,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
         final ImageView watchlist = (ImageView) newView.findViewById(R.id.watchlist_movie);
 
         if (mApp.getAccount() != null) {
-            List<Movie> favorite = mApp.getFavoriteMovies();
+            List<Movie> favorite = mApp.getAccount().getFavoriteMovies();
             boolean ind = false;
             for (Movie m : favorite)
                 if (m.getId() == movie.getId()) {
@@ -79,7 +79,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
                     ind = true;
                 }
             if (!ind) favourite.setImageResource(R.drawable.favorite);
-            List<Movie> watchList = mApp.getWatchListMovies();
+            List<Movie> watchList = mApp.getAccount().getWatchListMovies();
             ind = false;
             for (Movie m : watchList)
                 if (m.getId() == movie.getId()) {
@@ -110,7 +110,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
                             call1.enqueue(new Callback<MoviesListResponse>() {
                                 @Override
                                 public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                                    mApp.setWatchListMovies(response.body().getResults());
+                                    mApp.getAccount().setWatchListMovies(response.body().getResults());
                                 }
 
                                 @Override
@@ -151,7 +151,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
                                 call1.enqueue(new Callback<MoviesListResponse>() {
                                     @Override
                                     public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                                        mApp.setFavoriteMovies(response.body().getResults());
+                                        mApp.getAccount().setFavoriteMovies(response.body().getResults());
                                     }
 
                                     @Override
@@ -198,7 +198,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
     }
 
     private void Alert() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(newView.getRootView().getContext(), R.style.AppTheme));
+        AlertDialog.Builder builder = new AlertDialog.Builder(context.getApplicationContext(), android.R.style.Theme_Black);
                 /*(newView.getRootView().getContext()); */
         builder.setMessage(R.string.message)
                 .setTitle(R.string.Sign_in)

@@ -17,6 +17,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.TVShowDetails;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.TvShowGridViewAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Account;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.User;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TvShowResponse;
@@ -33,7 +34,7 @@ public class RatedTvShows extends Fragment {
                              Bundle savedInstanceState) {
         final View newView = inflater.inflate(R.layout.fragment_rated_tv_shows, container, false);
         final MovieApplication mApp = (MovieApplication)getActivity().getApplication();
-        Account a;
+        User a;
         a=mApp.getAccount();
 
         final GridView favoriteMovies = (GridView)newView.findViewById(R.id.rated_tv_shows);

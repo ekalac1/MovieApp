@@ -17,6 +17,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MoviesDetailsActiv
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.MovieGridViewAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Account;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.User;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
@@ -34,7 +35,7 @@ public class RatedMovies extends Fragment {
        final View newView = inflater.inflate(R.layout.fragment_rated_movies, container, false);
 
         final MovieApplication mApp = (MovieApplication)getActivity().getApplication();
-        Account a;
+        User a;
         a=mApp.getAccount();
 
         final GridView favoriteMovies = (GridView)newView.findViewById(R.id.rated_movies);

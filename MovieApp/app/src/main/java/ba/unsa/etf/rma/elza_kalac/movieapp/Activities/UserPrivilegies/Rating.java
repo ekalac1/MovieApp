@@ -1,9 +1,13 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -11,6 +15,7 @@ import android.widget.Toast;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.PostBody;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.SearchActivity;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
@@ -35,61 +40,8 @@ public class Rating extends AppCompatActivity {
 
         ActionBar actionBar = getSupportActionBar();
 
-        actionBar.setTitle(R.string.movies);
-        ImageView imageView = new ImageView(actionBar.getThemedContext());
-        imageView.setScaleType(ImageView.ScaleType.CENTER);
-        imageView.setImageResource(R.drawable.rate);
-        ActionBar.LayoutParams layoutParams = new ActionBar.LayoutParams(
-                300,
-                300, Gravity.END | Gravity.CENTER_VERTICAL);
-        layoutParams.rightMargin = 40;
-        imageView.setLayoutParams(layoutParams);
-        actionBar.setCustomView(imageView);
-        actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        actionBar.setTitle(R.string.rate_label);
         actionBar.setDisplayShowTitleEnabled(true);
-
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (starNum == 0) {
-                    Toast.makeText(getApplicationContext(), R.string.empty_rate, Toast.LENGTH_LONG).show();
-                } else {
-                    PostBody rate = new PostBody(starNum);
-                    if (movieID != 0) {
-                        Call<PostResponse> call = apiService.RateMovie(movieID, ApiClient.API_KEY, mApp.getAccount().getSessionId(), rate);
-                        call.enqueue(new Callback<PostResponse>() {
-                            @Override
-                            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                                if (response.body().getStatusCode() == 1) {
-                                    Toast.makeText(getApplicationContext(), R.string.sucess_rate, Toast.LENGTH_LONG).show();
-                                    onBackPressed();
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(Call<PostResponse> call, Throwable t) {
-
-                            }
-                        });
-                    } else if (tvShowID != 0) {
-                        Call<PostResponse> call = apiService.RateTvshow(tvShowID, ApiClient.API_KEY, mApp.getAccount().getSessionId(), rate);
-                        call.enqueue(new Callback<PostResponse>() {
-                            @Override
-                            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                                if (response.body().getStatusCode() == 1) {
-                                    Toast.makeText(getApplicationContext(), R.string.sucess_rate, Toast.LENGTH_LONG).show();
-                                    onBackPressed();
-                                }
-                            }
-                            @Override
-                            public void onFailure(Call<PostResponse> call, Throwable t) {
-
-                            }
-                        });
-                    }
-                }
-            }
-        });
 
         final ImageView rating1 = (ImageView) findViewById(R.id.rating1);
         final ImageView rating2 = (ImageView) findViewById(R.id.rating2);
@@ -117,8 +69,6 @@ public class Rating extends AppCompatActivity {
                 rating8.setImageResource(R.drawable.star_empty);
                 rating9.setImageResource(R.drawable.star_empty);
                 rating10.setImageResource(R.drawable.star_empty);
-
-
             }
         });
         rating2.setOnClickListener(new View.OnClickListener() {
@@ -267,5 +217,52 @@ public class Rating extends AppCompatActivity {
         });
 
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.rate_icon, menu);
+        return true;
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId()==R.id.rate)
+        {
+            if (starNum == 0) {
+                Toast.makeText(getApplicationContext(), R.string.empty_rate, Toast.LENGTH_LONG).show();
+            } else {
+                PostBody rate = new PostBody(starNum);
+                if (movieID != 0) {
+                    Call<PostResponse> call = apiService.RateMovie(movieID, ApiClient.API_KEY, mApp.getAccount().getSessionId(), rate);
+                    call.enqueue(new Callback<PostResponse>() {
+                        @Override
+                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                            if (response.body().getStatusCode() == 1 || response.body().getStatusCode()==12) {
+                                Toast.makeText(getApplicationContext(), R.string.sucess_rate, Toast.LENGTH_LONG).show();
+                                onBackPressed();
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<PostResponse> call, Throwable t) {
+                        }
+                    });
+                } else if (tvShowID != 0) {
+                    Call<PostResponse> call = apiService.RateTvshow(tvShowID, ApiClient.API_KEY, mApp.getAccount().getSessionId(), rate);
+                    call.enqueue(new Callback<PostResponse>() {
+                        @Override
+                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                            if (response.body().getStatusCode() == 1 || response.body().getStatusCode()==12) {
+                                Toast.makeText(getApplicationContext(), R.string.sucess_rate, Toast.LENGTH_LONG).show();
+                                onBackPressed();
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<PostResponse> call, Throwable t) {
+                        }
+                    });
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
