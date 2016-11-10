@@ -7,10 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
@@ -22,6 +22,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MoviesDetailsActiv
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.MovieGridViewAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListeners;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,22 +31,28 @@ public class MostPopularMoviesFragment extends Fragment {
     List<Movie> movies;
     ApiInterface apiService;
     MovieApplication mApp;
+    MovieGridViewAdapter adapter;
+    GridView grid;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.most_popular_movies_fragment, container, false);
-        final GridView grid = (GridView) view.findViewById(R.id.gridView1);
-
         mApp = (MovieApplication)getActivity().getApplicationContext();
         apiService = mApp.getApiService();
 
+        // Initialize grid data
+        grid = (GridView) view.findViewById(R.id.gridView1);
+        movies = new ArrayList<>();
+        adapter = new MovieGridViewAdapter(getActivity().getApplicationContext(), R.layout.movie_element, movies, mApp, (SignUpAlertListeners) getContext());
+        grid.setAdapter(adapter);
+
+        // Get movies
         Call<MoviesListResponse> call = apiService.getMostPopularMovies(ApiClient.API_KEY, 1);
         call.enqueue(new Callback<MoviesListResponse>() {
             @Override
             public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                movies = response.body().getResults();
-                final MovieGridViewAdapter adapter = new MovieGridViewAdapter(getActivity().getApplicationContext(), R.layout.movie_element, movies, mApp);
-                grid.setAdapter(adapter);
+                movies.addAll(response.body().getResults());
+                adapter.notifyDataSetChanged();
             }
 
             @Override
@@ -53,31 +60,26 @@ public class MostPopularMoviesFragment extends Fragment {
                 Toast.makeText(getActivity().getApplicationContext(),R.string.on_failure, Toast.LENGTH_LONG).show();
             }
         });
+
+        // Event listeners
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent myIntent = new Intent(getActivity(), MoviesDetailsActivity.class);
                 myIntent.putExtra("id", movies.get(position).getId());
                 startActivity(myIntent);
-
             }
         });
-
-
 
         grid.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
-                //  ApiInterface apiService =
-                //   ApiClient.getClient().create(ApiInterface.class);
                 Call<MoviesListResponse> call = apiService.getMostPopularMovies(ApiClient.API_KEY, page);
                 call.enqueue(new Callback<MoviesListResponse>() {
                     @Override
                     public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-
-                        List<Movie> temp = response.body().getResults();
-                        movies.addAll(temp);
-                        ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
+                        movies.addAll(response.body().getResults());
+                        adapter.notifyDataSetChanged();
                     }
 
                     @Override
@@ -103,4 +105,5 @@ public class MostPopularMoviesFragment extends Fragment {
         return view;
 
     }
+
 }

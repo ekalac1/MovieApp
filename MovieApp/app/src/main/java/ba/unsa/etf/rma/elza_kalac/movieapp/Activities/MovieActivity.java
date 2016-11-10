@@ -31,9 +31,10 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Watchlist;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.PagerAdapters.MoviesPagerAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListeners;
 import io.fabric.sdk.android.Fabric;
 
-public class MovieActivity extends AppCompatActivity {
+public class MovieActivity extends AppCompatActivity implements SignUpAlertListeners {
 
     private ActionBarDrawerToggle mToogle;
     NavigationView slideMenu;
@@ -102,27 +103,27 @@ public class MovieActivity extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.settings:
-                        if (mApp.getAccount()==null) Alert();
+                        if (mApp.getAccount()==null) showAlert();
                         else
                         startActivity(new Intent(getApplicationContext(), Settings.class));
                         break;
                     case R.id.favorites:
-                        if (mApp.getAccount()==null) Alert();
+                        if (mApp.getAccount()==null) showAlert();
                         else
                         startActivity(new Intent(getApplicationContext(), Favorites.class));
                         break;
                     case R.id.watchlist:
-                        if (mApp.getAccount()==null) Alert();
+                        if (mApp.getAccount()==null) showAlert();
                         else
                         startActivity(new Intent(getApplicationContext(), Watchlist.class));
                         break;
                     case R.id.ratings:
-                        if (mApp.getAccount()==null) Alert();
+                        if (mApp.getAccount()==null) showAlert();
                         else
                         startActivity(new Intent(getApplicationContext(), Ratings.class));
                         break;
                     case R.id.logout:
-                        if (mApp.getAccount()==null) Alert();
+                        if (mApp.getAccount()==null) showAlert();
 
                         mApp.setAccount(null);
                         mDrawerLayout.closeDrawer(Gravity.LEFT);
@@ -239,7 +240,7 @@ public class MovieActivity extends AppCompatActivity {
     }
 
 
-    private void Alert()
+    public void showAlert()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(MovieActivity.this);
         builder.setMessage(R.string.message)

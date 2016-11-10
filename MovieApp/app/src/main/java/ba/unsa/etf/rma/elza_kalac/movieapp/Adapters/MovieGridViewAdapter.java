@@ -1,10 +1,6 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Adapters;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,12 +20,12 @@ import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.PostBody;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Login;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListeners;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,12 +38,24 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
     Context context;
     MovieApplication mApp;
     LinearLayout newView;
+    private SignUpAlertListeners listener;
+    private List<Movie> movies;
 
     public MovieGridViewAdapter(Context _context, int _resource, List<Movie> items, MovieApplication mApp) {
         super(_context, _resource, items);
         resource = _resource;
         context = _context;
         this.mApp = mApp;
+        this.movies = items;
+    }
+
+    public MovieGridViewAdapter(Context _context, int _resource, List<Movie> items, MovieApplication mApp, SignUpAlertListeners listener) {
+        super(_context, _resource, items);
+        resource = _resource;
+        context = _context;
+        this.mApp = mApp;
+        this.movies = items;
+        this.listener = listener;
     }
 
     @Override
@@ -92,7 +100,9 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
         watchlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mApp.getAccount() == null) Alert();
+                if (mApp.getAccount() == null)  {
+                    listener.showAlert();
+                }
                 else {
                     PostBody postMovie;
                     if (watchlist.getDrawable().getConstantState().equals(context.getDrawable(R.drawable.watchlist).getConstantState()))
@@ -132,13 +142,15 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
         favourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mApp.getAccount() == null) Alert();
+                if (mApp.getAccount() == null) listener.showAlert();
                 else {
                     PostBody postMovie;
                     if (favourite.getDrawable().getConstantState().equals(getContext().getResources().getDrawable(R.drawable.favorite).getConstantState()))
-                    postMovie = new PostBody(mApp.movie, movie.getId(), mApp.favorite, mApp);
-                    else postMovie = new PostBody(mApp.movie, movie.getId(), mApp.watchlist, mApp);
+                        postMovie = new PostBody(mApp.movie, movie.getId(), mApp.favorite, mApp);
+                    else
+                        postMovie = new PostBody(mApp.movie, movie.getId(), mApp.watchlist, mApp);
                     Call<PostResponse> call = mApp.getApiService().PostFavorite(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), postMovie);
+
                     call.enqueue(new Callback<PostResponse>() {
                         @Override
                         public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
@@ -195,24 +207,6 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
                     .into((ImageView) newView.findViewById(R.id.imageView));
         }
         return newView;
-    }
-
-    private void Alert() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(newView.getRootView().getContext(), R.style.AppTheme));
-                /*(newView.getRootView().getContext()); */
-        builder.setMessage(R.string.message)
-                .setTitle(R.string.Sign_in)
-                .setPositiveButton(R.string.sign, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        Intent intent = new Intent(newView.getRootView().getContext(), Login.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
-                    }
-                })
-                .setNegativeButton(R.string.not_now, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                    }
-                }).show();
     }
 }
 
