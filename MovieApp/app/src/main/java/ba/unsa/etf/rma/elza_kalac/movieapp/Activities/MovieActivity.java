@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -207,6 +208,7 @@ public class MovieActivity extends AppCompatActivity implements SignUpAlertListe
         }
         final BottomBar bottomBar = (BottomBar) findViewById(R.id.bottomBar);
         bottomBar.selectTabWithId(R.id.tab_movies);
+        Log.d("Resume1", "1");
     }
 
     @Override
@@ -257,5 +259,6 @@ public class MovieActivity extends AppCompatActivity implements SignUpAlertListe
                     }
                 }).show();
     }
+
 
 }
