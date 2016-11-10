@@ -25,7 +25,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
-import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListeners;
+import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,7 +38,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
     Context context;
     MovieApplication mApp;
     LinearLayout newView;
-    private SignUpAlertListeners listener;
+    private SignUpAlertListener listener;
     private List<Movie> movies;
 
     public MovieGridViewAdapter(Context _context, int _resource, List<Movie> items, MovieApplication mApp) {
@@ -49,7 +49,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
         this.movies = items;
     }
 
-    public MovieGridViewAdapter(Context _context, int _resource, List<Movie> items, MovieApplication mApp, SignUpAlertListeners listener) {
+    public MovieGridViewAdapter(Context _context, int _resource, List<Movie> items, MovieApplication mApp, SignUpAlertListener listener) {
         super(_context, _resource, items);
         resource = _resource;
         context = _context;

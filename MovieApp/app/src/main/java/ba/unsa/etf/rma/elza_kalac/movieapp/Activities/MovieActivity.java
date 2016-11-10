@@ -31,10 +31,10 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Watchlist;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.PagerAdapters.MoviesPagerAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
-import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListeners;
+import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
 import io.fabric.sdk.android.Fabric;
 
-public class MovieActivity extends AppCompatActivity implements SignUpAlertListeners {
+public class MovieActivity extends AppCompatActivity implements SignUpAlertListener {
 
     private ActionBarDrawerToggle mToogle;
     NavigationView slideMenu;

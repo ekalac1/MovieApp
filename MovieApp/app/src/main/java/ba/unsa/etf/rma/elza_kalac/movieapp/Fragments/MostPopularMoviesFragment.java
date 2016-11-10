@@ -22,7 +22,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MoviesDetailsActiv
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.MovieGridViewAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
-import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListeners;
+import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,7 +43,7 @@ public class MostPopularMoviesFragment extends Fragment {
         // Initialize grid data
         grid = (GridView) view.findViewById(R.id.gridView1);
         movies = new ArrayList<>();
-        adapter = new MovieGridViewAdapter(getActivity().getApplicationContext(), R.layout.movie_element, movies, mApp, (SignUpAlertListeners) getContext());
+        adapter = new MovieGridViewAdapter(getActivity().getApplicationContext(), R.layout.movie_element, movies, mApp, (SignUpAlertListener) getContext());
         grid.setAdapter(adapter);
 
         // Get movies
