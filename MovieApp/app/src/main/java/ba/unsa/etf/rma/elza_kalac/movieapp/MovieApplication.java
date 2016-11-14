@@ -53,7 +53,7 @@ public class MovieApplication extends Application {
         // calendar.set(Calendar.MINUTE, 42);
         Intent intentAlarm = new Intent(this, AlarmReciever.class);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis()+5*1000,AlarmManager.INTERVAL_DAY*7,  PendingIntent.getBroadcast(this,1,  intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis()+5*1000,AlarmManager.INTERVAL_DAY,  PendingIntent.getBroadcast(this,1,  intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
         if (settings.getBoolean("accInfo", false))
         {
             final Account a = new Account();

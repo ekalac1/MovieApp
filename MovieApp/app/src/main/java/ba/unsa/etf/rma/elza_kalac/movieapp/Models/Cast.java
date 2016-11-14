@@ -49,6 +49,14 @@ public class Cast {
     private String title;
     @SerializedName("poster_path")
     private String posterPath;
+ @SerializedName("media_type")
+ private String mediaType;
+
+
+
+    public String getMediaType(){return mediaType;}
+
+
 
     public CreditsResponse getCast() {
         return cast;

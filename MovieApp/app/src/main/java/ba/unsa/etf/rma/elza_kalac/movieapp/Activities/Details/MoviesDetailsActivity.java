@@ -73,6 +73,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         final ImageView play = (ImageView) findViewById(R.id.play);
         final TextView rate = (TextView) findViewById(R.id.rate_this_label);
 
+
         movieID = getIntent().getIntExtra("id", 0);
 
         Call<Movie> call = apiService.getMovieDetails(movieID, ApiClient.API_KEY, "credits,reviews,videos");

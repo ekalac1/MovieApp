@@ -18,15 +18,12 @@
         <activity android:name=".Activities.MovieActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:host="movieapp.elza_kalac.rma.etf.unsa.ba"
                     android:pathPrefix="/main"
@@ -50,7 +47,8 @@
         <activity
             android:name=".Activities.Details.Seasons"
             android:parentActivityName=".Activities.Details.TVShowDetails" />
-        <activity android:name=".Activities.Details.ActorDetails" />
+        <activity android:name=".Activities.Details.ActorDetails"
+            android:parentActivityName=".Activities.Details.MoviesDetailsActivity"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"

@@ -19,12 +19,16 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MoviesDetailsActiv
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.TVShowDetails;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Cast;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Review;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.SearchResults;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
+/**
+ * Created by Hugsby on 14-Nov-16.
+ */
 
-public class CastGridAdapter extends RecyclerView.Adapter<CastGridAdapter.MyViewHolder> {
+public class FIlmographyAdapter extends RecyclerView.Adapter<FIlmographyAdapter.MyViewHolder> {
 
-    private List<Cast> castsList;
+    private List<SearchResults> castsList;
     public View view;
     public Context context;
     public String activity;
@@ -33,10 +37,10 @@ public class CastGridAdapter extends RecyclerView.Adapter<CastGridAdapter.MyView
         void onItemClick(Review item);
     }
 
-    List<Review> items;
-    OnItemClickListener listener;
+    List<SearchResults> items;
+    FIlmographyAdapter.OnItemClickListener listener;
 
-    public CastGridAdapter(List<Review> items, OnItemClickListener listener) {
+    public FIlmographyAdapter(List<SearchResults> items, FIlmographyAdapter.OnItemClickListener listener) {
         this.items = items;
         this.listener = listener;
     }
@@ -55,53 +59,42 @@ public class CastGridAdapter extends RecyclerView.Adapter<CastGridAdapter.MyView
     }
 
 
-    public CastGridAdapter(Context context, List<Cast> castsList, String activity) {
+    public FIlmographyAdapter(Context context, List<SearchResults> castsList, String activity) {
         this.context = context;
         this.castsList = castsList;
         this.activity = activity;
     }
 
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public FIlmographyAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.cast_element, parent, false);
-        return new MyViewHolder(itemView);
+        return new FIlmographyAdapter.MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
-        final Cast cast = castsList.get(position);
-        if (cast.getName() != null)
-            holder.name.setText(cast.getName());
-        else holder.name.setText(cast.getTitle());
-        holder.character.setText(cast.getCharacter_name());
+    public void onBindViewHolder(FIlmographyAdapter.MyViewHolder holder, final int position) {
+        final SearchResults cast = castsList.get(position);
+        if (cast.getMediaType().equals("movie"))
+            holder.name.setText(cast.getTitle());
+        else holder.name.setText(cast.getName());
         Glide.with(context)
                 .load(cast.getFullPosterPath(context))
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(holder.cast_image);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (activity != "actor")
-                {
-                    Intent myIntent = new Intent(context, ActorDetails.class);
-                    myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    myIntent.putExtra("id", cast.getId());
-                    context.startActivity(myIntent);
-                }
-                else
-                {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
                     Intent myIntent;
-                    if (cast.getMediaType().equals("movie"))
-                        myIntent=new Intent(context, MoviesDetailsActivity.class);
-                    else myIntent=new Intent(context, TVShowDetails.class);
+                    if (cast.getMediaType()=="movie")
+                    myIntent = new Intent(context, MoviesDetailsActivity.class);
+                    else myIntent = new Intent(context, TVShowDetails.class);
                     myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     myIntent.putExtra("id", cast.getId());
                     context.startActivity(myIntent);
                 }
-            }
-        });
+            });
     }
 
     @Override
@@ -109,3 +102,4 @@ public class CastGridAdapter extends RecyclerView.Adapter<CastGridAdapter.MyView
         return castsList.size();
     }
 }
+

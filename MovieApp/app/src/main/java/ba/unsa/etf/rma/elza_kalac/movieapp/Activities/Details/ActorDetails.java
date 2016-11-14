@@ -44,8 +44,6 @@ public class ActorDetails extends AppCompatActivity {
         apiService = mApp.getApiService();
 
         getSupportActionBar().setTitle(R.string.actor);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.left96);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         actorID=getIntent().getIntExtra("id", 0);
 
