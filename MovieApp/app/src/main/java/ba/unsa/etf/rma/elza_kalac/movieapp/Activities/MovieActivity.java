@@ -261,6 +261,8 @@ public class MovieActivity extends AppCompatActivity  implements SignUpAlertList
             editor.putString("accSession", mApp.getAccount().getSessionId());
             editor.putInt("accId", mApp.getAccount().getAccountId());
             editor.putString("accName", mApp.getAccount().getName());
+            editor.putBoolean("accMovie", mApp.getAccount().isMoviePushNof());
+            editor.putBoolean("accTv", mApp.getAccount().isTvShowPushNot());
         }
         // Commit the edits!
         editor.commit();

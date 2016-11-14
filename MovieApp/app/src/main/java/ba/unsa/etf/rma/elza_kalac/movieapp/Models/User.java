@@ -10,12 +10,32 @@ public class User {
     private int accountId;
     private String sessionId;
 
+    public boolean isTvShowPushNot() {
+        return tvShowPushNot;
+    }
+
+    public void setTvShowPushNot(boolean tvShowPushNot) {
+        this.tvShowPushNot = tvShowPushNot;
+    }
+
+    public boolean isMoviePushNof() {
+        return moviePushNof;
+    }
+
+    public void setMoviePushNof(boolean moviePushNof) {
+        this.moviePushNof = moviePushNof;
+    }
+
+    private boolean moviePushNof, tvShowPushNot;
+
     private List<Movie> favoriteMovies;
     private List<Movie> ratedMovies;
     private List<Movie> watchListMovies;
     private List<TvShow> favoriteTvShows;
     private List<TvShow> ratedTvShow;
     private List<TvShow> watchListTvShow;
+
+
 
     public String getUsername() {
         return username;

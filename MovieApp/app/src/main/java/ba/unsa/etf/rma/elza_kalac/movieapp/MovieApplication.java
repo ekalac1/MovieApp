@@ -35,6 +35,8 @@ public class MovieApplication extends Application {
     ApiInterface apiService;
     User account;
 
+    boolean pushM, pushTv;
+
     private static MovieApplication singleton;
 
     public static MovieApplication getInstance() {
@@ -61,6 +63,8 @@ public class MovieApplication extends Application {
             a.setSessionId(settings.getString("accSession", null));
             a.setAccountId(settings.getInt("accId", 0));
             a.setName(settings.getString("accName", ""));
+            pushM=(settings.getBoolean("accMovie", true));
+            pushTv=(settings.getBoolean("accTv", true));
             setAccount(a);
             Call<MoviesListResponse> call=apiService.getFavoritesMovies(a.getAccountId(), ApiClient.API_KEY, a.getSessionId(), order);
             call.enqueue(new Callback<MoviesListResponse>() {
@@ -121,6 +125,8 @@ public class MovieApplication extends Application {
             n.setSessionId(a.getSessionId());
             n.setUsername(a.getUsername());
             n.setAccountId(a.getAccountId());
+            n.setMoviePushNof(pushM);
+            n.setTvShowPushNot(pushTv);
             account=n;
         }
         else account=null;
