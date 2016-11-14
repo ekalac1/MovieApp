@@ -22,6 +22,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
@@ -88,7 +89,9 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                             Intent intent = (new Intent(getApplicationContext(), Rating.class));
                             intent.putExtra("movieID", movieID);
                             startActivity(intent);
-                        } else Alert();
+                        } else {
+                            Alert();
+                        }
                     }
                 });
                 if (movie.getReleaseDate() != null) {
@@ -129,8 +132,6 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                     TextView temp = (TextView) findViewById(R.id.directors_label);
                     temp.setText(R.string.directors);
                 }
-
-
                 if (movie.getCredits().getWriters().equals("")) {
                     writers.setVisibility(View.GONE);
                     TextView temp = (TextView) findViewById(R.id.writers_label);
@@ -163,6 +164,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         }
                     });
             }
+
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
@@ -181,28 +183,30 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 else {
                     PostBody post;
                     if (item.getIcon().getConstantState().equals(getDrawable(R.drawable.watchlist).getConstantState()))
-                    post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
-                    else  post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
+                        post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
+                    else post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
                     Call<PostResponse> call = apiService.MarkWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), post);
                     call.enqueue(new Callback<PostResponse>() {
                         @Override
                         public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                             if (response.body().getStatusCode() == 1)
                                 item.setIcon(R.drawable.watchlist_active);
-                            else if (response.body().getStatusCode()==13)
+                            else if (response.body().getStatusCode() == 13)
                                 item.setIcon(R.drawable.watchlist);
-                            Call<MoviesListResponse> call1=apiService.getMoviesWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
+                            Call<MoviesListResponse> call1 = apiService.getMoviesWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
                             call1.enqueue(new Callback<MoviesListResponse>() {
                                 @Override
                                 public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
                                     mApp.getAccount().setWatchListMovies(response.body().getResults());
                                 }
+
                                 @Override
                                 public void onFailure(Call<MoviesListResponse> call, Throwable t) {
 
                                 }
                             });
                         }
+
                         @Override
                         public void onFailure(Call<PostResponse> call, Throwable t) {
                         }
@@ -220,10 +224,11 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                     call.enqueue(new Callback<PostResponse>() {
                         @Override
                         public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                            if (response.body().getStatusCode() == 1)
-                               item.setIcon(R.drawable.favorite_active);
-                            else if (response.body().getStatusCode()==13)
-                            item.setIcon(R.drawable.favorite);
+                            if (response.body().getStatusCode() == 1) {
+                                item.setIcon(R.drawable.favorite_active);
+                            } else if (response.body().getStatusCode() == 13) {
+                                item.setIcon(R.drawable.favorite);
+                            }
                             Call<MoviesListResponse> call1 = apiService.getFavoritesMovies(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
                             call1.enqueue(new Callback<MoviesListResponse>() {
                                 @Override
@@ -236,7 +241,6 @@ public class MoviesDetailsActivity extends AppCompatActivity {
 
                                 }
                             });
-
                         }
 
                         @Override
@@ -252,25 +256,23 @@ public class MoviesDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.icons, menu);
-        if (mApp.getAccount()!=null)
-        {
-            for(Movie m: mApp.getAccount().getWatchListMovies())
-                if (m.getId()==movieID)
-                {
-                    MenuItem ma = menu.getItem(0);
-                    ma.setIcon(R.drawable.watchlist_active);
-                }
+        if (mApp.getAccount() != null) {
+            List<Movie> movie = mApp.getAccount().getFavoriteMovies();
+            if (movie != null)
+                for (Movie m : mApp.getAccount().getFavoriteMovies())
+                    if (m.getId() == movieID) {
+                        MenuItem ma = menu.getItem(1);
+                        ma.setIcon(R.drawable.favorite_active);
+                    }
+            movie = mApp.getAccount().getWatchListMovies();
+            if (movie != null)
+                for (Movie m : movie)
+                    if (m.getId() == movieID) {
+                        MenuItem ma = menu.getItem(0);
+                        ma.setIcon(R.drawable.watchlist_active);
+                    }
 
-            for(Movie m: mApp.getAccount().getFavoriteMovies())
-                if (m.getId()==movieID)
-                {
-
-                    MenuItem ma = menu.getItem(1);
-                    ma.setIcon(R.drawable.favorite_active);
-                }
         }
-
-
         return true;
     }
 

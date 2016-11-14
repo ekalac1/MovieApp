@@ -30,6 +30,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -38,16 +39,27 @@ import static ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication.order;
 
 public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
 
-    int resource;
-    Context context;
-    MovieApplication mApp;
-    LinearLayout newView;
+    private int resource;
+    private Context context;
+    private MovieApplication mApp;
+    private SignUpAlertListener listener;
+    private LinearLayout newView;
+    private List<Movie> movies;
 
     public MovieGridViewAdapter(Context _context, int _resource, List<Movie> items, MovieApplication mApp) {
         super(_context, _resource, items);
         resource = _resource;
         context = _context;
         this.mApp = mApp;
+        this.movies=items;
+    }
+    public MovieGridViewAdapter(Context _context, int _resource, List<Movie> items, MovieApplication mApp, SignUpAlertListener listenet) {
+        super(_context, _resource, items);
+        resource = _resource;
+        context = _context;
+        this.mApp = mApp;
+        this.movies=items;
+        this.listener=listenet;
     }
 
     @Override
@@ -73,26 +85,30 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
         if (mApp.getAccount() != null) {
             List<Movie> favorite = mApp.getAccount().getFavoriteMovies();
             boolean ind = false;
-            for (Movie m : favorite)
+            if (favorite!=null) {for (Movie m : favorite)
                 if (m.getId() == movie.getId()) {
                     favourite.setImageResource(R.drawable.favorite_active);
                     ind = true;
                 }
-            if (!ind) favourite.setImageResource(R.drawable.favorite);
+                if (!ind) favourite.setImageResource(R.drawable.favorite);
+                ind = false;}
             List<Movie> watchList = mApp.getAccount().getWatchListMovies();
-            ind = false;
-            for (Movie m : watchList)
-                if (m.getId() == movie.getId()) {
-                    ind = true;
-                    watchlist.setImageResource(R.drawable.watchlist_active);
-                }
-            if (!ind) watchlist.setImageResource(R.drawable.watchlist);
+            if (watchList!=null)
+            {
+                for (Movie m : watchList)
+                    if (m.getId() == movie.getId()) {
+                        ind = true;
+                        watchlist.setImageResource(R.drawable.watchlist_active);
+                    }
+                if (!ind) watchlist.setImageResource(R.drawable.watchlist);
+            }
+
         }
 
         watchlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mApp.getAccount() == null) Alert();
+                if (mApp.getAccount() == null) listener.Alert();
                 else {
                     PostBody postMovie;
                     if (watchlist.getDrawable().getConstantState().equals(context.getDrawable(R.drawable.watchlist).getConstantState()))
@@ -132,7 +148,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
         favourite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mApp.getAccount() == null) Alert();
+                if (mApp.getAccount() == null) listener.Alert();
                 else {
                     PostBody postMovie;
                     if (favourite.getDrawable().getConstantState().equals(getContext().getResources().getDrawable(R.drawable.favorite).getConstantState()))
@@ -215,6 +231,3 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
                 }).show();
     }
 }
-
-
-

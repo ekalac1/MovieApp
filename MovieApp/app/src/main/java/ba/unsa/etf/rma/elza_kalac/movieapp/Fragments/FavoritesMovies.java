@@ -7,9 +7,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
@@ -23,35 +25,44 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Models.User;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication.order;
+
 
 public class FavoritesMovies extends Fragment {
     List<Movie> movies;
+    MovieApplication mApp;
+    User a;
+    GridView favoriteMovies;
+    MovieGridViewAdapter adapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        final View newView= inflater.inflate(R.layout.fragment_favorites_movies, container, false);
+        final View newView = inflater.inflate(R.layout.fragment_favorites_movies, container, false);
 
-        final MovieApplication mApp = (MovieApplication)getActivity().getApplication();
-        User a;
-        a=mApp.getAccount();
+        mApp = (MovieApplication) getActivity().getApplication();
+        a = mApp.getAccount();
 
-        final GridView favoriteMovies = (GridView)newView.findViewById(R.id.favorite_movies);
+        movies = new ArrayList<>();
+        adapter = new MovieGridViewAdapter(newView.getContext(), R.layout.movie_element, movies, mApp);
+        favoriteMovies = (GridView) newView.findViewById(R.id.favorite_movies);
+        favoriteMovies.setAdapter(adapter);
 
-        Call<MoviesListResponse> call = mApp.getApiService().getFavoritesMovies(a.getAccountId(), ApiClient.API_KEY, a.getSessionId(), mApp.order);
+
+        Call<MoviesListResponse> call = mApp.getApiService().getFavoritesMovies(a.getAccountId(), ApiClient.API_KEY, a.getSessionId(), order);
         call.enqueue(new Callback<MoviesListResponse>() {
             @Override
             public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                movies=response.body().getResults();
-                MovieGridViewAdapter adapter = new MovieGridViewAdapter(newView.getContext(), R.layout.movie_element, response.body().getResults(), mApp);
-                favoriteMovies.setAdapter(adapter);
+                movies.addAll(response.body().getResults());
+                ((BaseAdapter) favoriteMovies.getAdapter()).notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(Call<MoviesListResponse> call, Throwable t) {
-
             }
         });
 
@@ -64,10 +75,12 @@ public class FavoritesMovies extends Fragment {
             }
         });
 
-        return  newView;
+        return newView;
     }
 
-
-
-
+    @Override
+    public void onResume() {
+        ((BaseAdapter) favoriteMovies.getAdapter()).notifyDataSetChanged();
+        super.onResume();
+    }
 }

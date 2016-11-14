@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
@@ -23,35 +24,41 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MoviesDetailsActiv
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.MovieGridViewAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class LatestMoviesFragment extends Fragment {
-    private static final String TAG = MovieActivity.class.getSimpleName();
+
     ApiInterface apiService;
     MovieApplication mApp;
-    public List<Movie> movies;
+    List<Movie> movies;
+    GridView grid;
+    MovieGridViewAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.latest_movies_fragment, container, false);
-        final GridView grid = (GridView) view.findViewById(R.id.gridView2);
 
 
-        mApp = (MovieApplication)getActivity().getApplicationContext();
+        mApp = (MovieApplication) getActivity().getApplicationContext();
         apiService = mApp.getApiService();
+
+        grid = (GridView) view.findViewById(R.id.gridView2);
+        movies = new ArrayList<>();
+        adapter = new MovieGridViewAdapter(getActivity().getApplicationContext(), R.layout.movie_element, movies, mApp, (SignUpAlertListener) getContext());
+        grid.setAdapter(adapter);
+
 
         Call<MoviesListResponse> call = apiService.getLatestMovies(ApiClient.API_KEY, 1);
         call.enqueue(new Callback<MoviesListResponse>() {
-           @Override
+            @Override
             public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-               if (response.body()!=null)
-               {
-                movies = response.body().getResults();
-                final MovieGridViewAdapter adapter = new MovieGridViewAdapter(getActivity().getApplicationContext(), R.layout.movie_element, movies, mApp);
-                 grid.setAdapter(adapter);
-               }
+                if (response.body() != null) {
+                    movies.addAll(response.body().getResults());
+                    ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -68,8 +75,7 @@ public class LatestMoviesFragment extends Fragment {
                 call.enqueue(new Callback<MoviesListResponse>() {
                     @Override
                     public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                        List<Movie> temp = response.body().getResults();
-                        movies.addAll(temp);
+                        movies.addAll(response.body().getResults());
                         ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
                     }
 
@@ -78,8 +84,6 @@ public class LatestMoviesFragment extends Fragment {
                         Toast.makeText(getActivity().getApplicationContext(), "Failed", Toast.LENGTH_LONG).show();
                     }
                 });
-
-
                 return true;
             }
         });
@@ -90,11 +94,15 @@ public class LatestMoviesFragment extends Fragment {
                 Intent myIntent = new Intent(getActivity(), MoviesDetailsActivity.class);
                 myIntent.putExtra("id", movies.get(position).getId());
                 startActivity(myIntent);
-
             }
         });
 
         return view;
+    }
 
+    @Override
+    public void onResume() {
+        ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
+        super.onResume();
     }
 }

@@ -1,10 +1,14 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp;
 
+import android.app.AlarmManager;
 import android.app.Application;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
@@ -43,6 +47,13 @@ public class MovieApplication extends Application {
         singleton = this;
         apiService = ApiClient.getClient().create(ApiInterface.class);
         SharedPreferences settings = getSharedPreferences("account", 0);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        //  calendar.set(Calendar.HOUR_OF_DAY, 13);
+        // calendar.set(Calendar.MINUTE, 42);
+        Intent intentAlarm = new Intent(this, AlarmReciever.class);
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis()+5*1000,AlarmManager.INTERVAL_DAY*7,  PendingIntent.getBroadcast(this,1,  intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
         if (settings.getBoolean("accInfo", false))
         {
             final Account a = new Account();

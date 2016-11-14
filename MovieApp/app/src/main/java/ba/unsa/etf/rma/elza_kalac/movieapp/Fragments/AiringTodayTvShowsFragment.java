@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
@@ -22,6 +23,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.TvShowGridViewAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.EndlessScrollListener;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,53 +33,45 @@ public class AiringTodayTvShowsFragment extends Fragment {
     List<TvShow> tvShow;
     ApiInterface apiService;
     MovieApplication mApp;
+    TvShowGridViewAdapter adapter;
+    GridView grid;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         final View view = inflater.inflate(R.layout.activity_airing_today_tv_shows_fragment, container, false);
 
         mApp = (MovieApplication)getActivity().getApplicationContext();
         apiService = mApp.getApiService();
 
-        final GridView grid = (GridView) view.findViewById(R.id.airing_today_tv_shows);
-
+        tvShow=new ArrayList<>();
+        grid = (GridView) view.findViewById(R.id.airing_today_tv_shows);
+        adapter = new TvShowGridViewAdapter(getActivity().getApplicationContext(), R.layout.tv_show_element, tvShow, mApp, (SignUpAlertListener) getContext());
+        grid.setAdapter(adapter);
 
         Call<TvShowResponse> call = apiService.getAiringTodayTvShows(ApiClient.API_KEY, 1);
         call.enqueue(new Callback<TvShowResponse>() {
             @Override
             public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
-
-                tvShow = response.body().getResults();
-                final TvShowGridViewAdapter adapter = new TvShowGridViewAdapter(getActivity().getApplicationContext(), R.layout.tv_show_element, tvShow, mApp);
-
-                grid.setAdapter(adapter);
+                tvShow.addAll(response.body().getResults());
+                ((BaseAdapter)grid.getAdapter()).notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(Call<TvShowResponse> call, Throwable t) {
-
                 Toast.makeText(getActivity().getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
-
             }
         });
 
         grid.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
-
                 Call<TvShowResponse> call = apiService.getAiringTodayTvShows(ApiClient.API_KEY, page);
                 call.enqueue(new Callback<TvShowResponse>() {
                     @Override
                     public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
-
-                        List<TvShow> temp = response.body().getResults();
-
-                        tvShow.addAll(temp);
-
-                        ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
+                        tvShow.addAll(response.body().getResults());
+                        ((BaseAdapter)grid.getAdapter()).notifyDataSetChanged();
                     }
-
                     @Override
                     public void onFailure(Call<TvShowResponse> call, Throwable t) {
                         Toast.makeText(getActivity().getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
@@ -97,5 +91,11 @@ public class AiringTodayTvShowsFragment extends Fragment {
             }
         });
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
+        super.onResume();
     }
 }

@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
@@ -28,24 +30,31 @@ import retrofit2.Response;
 public class RatedTvShows extends Fragment {
 
     List<TvShow> tvShow;
+    MovieApplication mApp;
+    User a;
+    GridView favoriteMovies;
+    TvShowGridViewAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View newView = inflater.inflate(R.layout.fragment_rated_tv_shows, container, false);
-        final MovieApplication mApp = (MovieApplication)getActivity().getApplication();
-        User a;
+        tvShow=new ArrayList<>();
+
+        mApp = (MovieApplication)getActivity().getApplication();
         a=mApp.getAccount();
 
-        final GridView favoriteMovies = (GridView)newView.findViewById(R.id.rated_tv_shows);
+        favoriteMovies = (GridView)newView.findViewById(R.id.rated_tv_shows);
+        adapter = new TvShowGridViewAdapter(newView.getContext(), R.layout.tv_show_element, tvShow, mApp);
+        favoriteMovies.setAdapter(adapter);
 
         Call<TvShowResponse> call = mApp.getApiService().getTvShowRatings(a.getAccountId(), ApiClient.API_KEY, a.getSessionId(), mApp.order);
         call.enqueue(new Callback<TvShowResponse>() {
             @Override
             public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
-                tvShow=response.body().getResults();
-                TvShowGridViewAdapter adapter = new TvShowGridViewAdapter(newView.getContext(), R.layout.tv_show_element, response.body().getResults(), mApp);
-                favoriteMovies.setAdapter(adapter);
+                tvShow.addAll(response.body().getResults());
+                ((BaseAdapter)favoriteMovies.getAdapter()).notifyDataSetChanged();
+
             }
 
             @Override
@@ -63,6 +72,12 @@ public class RatedTvShows extends Fragment {
             }
         });
         return newView;
+    }
+
+    @Override
+    public void onResume() {
+        ((BaseAdapter) favoriteMovies.getAdapter()).notifyDataSetChanged();
+        super.onResume();
     }
 
 }

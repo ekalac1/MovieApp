@@ -101,4 +101,7 @@ public interface ApiInterface {
     @POST("tv/{tv_id}/rating")
     Call<PostResponse> RateTvshow(@Path("tv_id") Integer tvShowID, @Query("api_key") String apiKey, @Query("session_id") String session_id, @Body PostBody body);
 
+    @GET("discover/movie")
+    Call<MoviesListResponse> DiscoverMovies(@Query("api_key") String apiKey, @Query("sort_by") String sortBy, @Query("primary_release_date.gte") String primaryRelaseDate, @Query("primary_release_date.lte") String endDate);
+
 }

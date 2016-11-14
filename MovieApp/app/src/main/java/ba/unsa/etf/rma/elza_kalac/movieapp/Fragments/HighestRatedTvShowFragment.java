@@ -11,6 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
@@ -22,6 +23,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.TvShowGridViewAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.EndlessScrollListener;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,24 +33,29 @@ public class HighestRatedTvShowFragment extends Fragment {
     List<TvShow> tvShow;
     ApiInterface apiService;
     MovieApplication mApp;
-
+    GridView grid;
+    TvShowGridViewAdapter adapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.activity_highest_rated_tv_show_fragment, container, false);
 
-        final GridView grid = (GridView) view.findViewById(R.id.highest_rated_tv_shows);
-
         mApp = (MovieApplication)getActivity().getApplicationContext();
         apiService = mApp.getApiService();
+
+        grid = (GridView) view.findViewById(R.id.highest_rated_tv_shows);
+        tvShow=new ArrayList<>();
+        adapter = new TvShowGridViewAdapter(getActivity().getApplicationContext(), R.layout.tv_show_element, tvShow, mApp, (SignUpAlertListener) getContext()
+        );
+        grid.setAdapter(adapter);
+
+
 
         Call<TvShowResponse> call = apiService.getHighestRatedTvShows(ApiClient.API_KEY, 1);
         call.enqueue(new Callback<TvShowResponse>() {
             @Override
             public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
-
-                tvShow = response.body().getResults();
-                final TvShowGridViewAdapter adapter = new TvShowGridViewAdapter(getActivity().getApplicationContext(), R.layout.tv_show_element, tvShow, mApp);
-                grid.setAdapter(adapter);
+                tvShow.addAll(response.body().getResults());
+                ((BaseAdapter)grid.getAdapter()).notifyDataSetChanged();
             }
 
             @Override
@@ -60,17 +67,13 @@ public class HighestRatedTvShowFragment extends Fragment {
         grid.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
-
                 final ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
-
                 Call<TvShowResponse> call = apiService.getHighestRatedTvShows(ApiClient.API_KEY, page);
                 call.enqueue(new Callback<TvShowResponse>() {
                     @Override
                     public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
-
-                        List<TvShow> temp = response.body().getResults();
-                        tvShow.addAll(temp);
-                        ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
+                        tvShow.addAll(response.body().getResults());
+                        ((BaseAdapter)grid.getAdapter()).notifyDataSetChanged();
                     }
 
                     @Override
@@ -91,5 +94,10 @@ public class HighestRatedTvShowFragment extends Fragment {
             }
         });
         return view;
+    }
+    @Override
+    public void onResume() {
+        ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
+        super.onResume();
     }
 }

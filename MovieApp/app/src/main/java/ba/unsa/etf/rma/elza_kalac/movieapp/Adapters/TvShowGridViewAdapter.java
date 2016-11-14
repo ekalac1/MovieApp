@@ -30,6 +30,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TvShowResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,12 +43,21 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
     private Context context;
     private MovieApplication mApp;
     private LinearLayout newView;
+    SignUpAlertListener listener;
 
     public TvShowGridViewAdapter(Context _context, int _resource, List<TvShow> items, MovieApplication mApp) {
         super(_context, _resource, items);
         resource = _resource;
         context = _context;
         this.mApp = mApp;
+    }
+
+    public TvShowGridViewAdapter(Context _context, int _resource, List<TvShow> items, MovieApplication mApp, SignUpAlertListener listener) {
+        super(_context, _resource, items);
+        resource = _resource;
+        context = _context;
+        this.mApp = mApp;
+        this.listener=listener;
     }
 
     @Override
@@ -93,7 +103,7 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
         favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mApp.getAccount() == null) Alert();
+                if (mApp.getAccount() == null) listener.Alert();
                 else {
                     PostBody postMovie;
                     if (favorite.getDrawable().getConstantState().equals(getContext().getResources().getDrawable(R.drawable.favorite).getConstantState()))
@@ -118,7 +128,6 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
 
                                     }
                                 });
-
                         }
 
                         @Override
@@ -133,7 +142,7 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
         watchlist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (mApp.getAccount() == null) Alert();
+                if (mApp.getAccount() == null) listener.Alert();
                 else {
                     PostBody postMovie;
                     if (watchlist.getDrawable().getConstantState().equals(context.getDrawable(R.drawable.watchlist).getConstantState()))

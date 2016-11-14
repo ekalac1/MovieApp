@@ -32,8 +32,9 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Watchlist;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.PagerAdapters.TvShowsPagerAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
 
-public class TVShows extends AppCompatActivity {
+public class TVShows extends AppCompatActivity implements SignUpAlertListener {
 
     private ActionBarDrawerToggle mToogle;
     NavigationView slideMenu;
@@ -218,7 +219,7 @@ public class TVShows extends AppCompatActivity {
             }
         }
     }
-    private void Alert()
+    public void Alert()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(TVShows.this);
         builder.setMessage(R.string.message)

@@ -18,7 +18,7 @@ public class SeasonsGridAdapter extends ArrayAdapter<Season> {
 
     int resource;
     Context context;
-    
+
     public SeasonsGridAdapter(Context _context, int _resource, List<Season> items) {
         super(_context, _resource, items);
         resource = _resource;

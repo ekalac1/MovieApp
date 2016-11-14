@@ -26,6 +26,8 @@ import android.widget.Toast;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
+import java.util.ArrayList;
+
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.RssAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Favorites;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Ratings;
@@ -45,31 +47,29 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 public class NewsFeed extends AppCompatActivity {
 
-    public ListView entrysList;
-    public Feed feed;
-    private ActionBarDrawerToggle mToogle;
+    ListView entrysList;
+    Feed feed;
+    ActionBarDrawerToggle mToogle;
     NavigationView slideMenu;
     DrawerLayout mDrawerLayout;
     MovieApplication mApp;
+    NewsListAdapter n;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_feed);
 
-        mApp=(MovieApplication)getApplicationContext();
-
+        mApp = (MovieApplication) getApplicationContext();
         slideMenu = (NavigationView) findViewById(R.id.navigationSlide);
 
-        if (mApp.getAccount()==null)
-        {
+
+        if (mApp.getAccount() == null) {
             slideMenu.getMenu().getItem(0).setVisible(false);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(false);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.login);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setIcon(R.drawable.login);
-        }
-        else
-        {
+        } else {
             slideMenu.getMenu().getItem(0).setVisible(true);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(true);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.logout);
@@ -82,28 +82,37 @@ public class NewsFeed extends AppCompatActivity {
 
                 switch (item.getItemId()) {
                     case R.id.settings:
-                        if (mApp.getAccount()==null) Alert();
+                        if (mApp.getAccount() == null) Alert();
                         else
-                        startActivity(new Intent(getApplicationContext(), Settings.class));
+                        {
+                            startActivity(new Intent(getApplicationContext(), Settings.class));
+                        }
                         break;
                     case R.id.favorites:
-                        if (mApp.getAccount()==null) Alert();
+                        if (mApp.getAccount() == null) Alert();
                         else
-                        startActivity(new Intent(getApplicationContext(), Favorites.class));
+                        {
+                            startActivity(new Intent(getApplicationContext(), Favorites.class));
+                        }
                         break;
                     case R.id.watchlist:
-                        if (mApp.getAccount()==null) Alert();
+                        if (mApp.getAccount() == null) Alert();
                         else
-                        startActivity(new Intent(getApplicationContext(), Watchlist.class));
+                        {
+                            startActivity(new Intent(getApplicationContext(), Watchlist.class));
+                        }
                         break;
                     case R.id.ratings:
-                        if (mApp.getAccount()==null) Alert();
+                        if (mApp.getAccount() == null) Alert();
                         else
-                        startActivity(new Intent(getApplicationContext(), Ratings.class));
+                        {
+                            startActivity(new Intent(getApplicationContext(), Ratings.class));
+                        }
                         break;
                     case R.id.logout:
-                        if (mApp.getAccount()==null) Alert();
-                        else {
+                        if (mApp.getAccount() == null) Alert();
+                        else
+                        {
                             mApp.setAccount(null);
                             mDrawerLayout.closeDrawer(GravityCompat.START);
                             Toast.makeText(getApplicationContext(), R.string.logout_done, Toast.LENGTH_LONG).show();
@@ -152,7 +161,7 @@ public class NewsFeed extends AppCompatActivity {
             }
         });
 
-       Retrofit retrofit = new Retrofit.Builder()
+        Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.boxofficemojo.com")
                 .client(new OkHttpClient())
                 .addConverterFactory(SimpleXmlConverterFactory.create())
@@ -164,7 +173,7 @@ public class NewsFeed extends AppCompatActivity {
             @Override
             public void onResponse(Call<Feed> call, Response<Feed> response) {
                 feed = response.body();
-                NewsListAdapter n = new NewsListAdapter(getApplicationContext(), R.layout.news_element, feed.getmChannel().getFeedItems());
+                n = new NewsListAdapter(getApplicationContext(), R.layout.news_element, feed.getmChannel().getFeedItems());
                 entrysList.setAdapter(n);
             }
 
@@ -187,15 +196,14 @@ public class NewsFeed extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (mToogle.onOptionsItemSelected(item)) {
             return true;
-        }
-        else if (item.getItemId()==R.id.search)
-        {
+        } else if (item.getItemId() == R.id.search) {
             startActivity(new Intent(getApplicationContext(), SearchActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
 
     private Boolean exit = false;
+
     @Override
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
@@ -215,8 +223,8 @@ public class NewsFeed extends AppCompatActivity {
             }
         }
     }
-    private void Alert()
-    {
+
+    private void Alert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(NewsFeed.this);
         builder.setMessage(R.string.message)
                 .setTitle(R.string.Sign_in)
@@ -234,22 +242,19 @@ public class NewsFeed extends AppCompatActivity {
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
-        if (mApp.getAccount()==null)
-        {
+        if (mApp.getAccount() == null) {
             slideMenu.getMenu().getItem(0).setVisible(false);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(false);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.login);
-        }
-        else
-        {
+        } else {
             slideMenu.getMenu().getItem(0).setVisible(true);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(true);
             slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.logout);
         }
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();

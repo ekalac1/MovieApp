@@ -32,11 +32,16 @@ import retrofit2.Response;
 public class ActorDetails extends AppCompatActivity {
     int actorID;
     ApiInterface apiService;
+    MovieApplication mApp;
+    CastGridAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_actor_details);
+
+        mApp = (MovieApplication)getApplicationContext();
+        apiService = mApp.getApiService();
 
         getSupportActionBar().setTitle(R.string.actor);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.left96);
@@ -77,8 +82,7 @@ public class ActorDetails extends AppCompatActivity {
                 }
             }
         });
-        MovieApplication mApp = (MovieApplication)getApplicationContext();
-        apiService = mApp.getApiService();
+
         Call<Cast> call = apiService.getActor(actorID, ApiClient.API_KEY, "combined_credits");
         call.enqueue(new Callback<Cast>() {
             @Override
@@ -131,19 +135,13 @@ public class ActorDetails extends AppCompatActivity {
                     readMore.setText(R.string.Read_more);
                     temp.setText(R.string.Biography);
                 }
-
-
-
-
-
-
                 Glide.with(getApplicationContext())
                         .load(actor.getFullPosterPath(getApplicationContext()))
                         .centerCrop()
                         .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .into((ImageView)findViewById(R.id.actor_detalis_image));
 
-                CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), actor.getCast().getCast(), "actor");
+                mAdapter = new CastGridAdapter(getApplicationContext(), actor.getCast().getCast(), "actor");
                 LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
                 actorRoles.setLayoutManager(mLayoutManager);
                 actorRoles.setAdapter(mAdapter);
@@ -158,8 +156,7 @@ public class ActorDetails extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return  true;
         }

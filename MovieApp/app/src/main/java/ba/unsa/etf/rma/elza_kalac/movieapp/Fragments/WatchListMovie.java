@@ -8,19 +8,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MoviesDetailsActivity;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.MovieGridViewAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Account;
+import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.User;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -28,31 +32,33 @@ import retrofit2.Response;
 public class WatchListMovie extends Fragment {
 
     List<Movie> movies;
+    MovieApplication mApp;
+    User a;
+    GridView favoriteMovies;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
          final View newView = inflater.inflate(R.layout.fragment_watch_list_movie, container, false);
 
-
-        final MovieApplication mApp = (MovieApplication)getActivity().getApplication();
-        User a;
+        mApp = (MovieApplication)getActivity().getApplication();
         a=mApp.getAccount();
 
-        final GridView favoriteMovies = (GridView)newView.findViewById(R.id.watch_list_movies);
+        movies=new ArrayList<>();
+        favoriteMovies = (GridView)newView.findViewById(R.id.watch_list_movies);
+        MovieGridViewAdapter adapter = new MovieGridViewAdapter(newView.getContext(), R.layout.movie_element, movies, mApp);
+        favoriteMovies.setAdapter(adapter);
 
         Call<MoviesListResponse> call = mApp.getApiService().getMoviesWatchList(a.getAccountId(), ApiClient.API_KEY, a.getSessionId(), mApp.order);
         call.enqueue(new Callback<MoviesListResponse>() {
             @Override
-            public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                movies = response.body().getResults();
-                MovieGridViewAdapter adapter = new MovieGridViewAdapter(newView.getContext(), R.layout.movie_element, response.body().getResults(), mApp);
-                favoriteMovies.setAdapter(adapter);
+            public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response)
+            {
+                movies.addAll(response.body().getResults());
+                ((BaseAdapter) favoriteMovies.getAdapter()).notifyDataSetChanged();
             }
 
             @Override
             public void onFailure(Call<MoviesListResponse> call, Throwable t) {
-
             }
         });
 
@@ -67,4 +73,9 @@ public class WatchListMovie extends Fragment {
         return newView;
     }
 
+    @Override
+    public void onResume() {
+        ((BaseAdapter) favoriteMovies.getAdapter()).notifyDataSetChanged();
+        super.onResume();
+    }
 }

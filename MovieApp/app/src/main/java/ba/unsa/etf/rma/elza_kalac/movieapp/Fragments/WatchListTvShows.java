@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.GridView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
@@ -28,25 +30,31 @@ import retrofit2.Response;
 public class WatchListTvShows extends Fragment {
 
     List<TvShow> tvShows;
+    MovieApplication mApp;
+    User a;
+    GridView favoriteMovies;
+    TvShowGridViewAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View newView=inflater.inflate(R.layout.fragment_watch_list_tv_shows, container, false);
 
-        final MovieApplication mApp = (MovieApplication)getActivity().getApplication();
-        User a;
+        mApp = (MovieApplication)getActivity().getApplication();
         a=mApp.getAccount();
 
-        final GridView favoriteMovies = (GridView)newView.findViewById(R.id.tv_show_watchlist);
+        tvShows=new ArrayList<>();
+        favoriteMovies = (GridView)newView.findViewById(R.id.tv_show_watchlist);
+        adapter = new TvShowGridViewAdapter(newView.getContext(), R.layout.tv_show_element, tvShows, mApp);
+        favoriteMovies.setAdapter(adapter);
 
         Call<TvShowResponse> call = mApp.getApiService().getTvShowWatchList(a.getAccountId(), ApiClient.API_KEY, a.getSessionId(), "created_at.desc");
         call.enqueue(new Callback<TvShowResponse>() {
             @Override
             public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
-                tvShows=response.body().getResults();
-                TvShowGridViewAdapter adapter = new TvShowGridViewAdapter(newView.getContext(), R.layout.tv_show_element, response.body().getResults(), mApp);
-                favoriteMovies.setAdapter(adapter);
+                tvShows.addAll(response.body().getResults());
+                ((BaseAdapter)favoriteMovies.getAdapter()).notifyDataSetChanged();
+
             }
 
             @Override
@@ -64,5 +72,10 @@ public class WatchListTvShows extends Fragment {
         });
 
         return newView;
+    }
+    @Override
+    public void onResume() {
+        ((BaseAdapter) favoriteMovies.getAdapter()).notifyDataSetChanged();
+        super.onResume();
     }
 }
