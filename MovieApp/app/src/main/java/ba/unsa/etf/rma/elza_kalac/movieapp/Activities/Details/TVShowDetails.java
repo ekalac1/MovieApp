@@ -220,7 +220,7 @@ public class TVShowDetails extends AppCompatActivity {
                 if (mApp.getAccount() == null) Alert();
                 else {
                     PostBody postMovie;
-                    if (item.getIcon().getConstantState().equals(getDrawable(R.drawable.watchlist).getConstantState()))
+                    if (item.getIcon().getConstantState().equals(getDrawable(R.drawable.watchlist_menu).getConstantState()))
                         postMovie = new PostBody(mApp.tvShow, tvshow.getId(), mApp.watchlist, mApp);
                     else postMovie = new PostBody(mApp.tvShow, tvshow.getId(), mApp.favorite, mApp);
                     Call<PostResponse> call = mApp.getApiService().MarkWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), postMovie);
@@ -230,7 +230,7 @@ public class TVShowDetails extends AppCompatActivity {
                             if (response.body().getStatusCode() == 1)
                                 item.setIcon(R.drawable.watchlist_active);
                             else if (response.body().getStatusCode() == 13)
-                                item.setIcon(R.drawable.watchlist);
+                                item.setIcon(R.drawable.watchlist_menu);
                             Call<TvShowResponse> call1 = apiService.getTvShowWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
                             call1.enqueue(new Callback<TvShowResponse>() {
                                 @Override
@@ -255,7 +255,7 @@ public class TVShowDetails extends AppCompatActivity {
                 if (mApp.getAccount() == null) Alert();
                 else {
                     PostBody postMovie;
-                    if (item.getIcon().getConstantState().equals(getDrawable(R.drawable.watchlist).getConstantState()))
+                    if (item.getIcon().getConstantState().equals(getDrawable(R.drawable.favorite).getConstantState()))
                     postMovie = new PostBody(mApp.tvShow, tvshow.getId(), mApp.favorite, mApp);
                     else postMovie = new PostBody(mApp.tvShow, tvshow.getId(), mApp.watchlist, mApp);
                     Call<PostResponse> call = mApp.getApiService().PostFavorite(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), postMovie);
