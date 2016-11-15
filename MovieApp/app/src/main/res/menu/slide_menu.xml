@@ -1,36 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-        <item
-            android:id="@+id/g1"
-            android:title="@string/your_list">
-            <menu>
-                <item
-                    android:id="@+id/favorites"
-                    android:icon="@drawable/favorite_active"
-                    android:title="@string/favourites" />
-                <item
-                    android:id="@+id/watchlist"
-                    android:icon="@drawable/watchlist_active"
-                    android:title="@string/watchlist" />
-                <item
-                    android:id="@+id/ratings"
-                    android:icon="@drawable/ratings"
-                    android:title="@string/ratings" />
-            </menu>
-        </item>
+    <item
+        android:id="@+id/name"
+        android:title="Elza Kalac">
 
-        <item
-            android:id="@+id/g2"
-            android:title="@string/more">
-            <menu>
-                <item
-                    android:id="@+id/settings"
-                    android:icon="@drawable/settings"
-                    android:title="@string/Settings" />
-                <item
-                    android:id="@+id/logout"
-                    android:icon="@drawable/logout"
-                    android:title="@string/logout" />
-            </menu>
-        </item>
+    </item>
+    <item
+        android:id="@+id/g1"
+        android:title="@string/your_list">
+        <menu>
+            <item
+                android:id="@+id/favorites"
+                android:icon="@drawable/favorite_active"
+                android:title="@string/favourites" />
+            <item
+                android:id="@+id/watchlist"
+                android:icon="@drawable/watchlist_active"
+                android:title="@string/watchlist" />
+            <item
+                android:id="@+id/ratings"
+                android:icon="@drawable/ratings"
+                android:title="@string/ratings" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/g2"
+        android:title="@string/more">
+        <menu>
+            <item
+                android:id="@+id/settings"
+                android:icon="@drawable/settings"
+                android:title="@string/Settings" />
+            <item
+                android:id="@+id/logout"
+                android:icon="@drawable/logout"
+                android:title="@string/logout" />
+        </menu>
+    </item>
 </menu>

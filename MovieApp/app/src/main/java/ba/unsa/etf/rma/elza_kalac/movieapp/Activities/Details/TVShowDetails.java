@@ -1,3 +1,275 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details;
 
 import android.content.DialogInterface;
@@ -116,7 +388,7 @@ public class TVShowDetails extends AppCompatActivity {
                 String seasonList = "";
                 if (tvshow.getSeasons().size() == 1) seasonList = String.valueOf(1);
                 else
-                    for (int i = 1; i < tvshow.getSeasons().size(); i++) {
+                    for (int i = tvshow.getSeasons().size(); i >0; i--) {
                         seasonList = seasonList + String.valueOf(i) + " ";
                     }
                 seasonsList.setText(seasonList);
@@ -130,9 +402,9 @@ public class TVShowDetails extends AppCompatActivity {
                         int endYear = Integer.parseInt(temp2);
                         List<Integer> yearList = new ArrayList<Integer>();
                         String list = "";
-                        for (int i = startYear; i <= endYear; i++) {
+                        for (int i = endYear; i >= startYear; i--) {
                             yearList.add(i);
-                            list = list + String.valueOf(i) + " ";
+                            list = list + String.valueOf(i) + "  ";
                         }
                         yearsList.setText(list);
                     }
@@ -220,7 +492,7 @@ public class TVShowDetails extends AppCompatActivity {
                 if (mApp.getAccount() == null) Alert();
                 else {
                     PostBody postMovie;
-                    if (item.getIcon().getConstantState().equals(getDrawable(R.drawable.watchlist_menu).getConstantState()))
+                    if (item.getIcon().getConstantState().equals(getDrawable(R.drawable.watchlist).getConstantState()))
                         postMovie = new PostBody(mApp.tvShow, tvshow.getId(), mApp.watchlist, mApp);
                     else postMovie = new PostBody(mApp.tvShow, tvshow.getId(), mApp.favorite, mApp);
                     Call<PostResponse> call = mApp.getApiService().MarkWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), postMovie);
@@ -230,7 +502,7 @@ public class TVShowDetails extends AppCompatActivity {
                             if (response.body().getStatusCode() == 1)
                                 item.setIcon(R.drawable.watchlist_active);
                             else if (response.body().getStatusCode() == 13)
-                                item.setIcon(R.drawable.watchlist_menu);
+                                item.setIcon(R.drawable.watchlist);
                             Call<TvShowResponse> call1 = apiService.getTvShowWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
                             call1.enqueue(new Callback<TvShowResponse>() {
                                 @Override

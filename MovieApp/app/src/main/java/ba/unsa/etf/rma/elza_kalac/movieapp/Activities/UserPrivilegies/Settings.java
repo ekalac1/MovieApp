@@ -18,9 +18,10 @@ public class Settings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
+        getSupportActionBar().setTitle(R.string.settings);
         mApp=(MovieApplication)getApplicationContext();
         TextView name = (TextView)findViewById(R.id.name);
-        name.setText(mApp.getAccount().getName());
+        name.setText("Elza Kalac");
         TextView username = (TextView)findViewById(R.id.username);
         username.setText(mApp.getAccount().getUsername());
         Switch movies =(Switch)findViewById(R.id.movies_not);

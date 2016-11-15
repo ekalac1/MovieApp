@@ -63,17 +63,21 @@ public class NewsFeed extends AppCompatActivity {
         mApp = (MovieApplication) getApplicationContext();
         slideMenu = (NavigationView) findViewById(R.id.navigationSlide);
 
+        slideMenu = (NavigationView) findViewById(R.id.navigationSlide);
 
         if (mApp.getAccount() == null) {
             slideMenu.getMenu().getItem(0).setVisible(false);
-            slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(false);
-            slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.login);
-            slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setIcon(R.drawable.login);
+            slideMenu.getMenu().getItem(1).setVisible(false);
+            slideMenu.getMenu().getItem(2).getSubMenu().getItem(0).setVisible(false);
+            slideMenu.getMenu().getItem(2).getSubMenu().getItem(1).setTitle(R.string.login);
+            slideMenu.getMenu().getItem(2).getSubMenu().getItem(1).setIcon(R.drawable.login);
+
         } else {
             slideMenu.getMenu().getItem(0).setVisible(true);
-            slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(true);
-            slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.logout);
-            slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setIcon(R.drawable.logout);
+            slideMenu.getMenu().getItem(1).setVisible(true);
+            slideMenu.getMenu().getItem(2).getSubMenu().getItem(0).setVisible(true);
+            slideMenu.getMenu().getItem(2).getSubMenu().getItem(1).setTitle(R.string.logout);
+            slideMenu.getMenu().getItem(2).getSubMenu().getItem(1).setIcon(R.drawable.logout);
         }
 
         slideMenu.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
@@ -244,14 +248,21 @@ public class NewsFeed extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
+        slideMenu = (NavigationView) findViewById(R.id.navigationSlide);
+
         if (mApp.getAccount() == null) {
             slideMenu.getMenu().getItem(0).setVisible(false);
-            slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(false);
-            slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.login);
+            slideMenu.getMenu().getItem(1).setVisible(false);
+            slideMenu.getMenu().getItem(2).getSubMenu().getItem(0).setVisible(false);
+            slideMenu.getMenu().getItem(2).getSubMenu().getItem(1).setTitle(R.string.login);
+            slideMenu.getMenu().getItem(2).getSubMenu().getItem(1).setIcon(R.drawable.login);
+
         } else {
             slideMenu.getMenu().getItem(0).setVisible(true);
-            slideMenu.getMenu().getItem(1).getSubMenu().getItem(0).setVisible(true);
-            slideMenu.getMenu().getItem(1).getSubMenu().getItem(1).setTitle(R.string.logout);
+            slideMenu.getMenu().getItem(1).setVisible(true);
+            slideMenu.getMenu().getItem(2).getSubMenu().getItem(0).setVisible(true);
+            slideMenu.getMenu().getItem(2).getSubMenu().getItem(1).setTitle(R.string.logout);
+            slideMenu.getMenu().getItem(2).getSubMenu().getItem(1).setIcon(R.drawable.logout);
         }
     }
 

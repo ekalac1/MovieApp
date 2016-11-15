@@ -183,7 +183,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 if (mApp.getAccount() == null) Alert();
                 else {
                     PostBody post;
-                    if (item.getIcon().getConstantState().equals(getDrawable(R.drawable.watchlist_menu).getConstantState()))
+                    if (item.getIcon().getConstantState().equals(getDrawable(R.drawable.watchlist).getConstantState()))
                         post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
                     else post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
                     Call<PostResponse> call = apiService.MarkWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), post);
@@ -193,7 +193,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                             if (response.body().getStatusCode() == 1)
                                 item.setIcon(R.drawable.watchlist_active);
                             else if (response.body().getStatusCode() == 13)
-                                item.setIcon(R.drawable.watchlist_menu);
+                                item.setIcon(R.drawable.watchlist);
                             Call<MoviesListResponse> call1 = apiService.getMoviesWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
                             call1.enqueue(new Callback<MoviesListResponse>() {
                                 @Override

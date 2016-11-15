@@ -57,11 +57,12 @@
     <string name="exit">Press Back again to Exit.</string>
     <string name="empty_rate">You need to rate this !</string>
     <string name="sucess_rate">Rate added</string>
-    <string name="account">Account</string>
-    <string name="notification">Account Notification</string>
-    <string name="name">Name : </string>
+    <string name="account">ACCOUNT</string>
+    <string name="notification">ACCOUNT NOTIFICATION</string>
+    <string name="name">Name: </string>
     <string name="tv_notificattion">Tv shows notification</string>
     <string name="m_notificattion">Movies notification</string>
+    <string name="settings">Settings</string>
 
 
 

@@ -77,7 +77,6 @@
             android:layout_marginTop="27dp"
             android:textColor="@color/white_dark"
             android:textSize="14sp" />
-
         <TextView
             android:id="@+id/tv_show_directors"
             android:layout_width="wrap_content"
@@ -206,14 +205,7 @@
                 android:text="@string/SeeAll"
                 android:textSize="12sp"
                 android:textColor="@color/golden" />
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="15dp"
-                android:src="@drawable/arrow"/>
-
         </LinearLayout>
-
-
 
         <TextView
             android:layout_width="wrap_content"
@@ -270,15 +262,26 @@
             android:layout_height="1dp"
             android:layout_below="@+id/years_list"
             android:background="@color/view_grey" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/cast"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:textSize="14sp"
+            android:text="@string/cast"
+            android:textColor="@color/white"
+            android:layout_below="@+id/view_"/>
         <android.support.v7.widget.RecyclerView
             android:id="@+id/tv_show_cast"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/view_"
+            android:layout_below="@+id/cast"
             android:layout_marginStart="16sp"
             android:layout_marginBottom="30dp"
             android:layout_marginEnd="20dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="15dp"
             android:layout_alignWithParentIfMissing="true"
             />
 
