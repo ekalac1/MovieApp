@@ -77,8 +77,8 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
         TextView tvShowName = (TextView) newView.findViewById(R.id.tvShowName);
         TextView date = (TextView) newView.findViewById(R.id.tvShowRelaseDate);
         TextView voteAverage = (TextView) newView.findViewById(R.id.tvShowAverage);
-        final ImageView favorite = (ImageView) newView.findViewById(R.id.favorite_tv);
-        final ImageView watchlist = (ImageView) newView.findViewById(R.id.watchlist_tv);
+        final ImageView favorite = (ImageView) newView.findViewById(R.id.favorite_movie);
+        final ImageView watchlist = (ImageView) newView.findViewById(R.id.watchlist_movie);
         if (mApp.getAccount() != null) {
             boolean ind=true;
             for (TvShow m : mApp.getAccount().getFavoriteTvShows())

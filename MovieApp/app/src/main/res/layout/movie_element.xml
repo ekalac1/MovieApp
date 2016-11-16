@@ -85,17 +85,18 @@
                 <ImageView
                     android:id="@+id/watchlist_movie"
                     android:layout_width="48dp"
-                    android:layout_height="18dp"
+                    android:layout_height="19dp"
+                    android:paddingTop="1dp"
                     android:paddingLeft="20dp"
-                    android:paddingRight="3dp"
+                    android:paddingRight="2dp"
                     android:src="@drawable/watchlist" />
 
                 <ImageView
                     android:id="@+id/favorite_movie"
                     android:layout_width="31dp"
-                    android:layout_height="17dp"
-                    android:paddingLeft="3dp"
-                    android:paddingTop="2dp"
+                    android:layout_height="19dp"
+                    android:paddingLeft="1dp"
+                    android:paddingTop="0dp"
                     android:paddingRight="10dp"
                     android:src="@drawable/favorite" />
 

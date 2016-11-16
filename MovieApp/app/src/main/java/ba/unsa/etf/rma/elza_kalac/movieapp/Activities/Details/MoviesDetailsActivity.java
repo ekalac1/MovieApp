@@ -2,6 +2,9 @@ package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -48,6 +51,11 @@ public class MoviesDetailsActivity extends AppCompatActivity {
     ApiInterface apiService;
     MovieApplication mApp;
 
+    Drawable favorite_active;
+    Drawable favorite;
+    Drawable watchlist_active;
+    Drawable watchlist;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +83,8 @@ public class MoviesDetailsActivity extends AppCompatActivity {
 
 
         movieID = getIntent().getIntExtra("id", 0);
+
+        setIcons();
 
         Call<Movie> call = apiService.getMovieDetails(movieID, ApiClient.API_KEY, "credits,reviews,videos");
 
@@ -183,7 +193,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 if (mApp.getAccount() == null) Alert();
                 else {
                     PostBody post;
-                    if (item.getIcon().getConstantState().equals(getDrawable(R.drawable.watchlist).getConstantState()))
+                    if (item.getIcon().getConstantState().equals(watchlist.getConstantState()))
                         post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
                     else post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
                     Call<PostResponse> call = apiService.MarkWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), post);
@@ -191,9 +201,9 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                             if (response.body().getStatusCode() == 1)
-                                item.setIcon(R.drawable.watchlist_active);
+                                item.setIcon(watchlist_active);
                             else if (response.body().getStatusCode() == 13)
-                                item.setIcon(R.drawable.watchlist);
+                                item.setIcon(watchlist);
                             Call<MoviesListResponse> call1 = apiService.getMoviesWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
                             call1.enqueue(new Callback<MoviesListResponse>() {
                                 @Override
@@ -218,7 +228,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 if (mApp.getAccount() == null) Alert();
                 else {
                     PostBody post;
-                    if (item.getIcon().getConstantState().equals(getDrawable(R.drawable.favorite).getConstantState()))
+                    if (item.getIcon().getConstantState().equals(favorite.getConstantState()))
                         post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
                     else post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
                     Call<PostResponse> call = apiService.PostFavorite(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), post);
@@ -226,9 +236,9 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                             if (response.body().getStatusCode() == 1) {
-                                item.setIcon(R.drawable.favorite_active);
+                                item.setIcon(favorite_active);
                             } else if (response.body().getStatusCode() == 13) {
-                                item.setIcon(R.drawable.favorite);
+                                item.setIcon(favorite);
                             }
                             Call<MoviesListResponse> call1 = apiService.getFavoritesMovies(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
                             call1.enqueue(new Callback<MoviesListResponse>() {
@@ -257,24 +267,44 @@ public class MoviesDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.icons, menu);
+        MenuItem ma0 = menu.getItem(0);
+        MenuItem ma1 = menu.getItem(1);
+
+        ma0.setIcon(watchlist);
+        ma1.setIcon(favorite);
         if (mApp.getAccount() != null) {
             List<Movie> movie = mApp.getAccount().getFavoriteMovies();
             if (movie != null)
                 for (Movie m : mApp.getAccount().getFavoriteMovies())
                     if (m.getId() == movieID) {
-                        MenuItem ma = menu.getItem(1);
-                        ma.setIcon(R.drawable.favorite_active);
+                        ma1.setIcon(favorite_active);
                     }
             movie = mApp.getAccount().getWatchListMovies();
             if (movie != null)
                 for (Movie m : movie)
                     if (m.getId() == movieID) {
-                        MenuItem ma = menu.getItem(0);
-                        ma.setIcon(R.drawable.watchlist_active);
+                        ma0.setIcon(watchlist_active);
                     }
 
         }
         return true;
+    }
+    public void setIcons() {
+        // Old icons
+        Drawable dr_favorite_active = getDrawable(R.drawable.favorite_active);
+        Drawable dr_favorite = getDrawable(R.drawable.favorite);
+        Drawable dr_watchlist_active = getDrawable(R.drawable.watchlist_active);
+        Drawable dr_watchlist = getDrawable(R.drawable.watchlist);
+        // Bitmaps
+        Bitmap bitmap_favorite_active = ((BitmapDrawable) dr_favorite_active).getBitmap();
+        Bitmap bitmap_favorite = ((BitmapDrawable) dr_favorite).getBitmap();
+        Bitmap bitmap_watchlist_active = ((BitmapDrawable) dr_watchlist_active).getBitmap();
+        Bitmap bitmap_watchlist = ((BitmapDrawable) dr_watchlist).getBitmap();
+        // Final drawables
+        favorite_active = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap_favorite_active, 70, 70, true));
+        favorite = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap_favorite, 70, 70, true));
+        watchlist_active = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap_watchlist_active, 70, 70, true));
+        watchlist = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap_watchlist, 70, 70, true));
     }
 
     private void Alert() {
