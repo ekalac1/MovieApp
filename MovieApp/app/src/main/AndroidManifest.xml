@@ -74,7 +74,7 @@
             android:name=".Activities.UserPrivilegies.Ratings"
             android:parentActivityName=".Activities.MovieActivity" />
         <activity android:name=".Activities.UserPrivilegies.Rating"
-            android:parentActivityName=".Activities.MovieActivity"></activity>
+            android:parentActivityName=".Activities.Details.MoviesDetailsActivity"></activity>
     </application>
 
 </manifest>

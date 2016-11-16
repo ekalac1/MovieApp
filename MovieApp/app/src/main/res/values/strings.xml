@@ -47,6 +47,7 @@
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">LOGIN</string>
+    <string name="login_">Login</string>
     <string name="logout">Logout</string>
     <string name="newacc">Create a new account</string>
     <string name="details">Forgot your details?</string>

@@ -44,8 +44,7 @@ public class Login extends AppCompatActivity {
         final EditText password = (EditText) findViewById(R.id.password);
         username.setText("vanderwoodsen");
         password.setText("ekalac1");
-        final
-        Button loginButton = (Button) findViewById(R.id.login);
+        final Button loginButton = (Button) findViewById(R.id.login);
         TextView newAcc = (TextView) findViewById(R.id.new_acc);
         TextView forgot = (TextView) findViewById(R.id.forgot_details);
 
@@ -87,6 +86,7 @@ public class Login extends AppCompatActivity {
                                 @Override
                                 public void onResponse(Call<AuthentificationResponse> call, Response<AuthentificationResponse> response) {
                                     if (response.errorBody() != null) {
+                                        loginButton.setBackground(getDrawable(R.color.golden));
                                         Toast.makeText(getApplicationContext(), R.string.login_error, Toast.LENGTH_LONG).show();
                                         password.setText("");
                                     } else {
@@ -184,6 +184,7 @@ public class Login extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<AuthentificationResponse> call, Throwable t) {
                         Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
+
                     }
                 });
             }

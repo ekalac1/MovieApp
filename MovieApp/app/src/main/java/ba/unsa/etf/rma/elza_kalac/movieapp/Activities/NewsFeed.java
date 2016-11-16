@@ -69,7 +69,7 @@ public class NewsFeed extends AppCompatActivity {
             slideMenu.getMenu().getItem(0).setVisible(false);
             slideMenu.getMenu().getItem(1).setVisible(false);
             slideMenu.getMenu().getItem(2).getSubMenu().getItem(0).setVisible(false);
-            slideMenu.getMenu().getItem(2).getSubMenu().getItem(1).setTitle(R.string.login);
+            slideMenu.getMenu().getItem(2).getSubMenu().getItem(1).setTitle(R.string.login_);
             slideMenu.getMenu().getItem(2).getSubMenu().getItem(1).setIcon(R.drawable.login);
 
         } else {
@@ -254,7 +254,7 @@ public class NewsFeed extends AppCompatActivity {
             slideMenu.getMenu().getItem(0).setVisible(false);
             slideMenu.getMenu().getItem(1).setVisible(false);
             slideMenu.getMenu().getItem(2).getSubMenu().getItem(0).setVisible(false);
-            slideMenu.getMenu().getItem(2).getSubMenu().getItem(1).setTitle(R.string.login);
+            slideMenu.getMenu().getItem(2).getSubMenu().getItem(1).setTitle(R.string.login_);
             slideMenu.getMenu().getItem(2).getSubMenu().getItem(1).setIcon(R.drawable.login);
 
         } else {
