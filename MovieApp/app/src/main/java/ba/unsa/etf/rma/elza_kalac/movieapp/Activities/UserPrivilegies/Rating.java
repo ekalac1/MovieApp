@@ -1,5 +1,7 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +11,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareButton;
+import com.facebook.share.widget.ShareDialog;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
@@ -20,10 +28,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public class Rating extends AppCompatActivity {
     int starNum, movieID, tvShowID;
     ApiInterface apiService;
     MovieApplication mApp;
+    CallbackManager callbackManager;
+    ShareDialog shareDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +45,44 @@ public class Rating extends AppCompatActivity {
         tvShowID = getIntent().getIntExtra("tvID", 0);
         mApp = (MovieApplication) getApplicationContext();
         apiService = mApp.getApiService();
+
+       String a=getIntent().getStringExtra("movieName");
+        a=a.toLowerCase();
+        a=a.replace(" ", "-");
+        Toast.makeText(getApplicationContext(), a, Toast.LENGTH_LONG).show();
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
+
+        String link;
+        if (movieID!=0)
+        {
+            link=String.valueOf(movieID)+"-"+a;
+            link="https://www.themoviedb.org/movie/"+link;
+        }
+        else
+        {
+            link=String.valueOf(tvShowID)+"-"+a;
+            link="https://www.themoviedb.org/tv/"+link;
+        }
+
+        final ShareLinkContent content = new ShareLinkContent.Builder()
+                .setContentUrl(Uri.parse(link))
+                .build();
+
+        ShareButton shareButton = (ShareButton)findViewById(R.id.fb_share_button);
+        shareButton.setShareContent(content);
+
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ShareDialog.canShow(ShareLinkContent.class)) {
+                    shareDialog.show(content);
+                }
+            }
+        });
 
         ActionBar actionBar = getSupportActionBar();
 
@@ -266,5 +315,11 @@ public class Rating extends AppCompatActivity {
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

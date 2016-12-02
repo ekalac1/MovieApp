@@ -13,7 +13,8 @@
         android:text="Tap to rate"
         android:textColor="@color/white"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="80dp"/>
+        android:layout_marginTop="80dp"
+        android:id="@+id/textView" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -82,6 +83,14 @@
             android:src="@drawable/star_empty"/>
 
     </LinearLayout>
+
+    <com.facebook.share.widget.ShareButton
+        android:text="Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/textView"
+        android:id="@+id/fb_share_button" />
 
 
 </RelativeLayout>

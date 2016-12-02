@@ -1,6 +1,7 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Fragments;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,6 +11,9 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
+
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +73,9 @@ public class FavoritesMovies extends Fragment {
         favoriteMovies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+
+
                 Intent myIntent = new Intent(getActivity(), MoviesDetailsActivity.class);
                 myIntent.putExtra("id", movies.get(position).getId());
                 startActivity(myIntent);

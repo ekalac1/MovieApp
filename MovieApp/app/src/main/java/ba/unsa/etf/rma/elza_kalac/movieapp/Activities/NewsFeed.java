@@ -114,7 +114,12 @@ public class NewsFeed extends AppCompatActivity {
                         }
                         break;
                     case R.id.logout:
-                        if (mApp.getAccount() == null) Alert();
+                        if (mApp.getAccount() == null)
+                        {
+                            Intent intent = new Intent(getApplicationContext(), Login.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
                         else
                         {
                             mApp.setAccount(null);

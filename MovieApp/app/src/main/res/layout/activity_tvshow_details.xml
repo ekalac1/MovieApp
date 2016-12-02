@@ -253,14 +253,43 @@
             android:layout_below="@+id/seasons"
             android:layout_toEndOf="@+id/tv_shows_years_label"
             android:layout_alignTop="@+id/tv_shows_years_label"
+            android:layout_alignWithParentIfMissing="true" />
+
+
+        <View
+            android:id="@+id/view1"
             android:layout_alignWithParentIfMissing="true"
-            />
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/years_list"
+            android:background="@color/view_grey" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view1"
+            android:layout_alignEnd="@+id/tv_show_about"
+            android:text="@string/SeeAll"
+            android:textColor="@color/golden"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/tv_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view1"
+            android:layout_marginStart="30sp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="15dp"
+            android:layout_alignWithParentIfMissing="true" />
+
+
         <View
             android:id="@+id/view_"
             android:layout_alignWithParentIfMissing="true"
             android:layout_width="fill_parent"
             android:layout_height="1dp"
-            android:layout_below="@+id/years_list"
+            android:layout_below="@+id/tv_gallery"
             android:background="@color/view_grey" />
 
         <TextView
@@ -282,8 +311,7 @@
             android:layout_marginBottom="30dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="15dp"
-            android:layout_alignWithParentIfMissing="true"
-            />
+            android:layout_alignWithParentIfMissing="true" />
 
         <ImageView
             android:layout_width="20dp"

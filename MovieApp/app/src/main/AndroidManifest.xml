@@ -2,10 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ba.unsa.etf.rma.elza_kalac.movieapp">
 
+    <provider
+        android:name="com.facebook.FacebookContentProvider"
+        android:authorities="com.facebook.app.FacebookContentProvider672699442907366"
+        android:exported="true" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
 
     <application
         android:name=".MovieApplication"
@@ -14,16 +19,24 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat">
-        <receiver android:name=".AlarmReciever"/>
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
+        <receiver android:name=".AlarmReciever" />
+
         <activity android:name=".Activities.MovieActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="movieapp.elza_kalac.rma.etf.unsa.ba"
                     android:pathPrefix="/main"
@@ -32,7 +45,19 @@
         </activity>
         <activity
             android:name=".Activities.Details.MoviesDetailsActivity"
-            android:parentActivityName=".Activities.MovieActivity" />
+            android:parentActivityName=".Activities.MovieActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="www.themoviedb.org"
+                    android:pathPrefix="/movie"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Activities.SearchActivity"
             android:parentActivityName=".Activities.MovieActivity" />
@@ -43,12 +68,25 @@
             android:parentActivityName=".Activities.Details.MoviesDetailsActivity" />
         <activity
             android:name=".Activities.Details.TVShowDetails"
-            android:parentActivityName=".Activities.TVShows" />
+            android:parentActivityName=".Activities.TVShows">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="www.themoviedb.org"
+                    android:pathPrefix="/tv"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Activities.Details.Seasons"
             android:parentActivityName=".Activities.Details.TVShowDetails" />
-        <activity android:name=".Activities.Details.ActorDetails"
-            android:parentActivityName=".Activities.Details.MoviesDetailsActivity"/>
+        <activity
+            android:name=".Activities.Details.ActorDetails"
+            android:parentActivityName=".Activities.Details.MoviesDetailsActivity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -73,8 +111,10 @@
         <activity
             android:name=".Activities.UserPrivilegies.Ratings"
             android:parentActivityName=".Activities.MovieActivity" />
-        <activity android:name=".Activities.UserPrivilegies.Rating"
-            android:parentActivityName=".Activities.Details.MoviesDetailsActivity"></activity>
+        <activity
+            android:name=".Activities.UserPrivilegies.Rating"
+            android:parentActivityName=".Activities.Details.MoviesDetailsActivity" />
+        <activity android:name=".Activities.Details.Gallery"></activity>
     </application>
 
 </manifest>

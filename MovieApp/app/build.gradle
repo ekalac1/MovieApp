@@ -39,6 +39,10 @@ android {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile files('libs/YouTubeAndroidPlayerApi.jar')
@@ -62,4 +66,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:24.1.1'
     compile 'com.ms-square:expandableTextView:0.1.4'
     testCompile 'junit:junit:4.12'
+    compile 'com.facebook.android:facebook-android-sdk:[4,5)'
+    compile('com.twitter.sdk.android:tweet-composer:2.2.0@aar') {
+        transitive = true;
+    }
 }

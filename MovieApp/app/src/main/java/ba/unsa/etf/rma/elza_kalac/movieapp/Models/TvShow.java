@@ -9,6 +9,7 @@ import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.CreditsResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.GalleryResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.ReviewResponse;
 
 
@@ -50,6 +51,10 @@ public class TvShow {
     @SerializedName("status")
     private String status;
     public String getStatus() {return  status;}
+
+    @SerializedName("images")
+    private GalleryResponse gallery;
+    public GalleryResponse getGallery() {return gallery;}
 
     @SerializedName("seasons")
     private List<Season> seasons;

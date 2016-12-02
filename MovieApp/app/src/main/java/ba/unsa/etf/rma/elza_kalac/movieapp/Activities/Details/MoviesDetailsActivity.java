@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
@@ -84,6 +85,14 @@ public class MoviesDetailsActivity extends AppCompatActivity {
 
         movieID = getIntent().getIntExtra("id", 0);
 
+        if (movieID==0)
+        {
+            Uri data = getIntent().getData();
+            String a = String.valueOf(data);
+            a = a.replaceAll("\\D+","");
+            movieID=Integer.valueOf(a);
+        }
+
         setIcons();
 
         Call<Movie> call = apiService.getMovieDetails(movieID, ApiClient.API_KEY, "credits,reviews,videos");
@@ -99,6 +108,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         if (mApp.getAccount() != null) {
                             Intent intent = (new Intent(getApplicationContext(), Rating.class));
                             intent.putExtra("movieID", movieID);
+                            intent.putExtra("movieName", movie.getTitle());
                             startActivity(intent);
                         } else {
                             Alert();
@@ -118,16 +128,17 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                     date.setText("");
                 }
 
-                if (movie.getReviews().getResults().size() == 0) {
+                if (movie.getReviews().getResults().size() == 0)
+                {
                     TextView r = (TextView) findViewById(R.id.review_label);
                     r.setVisibility(View.INVISIBLE);
                     View v = (View) findViewById(R.id.view___);
                     v.setVisibility(View.INVISIBLE);
                 }
                 if (movie.getVideos().getResults().size() != 0)
-
+                {
                     play.setVisibility(View.VISIBLE);
-
+                }
                 temp.setText(movie.getGenres());
                 Glide.with(getApplicationContext())
                         .load(movie.getFullPosterPath(getApplicationContext()))
@@ -135,19 +146,25 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .into((ImageView) findViewById(R.id.movies_detalis_image));
 
-                if (movie.getCredits().getDirectors().equals("")) {
+                if (movie.getCredits().getDirectors().equals(""))
+                {
                     TextView temp = (TextView) findViewById(R.id.directors_label);
                     temp.setVisibility(View.INVISIBLE);
-                } else {
+                }
+                else
+                {
                     directors.setText(movie.getCredits().getDirectors());
                     TextView temp = (TextView) findViewById(R.id.directors_label);
                     temp.setText(R.string.directors);
                 }
-                if (movie.getCredits().getWriters().equals("")) {
+                if (movie.getCredits().getWriters().equals(""))
+                {
                     writers.setVisibility(View.GONE);
                     TextView temp = (TextView) findViewById(R.id.writers_label);
                     temp.setVisibility(View.GONE);
-                } else {
+                }
+                else
+                {
                     writers.setText(movie.getCredits().getWriters());
                     TextView temp = (TextView) findViewById(R.id.writers_label);
                     temp.setText(R.string.writers);

@@ -3,6 +3,7 @@ package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.IdRes;
@@ -49,6 +50,8 @@ public class MovieActivity extends AppCompatActivity  implements SignUpAlertList
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
+
+
 
         mApp = (MovieApplication) getApplicationContext();
 
@@ -108,7 +111,12 @@ public class MovieActivity extends AppCompatActivity  implements SignUpAlertList
                             startActivity(new Intent(getApplicationContext(), Ratings.class));
                         break;
                     case R.id.logout:
-                        if (mApp.getAccount() == null) Alert();
+                        if (mApp.getAccount() == null)
+                        {
+                            Intent intent = new Intent(getApplicationContext(), Login.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                        }
                         else {
                             mApp.setAccount(null);
                             mDrawerLayout.closeDrawer(GravityCompat.START);

@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,7 +24,11 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+import java.util.concurrent.ExecutionException;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
@@ -30,9 +36,12 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.API.PostBody;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Login;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Rating;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.CastGridAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.GaleryAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Image;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.GalleryResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TvShowResponse;
 import retrofit2.Call;
@@ -47,6 +56,8 @@ public class TVShowDetails extends AppCompatActivity {
     int tvshowID;
     ApiInterface apiService;
     MovieApplication mApp;
+    List<Bitmap> gallery;
+    List<String> images_url;
 
     Drawable favorite_active;
     Drawable favorite;
@@ -61,10 +72,20 @@ public class TVShowDetails extends AppCompatActivity {
 
         mApp = (MovieApplication) getApplicationContext();
         apiService = mApp.getApiService();
+        gallery=new ArrayList<>();
+        images_url=new ArrayList<>();
 
         getSupportActionBar().setTitle(R.string.tv_show);
 
         tvshowID = getIntent().getIntExtra("id", 0);
+
+        if (tvshowID==0)
+        {
+            Uri data = getIntent().getData();
+            String a = String.valueOf(data);
+            a = a.replaceAll("\\D+","");
+            tvshowID=Integer.valueOf(a);
+        }
         final Intent intent = new Intent(getApplicationContext(), Seasons.class);
         intent.putExtra("id", tvshowID);
 
@@ -78,6 +99,7 @@ public class TVShowDetails extends AppCompatActivity {
         final TextView writers = (TextView) findViewById(R.id.tv_show_writers);
         final TextView stars = (TextView) findViewById(R.id.tv_show_stars);
         final RecyclerView cast = (RecyclerView) findViewById(R.id.tv_show_cast);
+        final RecyclerView gallery =(RecyclerView)findViewById(R.id.tv_gallery);
         final TextView votes = (TextView) findViewById(R.id.tv_show_votes);
         final TextView seasonsList = (TextView) findViewById(R.id.seasons);
         final TextView yearsList = (TextView) findViewById(R.id.years_list);
@@ -105,7 +127,7 @@ public class TVShowDetails extends AppCompatActivity {
             }
         });
 
-        Call<TvShow> call = apiService.getTvShowDetails(tvshowID, ApiClient.API_KEY, "credits");
+        Call<TvShow> call = apiService.getTvShowDetails(tvshowID, ApiClient.API_KEY, "credits,images");
 
         call.enqueue(new Callback<TvShow>() {
             @Override
@@ -119,10 +141,23 @@ public class TVShowDetails extends AppCompatActivity {
                         if (mApp.getAccount() != null) {
                             Intent intent = (new Intent(getApplicationContext(), Rating.class));
                             intent.putExtra("tvID", tvshowID);
+                            intent.putExtra("movieName", tvshow.getName());
                             startActivity(intent);
                         } else Alert();
                     }
                 });
+
+                for (Image i: response.body().getGallery().getBackdrops()) {
+                    images_url.add(i.getFullPosterPath(getApplicationContext()));
+                }
+
+                Toast.makeText(getApplicationContext(), String.valueOf(images_url.size()), Toast.LENGTH_LONG).show();
+
+                GaleryAdapter gAdapter = new GaleryAdapter(getApplicationContext(), images_url);
+                LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                gallery.setLayoutManager(mLayoutManager);
+                gallery.setAdapter(gAdapter);
+
 
                 String seasonList = "";
                 if (tvshow.getSeasons().size() == 1) seasonList = String.valueOf(1);
@@ -200,8 +235,8 @@ public class TVShowDetails extends AppCompatActivity {
                     temp.setText(R.string.stars);
                     stars.setText(tvshow.getCredits().getStars());
                     CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), tvshow.getCredits().getCast(), "tv");
-                    LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
-                    cast.setLayoutManager(mLayoutManager);
+                    LinearLayoutManager LayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                    cast.setLayoutManager(LayoutManager);
                     cast.setAdapter(mAdapter);
                 } else {
                     stars.setVisibility(View.GONE);
