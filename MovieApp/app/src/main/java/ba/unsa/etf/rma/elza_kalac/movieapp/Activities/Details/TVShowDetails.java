@@ -7,7 +7,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,11 +23,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.concurrent.ExecutionException;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
@@ -41,7 +36,6 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Image;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.GalleryResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TvShowResponse;
 import retrofit2.Call;
@@ -56,7 +50,6 @@ public class TVShowDetails extends AppCompatActivity {
     int tvshowID;
     ApiInterface apiService;
     MovieApplication mApp;
-    List<Bitmap> gallery;
     List<String> images_url;
 
     Drawable favorite_active;
@@ -72,7 +65,6 @@ public class TVShowDetails extends AppCompatActivity {
 
         mApp = (MovieApplication) getApplicationContext();
         apiService = mApp.getApiService();
-        gallery=new ArrayList<>();
         images_url=new ArrayList<>();
 
         getSupportActionBar().setTitle(R.string.tv_show);
@@ -105,6 +97,7 @@ public class TVShowDetails extends AppCompatActivity {
         final TextView yearsList = (TextView) findViewById(R.id.years_list);
         final LinearLayout seeAll = (LinearLayout) findViewById(R.id.see_all);
         final TextView rate = (TextView) findViewById(R.id.rate_this_label);
+        final TextView gallerySeeAll = (TextView)findViewById(R.id.see_all_galery);
 
         yearsList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,12 +144,19 @@ public class TVShowDetails extends AppCompatActivity {
                     images_url.add(i.getFullPosterPath(getApplicationContext()));
                 }
 
-                Toast.makeText(getApplicationContext(), String.valueOf(images_url.size()), Toast.LENGTH_LONG).show();
-
                 GaleryAdapter gAdapter = new GaleryAdapter(getApplicationContext(), images_url);
                 LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
                 gallery.setLayoutManager(mLayoutManager);
                 gallery.setAdapter(gAdapter);
+
+                gallerySeeAll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), Gallery.class);
+                        intent.putExtra("tvID", tvshowID);
+                        startActivity(intent);
+                    }
+                });
 
 
                 String seasonList = "";

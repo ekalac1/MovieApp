@@ -114,7 +114,8 @@
         <activity
             android:name=".Activities.UserPrivilegies.Rating"
             android:parentActivityName=".Activities.Details.MoviesDetailsActivity" />
-        <activity android:name=".Activities.Details.Gallery"></activity>
+        <activity android:name=".Activities.Details.Gallery" />
+        <activity android:name=".Activities.Details.ImageView"></activity>
     </application>
 
 </manifest>

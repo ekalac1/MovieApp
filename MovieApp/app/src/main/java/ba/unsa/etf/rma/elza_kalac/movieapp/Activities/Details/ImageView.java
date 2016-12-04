@@ -1,11 +1,8 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details;
 
-import android.content.Intent;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,6 +10,7 @@ import java.util.List;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.GalleryGridAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.PagerAdapters.CustomPagerAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Image;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
@@ -22,43 +20,29 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Gallery extends AppCompatActivity {
+public class ImageView extends AppCompatActivity {
 
     int movieID, tvID;
     ApiInterface apiService;
     MovieApplication mApp;
     List<String> images_url;
+    ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_gallery);
+        setContentView(R.layout.activity_image_view);
 
         mApp = (MovieApplication) getApplicationContext();
         apiService = mApp.getApiService();
 
-
-
         images_url=new ArrayList<>();
-
-        final GridView gallery=(GridView)findViewById(R.id.gallery);
-
+        mViewPager = (ViewPager) findViewById(R.id.pager);
 
         movieID=getIntent().getIntExtra("movieID", 0);
         tvID=getIntent().getIntExtra("tvID", 0);
 
-        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getApplicationContext(), ImageView.class);
-                intent.putExtra("position", position);
-                if (movieID!=0)
-                intent.putExtra("movieID", movieID);
-                else
-                    intent.putExtra("tvID", tvID);
-                startActivity(intent);
-            }
-        });
+        getSupportActionBar().hide();
 
         if (movieID!=0)
         {
@@ -69,8 +53,10 @@ public class Gallery extends AppCompatActivity {
                     for (Image i: response.body().getGallery().getBackdrops()) {
                         images_url.add(i.getFullPosterPath(getApplicationContext()));
                     }
-                    GalleryGridAdapter adapter = new GalleryGridAdapter(getApplicationContext(), R.layout.galery_image_element,images_url);
-                    gallery.setAdapter(adapter);
+
+                    CustomPagerAdapter mCustomPagerAdapter = new CustomPagerAdapter(getApplicationContext(), images_url);
+                    mViewPager.setAdapter(mCustomPagerAdapter);
+                    mViewPager.setCurrentItem(getIntent().getIntExtra("position", 0));
                 }
 
                 @Override
@@ -88,8 +74,10 @@ public class Gallery extends AppCompatActivity {
                     for (Image i: response.body().getGallery().getBackdrops()) {
                         images_url.add(i.getFullPosterPath(getApplicationContext()));
                     }
-                    GalleryGridAdapter adapter = new GalleryGridAdapter(getApplicationContext(), R.layout.galery_image_element,images_url);
-                    gallery.setAdapter(adapter);
+                    CustomPagerAdapter mCustomPagerAdapter = new CustomPagerAdapter(getApplicationContext(), images_url);
+                    mViewPager.setAdapter(mCustomPagerAdapter);
+                    mViewPager.setCurrentItem(getIntent().getIntExtra("position", 0));
+
                 }
 
                 @Override
@@ -98,9 +86,10 @@ public class Gallery extends AppCompatActivity {
                 }
             });
         }
-
-
-
-
     }
+
+
+
+
+
 }

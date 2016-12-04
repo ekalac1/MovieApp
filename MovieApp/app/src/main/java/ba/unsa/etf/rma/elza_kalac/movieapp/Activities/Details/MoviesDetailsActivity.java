@@ -25,6 +25,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +35,9 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.API.PostBody;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Login;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Rating;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.CastGridAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.GaleryAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.ReviewListAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Image;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
@@ -51,6 +54,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
     public int movieID;
     ApiInterface apiService;
     MovieApplication mApp;
+    List<String> images_url;
 
     Drawable favorite_active;
     Drawable favorite;
@@ -64,6 +68,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
 
         mApp = (MovieApplication) getApplicationContext();
         apiService = mApp.getApiService();
+        images_url=new ArrayList<>();
 
         ActionBar actionBar = getSupportActionBar();
 
@@ -81,6 +86,8 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         final TextView votes = (TextView) findViewById(R.id.votes);
         final ImageView play = (ImageView) findViewById(R.id.play);
         final TextView rate = (TextView) findViewById(R.id.rate_this_label);
+        final RecyclerView gallery =(RecyclerView)findViewById(R.id.tv_gallery);
+        final TextView gallerySeeAll = (TextView)findViewById(R.id.see_all_galery);
 
 
         movieID = getIntent().getIntExtra("id", 0);
@@ -95,7 +102,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
 
         setIcons();
 
-        Call<Movie> call = apiService.getMovieDetails(movieID, ApiClient.API_KEY, "credits,reviews,videos");
+        Call<Movie> call = apiService.getMovieDetails(movieID, ApiClient.API_KEY, "credits,reviews,videos,images");
 
         call.enqueue(new Callback<Movie>() {
             @Override
@@ -115,6 +122,25 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         }
                     }
                 });
+
+                for (Image i: response.body().getGallery().getBackdrops()) {
+                    images_url.add(i.getFullPosterPath(getApplicationContext()));
+                }
+
+                GaleryAdapter gAdapter = new GaleryAdapter(getApplicationContext(), images_url);
+                LinearLayoutManager LayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+                gallery.setLayoutManager(LayoutManager);
+                gallery.setAdapter(gAdapter);
+
+                gallerySeeAll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), Gallery.class);
+                        intent.putExtra("movieID", movieID);
+                        startActivity(intent);
+                    }
+                });
+
                 if (movie.getReleaseDate() != null) {
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
                     Date startDate = new Date();

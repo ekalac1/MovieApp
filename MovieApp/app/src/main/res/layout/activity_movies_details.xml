@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_gravity="start|bottom"
     android:background="@color/colorPrimaryDark"
     android:fillViewport="true">
@@ -192,11 +191,39 @@
             android:textColor="@color/white_dark"/>
 
         <View
+            android:id="@+id/view1"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/about"
+            android:background="@color/view_grey" />
+
+        <TextView
+            android:id="@+id/see_all_galery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view1"
+            android:layout_alignEnd="@+id/about"
+            android:text="@string/SeeAll"
+            android:textColor="@color/golden"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/tv_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view1"
+            android:layout_marginStart="16sp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_alignWithParentIfMissing="true" />
+
+        <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:id="@+id/view__"
             android:background="@color/view_grey"
-            android:layout_below="@+id/about" />
+            android:layout_below="@+id/tv_gallery" />
 
 
         <android.support.v7.widget.RecyclerView

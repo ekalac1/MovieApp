@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.CreditsResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.GalleryResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.ReviewResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TrailerResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
@@ -205,6 +206,10 @@ public class Movie {
     public double getVoteAverage() {
         return voteAverage;
     }
+
+    @SerializedName("images")
+    private GalleryResponse gallery;
+    public GalleryResponse getGallery() {return gallery;}
 
     public String getFullPosterPath(Context c) {;
         return c.getString(R.string.MovieImageBaseAdress)+c.getString(R.string.MovieImageWidth500) + getPosterPath();
