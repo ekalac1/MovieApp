@@ -77,7 +77,7 @@ public class Gallery extends AppCompatActivity {
                     for (Image i: response.body().getGallery().getBackdrops()) {
                         images_url.add(i.getSmallFullPosterPath(getApplicationContext()));
                     }
-                    movieName.setText(response.body().getTitle().toUpperCase());
+                    movieName.setText(response.body().getTitle());
                     ((BaseAdapter)gallery.getAdapter()).notifyDataSetChanged();
                 }
 
@@ -95,7 +95,7 @@ public class Gallery extends AppCompatActivity {
                 public void onResponse(Call<TvShow> call, Response<TvShow> response) {
                     for (Image i: response.body().getGallery().getBackdrops()) {
                         images_url.add(i.getSmallFullPosterPath(getApplicationContext()));
-                        movieName.setText(response.body().getName().toUpperCase());
+                        movieName.setText(response.body().getName());
                     }
                     ((BaseAdapter)gallery.getAdapter()).notifyDataSetChanged();
                 }

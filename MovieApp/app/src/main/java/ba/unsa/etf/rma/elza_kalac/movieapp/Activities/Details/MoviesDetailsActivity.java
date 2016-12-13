@@ -48,6 +48,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Review;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.Action;
 import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.MovieRealm;
 import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.RealmReview;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
@@ -137,6 +138,8 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         Favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isNetworkAvailable())
+                {
                 PostBody post;
                 if (Favorite.getDrawable().getConstantState().equals(getDrawable(R.drawable.favorite).getConstantState()))
                     post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
@@ -167,7 +170,27 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<PostResponse> call, Throwable t) {
                     }
-                });
+                }); }
+                else {
+                    realm.beginTransaction();
+                    MovieRealm movie = realm.where(MovieRealm.class).equalTo("id", movieID).findFirst();
+                    Action post = new Action();
+                    post.setId(movie.getId());
+
+                    post.setMediaType("movie");
+                    if (Favorite.getDrawable().getConstantState().equals(getDrawable(R.drawable.favorite).getConstantState()))
+                    {
+                        Favorite.setImageResource(R.drawable.favorite_active);
+                        post.setActionType("favorite");
+                    }
+                    else
+                    {
+                        Favorite.setImageResource(R.drawable.favorite);
+                        post.setActionType("removefavorite");
+                    }
+                    realm.copyToRealm(post);
+                    realm.commitTransaction();
+                }
             }
         });
 
@@ -175,7 +198,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mApp.getAccount() == null) Alert();
-                else {
+                else { if (isNetworkAvailable()) {
                     PostBody post;
                     if (Watchlist.getDrawable().getConstantState().equals(getDrawable(R.drawable.watchlist).getConstantState()))
                         post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
@@ -207,6 +230,28 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         }
                     });
                 }
+                else
+                {
+                    realm.beginTransaction();
+                    MovieRealm movie = realm.where(MovieRealm.class).equalTo("id", movieID).findFirst();
+                    Action post = new Action();
+                    post.setId(movie.getId());
+
+                    post.setMediaType("movie");
+                    if (Watchlist.getDrawable().getConstantState().equals(getDrawable(R.drawable.watchlist).getConstantState()))
+                    {
+                        Watchlist.setImageResource(R.drawable.watchlist_active);
+                        post.setActionType("watchlist");
+                    }
+                    else
+                    {
+                        Favorite.setImageResource(R.drawable.watchlist);
+                        post.setActionType("removewatchlist");
+                    }
+                    realm.copyToRealm(post);
+                    realm.commitTransaction();
+                }}
+
 
             }
         });

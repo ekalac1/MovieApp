@@ -4,9 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,9 +30,13 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Login;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.Action;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.MovieRealm;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,6 +51,8 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
     private SignUpAlertListener listener;
     private LinearLayout newView;
     private List<Movie> movies;
+    private Bitmap theBitmap;
+    Realm realm;
 
     public MovieGridViewAdapter(Context _context, int _resource, List<Movie> items, MovieApplication mApp) {
         super(_context, _resource, items);
@@ -63,10 +68,17 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
         this.mApp = mApp;
         this.movies=items;
         this.listener=listenet;
+        Realm.init(context);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
+
+        realm = Realm.getDefaultInstance();
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
 
         if (convertView == null) {
             newView = new LinearLayout(getContext());
@@ -154,38 +166,53 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
             @Override
             public void onClick(View v) {
                 if (mApp.getAccount() == null) listener.Alert();
-                else {
+                else if (isNetworkAvailable()) {
                     PostBody postMovie;
                     if (favourite.getDrawable().getConstantState().equals(getContext().getResources().getDrawable(R.drawable.favorite).getConstantState()))
-                    postMovie = new PostBody(mApp.movie, movie.getId(), mApp.favorite, mApp);
+                        postMovie = new PostBody(mApp.movie, movie.getId(), mApp.favorite, mApp);
                     else postMovie = new PostBody(mApp.movie, movie.getId(), mApp.watchlist, mApp);
                     Call<PostResponse> call = mApp.getApiService().PostFavorite(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), postMovie);
                     call.enqueue(new Callback<PostResponse>() {
                         @Override
                         public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                            if (response.body().getStatusCode() == 1)
-                            {
+                            if (response.body().getStatusCode() == 1) {
                                 favourite.setImageResource(R.drawable.favorite_active);
-                            } else if (response.body().getStatusCode()==13)
+                            } else if (response.body().getStatusCode() == 13)
                                 favourite.setImageResource(R.drawable.favorite);
                             Call<MoviesListResponse> call1 = mApp.getApiService().getFavoritesMovies(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
-                                call1.enqueue(new Callback<MoviesListResponse>() {
-                                    @Override
-                                    public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                                        mApp.getAccount().setFavoriteMovies(response.body().getResults());
-                                    }
+                            call1.enqueue(new Callback<MoviesListResponse>() {
+                                @Override
+                                public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+                                    mApp.getAccount().setFavoriteMovies(response.body().getResults());
+                                }
 
-                                    @Override
-                                    public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+                                @Override
+                                public void onFailure(Call<MoviesListResponse> call, Throwable t) {
 
-                                    }
-                                });
+                                }
+                            });
                         }
 
                         @Override
                         public void onFailure(Call<PostResponse> call, Throwable t) {
                         }
                     });
+                } else {
+                    realm.beginTransaction();
+                    MovieRealm movie = realm.where(MovieRealm.class).equalTo("id", getItem(position).getId()).findFirst();
+                    Action post = new Action();
+                    post.setId(movie.getId());
+
+                    post.setMediaType("movie");
+                    if (favourite.getDrawable().getConstantState().equals(context.getDrawable(R.drawable.favorite).getConstantState())) {
+                        favourite.setImageResource(R.drawable.favorite_active);
+                        post.setActionType("favorite");
+                    } else {
+                        favourite.setImageResource(R.drawable.favorite);
+                        post.setActionType("removefavorite");
+                    }
+                    realm.copyToRealm(post);
+                    realm.commitTransaction();
                 }
             }
         });
@@ -214,17 +241,6 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .placeholder(R.drawable.movies)
                     .into((ImageView) newView.findViewById(R.id.imageView));
-
-        /*  Drawable d=((ImageView) newView.findViewById(R.id.imageView)).getDrawable();
-            Bitmap bmp = drawableToBitmap(d);
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            byte[] byteArray = stream.toByteArray(); */
-          /*  Realm realm = Realm.getInstance(context);
-            realm.beginTransaction();
-            RealmResults<MovieRealm> m = realm.where(MovieRealm.class).equalTo("id", movie.getId()).findAll();
-            m.get(0).setImage(byteArray);
-            realm.commitTransaction(); */
         return newView;
     }
 
@@ -244,22 +260,11 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
                     }
                 }).show();
     }
-    private static Bitmap drawableToBitmap (Drawable drawable) {
-        if (drawable instanceof BitmapDrawable) {
-            return ((BitmapDrawable)drawable).getBitmap();
-        }
-
-        int width = drawable.getIntrinsicWidth();
-        width = width > 0 ? width : 1;
-        int height = drawable.getIntrinsicHeight();
-        height = height > 0 ? height : 1;
-
-        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-
-        return bitmap;
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 }
 

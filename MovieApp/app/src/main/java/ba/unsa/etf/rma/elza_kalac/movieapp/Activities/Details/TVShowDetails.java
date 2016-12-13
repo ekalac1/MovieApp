@@ -162,6 +162,11 @@ public class TVShowDetails extends AppCompatActivity {
             votes.setText(String.valueOf(tvshow.getVoteAverage()));
             seasonsList.setText(tvshow.getSeasons());
             temp.setText(tvshow.getGenres());
+            if (tvshow.getStars()!=null && tvshow.getStars()!="")
+            {
+                TextView temp1 = (TextView) findViewById(R.id.tv_show_stars_label);
+                temp1.setText(R.string.stars);
+            }
             stars.setText(tvshow.getStars());
             about.setText(tvshow.getOverview());
 
