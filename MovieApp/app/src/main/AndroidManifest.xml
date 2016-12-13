@@ -116,7 +116,8 @@
         <activity
             android:name=".Activities.UserPrivilegies.Rating"
             android:parentActivityName=".Activities.Details.MoviesDetailsActivity" />
-        <activity android:name=".Activities.Details.Gallery" />
+        <activity android:name=".Activities.Details.Gallery"
+            android:parentActivityName=".Activities.Details.MoviesDetailsActivity"/>
         <activity android:name=".Activities.Details.ImageView" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"

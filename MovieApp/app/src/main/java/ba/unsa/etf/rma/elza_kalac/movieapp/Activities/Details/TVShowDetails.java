@@ -99,7 +99,7 @@ public class TVShowDetails extends AppCompatActivity {
         final Intent intent = new Intent(getApplicationContext(), Seasons.class);
         intent.putExtra("id", tvshowID);
 
-        setIcons();
+    //    setIcons();
 
         Realm.init(getApplicationContext());
 
@@ -125,8 +125,8 @@ public class TVShowDetails extends AppCompatActivity {
         final LinearLayout seeAll = (LinearLayout) findViewById(R.id.see_all);
         final TextView rate = (TextView) findViewById(R.id.rate_this_label);
         final TextView gallerySeeAll = (TextView)findViewById(R.id.see_all_galery);
-        final ImageView facebook = (ImageView) findViewById(R.id.watchlist);
-        final ImageView twitter = (ImageView) findViewById(R.id.favorite);
+        final ImageView Watchlist = (ImageView) findViewById(R.id.watchlist);
+        final ImageView Favorite = (ImageView) findViewById(R.id.favorite);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
@@ -170,8 +170,89 @@ public class TVShowDetails extends AppCompatActivity {
             }
             about.setText(tvshow.getOverview());
             votes.setText(String.valueOf(tvshow.getVoteAverage()));
+            seasonsList.setText(tvshow.getSeasons());
+            temp.setText(tvshow.getGenres());
+            stars.setText(tvshow.getStars());
+            about.setText(tvshow.getOverview());
+
 
         }
+
+        Watchlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mApp.getAccount() == null) Alert();
+                else {
+                    PostBody postMovie;
+                    if (Watchlist.getDrawable().getConstantState().equals(getDrawable(R.drawable.watchlist).getConstantState()))
+                        postMovie = new PostBody(mApp.tvShow, tvshow.getId(), mApp.watchlist, mApp);
+                    else postMovie = new PostBody(mApp.tvShow, tvshow.getId(), mApp.favorite, mApp);
+                    Call<PostResponse> call = mApp.getApiService().MarkWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), postMovie);
+                    call.enqueue(new Callback<PostResponse>() {
+                        @Override
+                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                            if (response.body().getStatusCode() == 1)
+                                Watchlist.setImageResource(R.drawable.watchlist_active);
+                            else if (response.body().getStatusCode() == 13)
+                                Watchlist.setImageResource(R.drawable.watchlist);
+                            Call<TvShowResponse> call1 = apiService.getTvShowWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
+                            call1.enqueue(new Callback<TvShowResponse>() {
+                                @Override
+                                public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
+                                    mApp.getAccount().setWatchListTvShow(response.body().getResults());
+                                }
+
+                                @Override
+                                public void onFailure(Call<TvShowResponse> call, Throwable t) {
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onFailure(Call<PostResponse> call, Throwable t) {
+
+                        }
+                    });
+                }
+            }
+        });
+
+
+        Favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mApp.getAccount() == null) Alert();
+                else {
+                    PostBody postMovie;
+                    if (Favorite.getDrawable().getConstantState().equals(getDrawable(R.drawable.favorite).getConstantState()))
+                        postMovie = new PostBody(mApp.tvShow, tvshow.getId(), mApp.favorite, mApp);
+                    else postMovie = new PostBody(mApp.tvShow, tvshow.getId(), mApp.watchlist, mApp);
+                    Call<PostResponse> call = mApp.getApiService().PostFavorite(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), postMovie);
+                    call.enqueue(new Callback<PostResponse>() {
+                        @Override
+                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                            if (response.body().getStatusCode() == 1)
+                                Favorite.setImageResource(R.drawable.favorite_active);
+                            else  if (response.body().getStatusCode() == 13)
+                                Favorite.setImageResource(R.drawable.favorite);
+                            Call<TvShowResponse> call1 = mApp.getApiService().getFavoritesTvShows(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
+                            call1.enqueue(new Callback<TvShowResponse>() {
+                                @Override
+                                public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
+                                    mApp.getAccount().setFavoriteTvShows(response.body().getResults());
+                                }
+                                @Override
+                                public void onFailure(Call<TvShowResponse> call, Throwable t) {
+                                }
+                            });
+                        }
+                        @Override
+                        public void onFailure(Call<PostResponse> call, Throwable t) {
+                        }
+                    });
+                }
+            }
+        });
 
         call.enqueue(new Callback<TvShow>() {
             @Override
@@ -179,6 +260,9 @@ public class TVShowDetails extends AppCompatActivity {
                 tvshow = response.body();
                 movieId.setText(tvshow.getName());
                 link = "https://www.themoviedb.org/tv/" + String.valueOf(tvshowID) + "-" + tvshow.getName().replace(" ", "-");
+                realm.beginTransaction();
+                RealmTvShow rtvshow = realm.where(RealmTvShow.class).equalTo("id", tvshowID).findFirst();
+
 
                 intent.putExtra("name", tvshow.getName());
                 rate.setOnClickListener(new View.OnClickListener() {
@@ -190,31 +274,6 @@ public class TVShowDetails extends AppCompatActivity {
                             intent.putExtra("movieName", tvshow.getName());
                             startActivity(intent);
                         } else Alert();
-                    }
-                });
-
-                facebook.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (ShareDialog.canShow(ShareLinkContent.class)) {
-                            final ShareLinkContent content = new ShareLinkContent.Builder()
-                                    .setContentUrl(Uri.parse(link))
-                                    .build();
-                            shareDialog.show(content);
-                        }
-                    }
-                });
-
-                twitter.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        TwitterAuthConfig authConfig = new TwitterAuthConfig("e8aY8o5kas7KV3U6xFCpZPad4", "7ERg55rzkhGzzUMTkadoEvFkjUu7wXDhnwcUzsinjH0Ux05n6b");
-                        Fabric.with(getApplicationContext(), new TwitterCore(authConfig), new TweetComposer());
-                        Intent intent = new TweetComposer.Builder(getApplicationContext())
-                                .text(link)
-                                .createIntent();
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(intent);
                     }
                 });
 
@@ -244,6 +303,7 @@ public class TVShowDetails extends AppCompatActivity {
                         seasonList = seasonList + String.valueOf(i) + " ";
                     }
                 seasonsList.setText(seasonList);
+                rtvshow.setSeasons(seasonList);
                 if (tvshow.getFirstAirDate() != null) {
                     String tempe = tvshow.getFirstAirDate().substring(0, 4);
                     int startYear = Integer.parseInt(tempe);
@@ -283,6 +343,7 @@ public class TVShowDetails extends AppCompatActivity {
                     }
                 }
                 temp.setText(tvshow.getGenres());
+                rtvshow.setGenres(tvshow.getGenres());
                 Glide.with(getApplicationContext())
                         .load(tvshow.getFullPosterPath(getApplicationContext()))
                         .centerCrop()
@@ -308,10 +369,12 @@ public class TVShowDetails extends AppCompatActivity {
                     temp.setVisibility(View.GONE);
                 }
                 about.setText(tvshow.getOverview());
+                rtvshow.setOverview(tvshow.getOverview());
                 if (tvshow.getCredits().getStars() != "") {
                     TextView temp = (TextView) findViewById(R.id.tv_show_stars_label);
                     temp.setText(R.string.stars);
                     stars.setText(tvshow.getCredits().getStars());
+                    rtvshow.setStars(tvshow.getCredits().getStars());
                     CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), tvshow.getCredits().getCast(), "tv");
                     LinearLayoutManager LayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
                     cast.setLayoutManager(LayoutManager);
@@ -325,6 +388,8 @@ public class TVShowDetails extends AppCompatActivity {
                     tempImage.setVisibility(View.GONE);
                 }
                 votes.setText(String.valueOf(tvshow.getVoteAverage()));
+                realm.copyToRealm(rtvshow);
+                realm.commitTransaction();
             }
 
             @Override
@@ -356,7 +421,7 @@ public class TVShowDetails extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 break;
-            case R.id.watchlist:
+           /* case R.id.watchlist:
                 if (mApp.getAccount() == null) Alert();
                 else {
                     PostBody postMovie;
@@ -422,7 +487,7 @@ public class TVShowDetails extends AppCompatActivity {
                         }
                     });
                 }
-                break;
+                break; */
         }
         return super.onOptionsItemSelected(item);
     }
@@ -430,7 +495,7 @@ public class TVShowDetails extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.icons, menu);
-        MenuItem ma0 = menu.getItem(0);
+     /*   MenuItem ma0 = menu.getItem(0);
         MenuItem ma1 = menu.getItem(1);
 
         ma0.setIcon(watchlist);
@@ -446,7 +511,7 @@ public class TVShowDetails extends AppCompatActivity {
                 if (m.getId() == tvshowID) {
                     ma0.setIcon(watchlist_active);
                 }
-        }
+        } */
         return true;
     }
 

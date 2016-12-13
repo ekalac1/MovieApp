@@ -143,7 +143,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 PostBody post;
-                if (Favorite.getDrawable().getConstantState().equals(getDrawable(R.drawable.favorite)))
+                if (Favorite.getDrawable().getConstantState().equals(getDrawable(R.drawable.favorite).getConstantState()))
                     post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
                 else post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
                 Call<PostResponse> call = apiService.PostFavorite(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), post);
@@ -176,6 +176,48 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             }
         });
 
+        Watchlist.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mApp.getAccount() == null) Alert();
+                else {
+                    PostBody post;
+                    if (Watchlist.getDrawable().getConstantState().equals(getDrawable(R.drawable.watchlist).getConstantState()))
+                        post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
+                    else post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
+                    Call<PostResponse> call = apiService.MarkWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), post);
+                    call.enqueue(new Callback<PostResponse>() {
+                        @Override
+                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                            if (response.body().getStatusCode() == 1)
+                               Watchlist.setImageResource(R.drawable.watchlist_active);
+                            else if (response.body().getStatusCode() == 13)
+                                Watchlist.setImageResource(R.drawable.watchlist);
+                            Call<MoviesListResponse> call1 = apiService.getMoviesWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
+                            call1.enqueue(new Callback<MoviesListResponse>() {
+                                @Override
+                                public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+                                    mApp.getAccount().setWatchListMovies(response.body().getResults());
+                                }
+
+                                @Override
+                                public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+
+                                }
+                            });
+                        }
+
+                        @Override
+                        public void onFailure(Call<PostResponse> call, Throwable t) {
+                        }
+                    });
+                }
+
+            }
+        });
+
+
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
         shareDialog = new ShareDialog(this);
@@ -189,7 +231,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
 
 
 
-        setIcons();
+      //  setIcons();
 
         if (!isNetworkAvailable())
         {
@@ -354,7 +396,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 break;
-            case R.id.watchlist:
+        /*    case R.id.watchlist:
                 if (mApp.getAccount() == null) Alert();
                 else {
                     PostBody post;
@@ -424,7 +466,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         }
                     });
                 }
-                break;
+                break; */
         }
         return super.onOptionsItemSelected(item);
     }
@@ -432,7 +474,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.icons, menu);
-        MenuItem ma0 = menu.getItem(0);
+       /* MenuItem ma0 = menu.getItem(0);
         MenuItem ma1 = menu.getItem(1);
 
         ma0.setIcon(watchlist);
@@ -451,7 +493,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         ma0.setIcon(watchlist_active);
                     }
 
-        }
+        } */
         return true;
     }
 

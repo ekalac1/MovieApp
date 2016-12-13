@@ -8,17 +8,11 @@ import io.realm.RealmObject;
 
 public class RealmTvShow extends RealmObject {
 
-    @SerializedName("poster_path")
     private String posterPath;
-    @SerializedName("popularity")
     private double popularity;
-    @SerializedName("id")
     private int id;
-    @SerializedName("backdrop_path")
     private String backdropPath;
-    @SerializedName("vote_average")
     private double voteAverage;
-    @SerializedName("overview")
     private String overview;
     private boolean favorite;
     private boolean watchlist;
@@ -26,6 +20,40 @@ public class RealmTvShow extends RealmObject {
     private boolean mostPopular;
     private boolean latest;
     private boolean highestRated;
+    private String genres;
+    private String firstAirDate;
+    private String originalLanguage;
+    private int voteCount;
+    private String name;
+    private String originalName;
+    private String lastAirDate;
+    private String stars;
+
+    public String getStars() {
+        return stars;
+    }
+
+    public void setStars(String stars) {
+        this.stars = stars;
+    }
+
+    public String getGenres() {
+        return genres;
+    }
+
+    public void setGenres(String genres) {
+        this.genres = genres;
+    }
+
+    public String getSeasons() {
+        return seasons;
+    }
+
+    public void setSeasons(String seasons) {
+        this.seasons = seasons;
+    }
+
+    private String seasons;
 
     public boolean isAiringToday() {
         return airingToday;
@@ -93,18 +121,6 @@ public class RealmTvShow extends RealmObject {
         this.status = status;
     }
 
-    @SerializedName("first_air_date")
-    private String firstAirDate;
-    @SerializedName("original_language")
-    private String originalLanguage;
-    @SerializedName("vote_count")
-    private int voteCount;
-    @SerializedName("name")
-    private String name;
-    @SerializedName("original_name")
-    private String originalName;
-    @SerializedName("last_air_date")
-    private String lastAirDate;
 
     public String getLastAirDate() {
         return lastAirDate;

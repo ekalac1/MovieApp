@@ -8,13 +8,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.MovieRealm;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.CreditsResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.GalleryResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.ReviewResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TrailerResponse;
-import ba.unsa.etf.rma.elza_kalac.movieapp.R;
-import io.realm.RealmObject;
 
 
 public class Movie {
@@ -315,7 +314,6 @@ public class Movie {
     {
         MovieRealm movie= new MovieRealm();
         movie.setTitle(m.getTitle());
-        movie.setBudget(m.getBudget());
         movie.setReleaseDate(m.getReleaseDate());
         movie.setId(m.getId());
         movie.setVoteAverage(m.getVoteAverage());
@@ -327,7 +325,6 @@ public class Movie {
         Movie movie = new Movie();
         movie.setTitle(m.getTitle());
         movie.setTitle(m.getTitle());
-        movie.setBudget(m.getBudget());
         movie.setReleaseDate(m.getReleaseDate());
         movie.setId(m.getId());
         movie.setVoteAverage(m.getVoteAverage());
