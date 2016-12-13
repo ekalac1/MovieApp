@@ -3,6 +3,7 @@ package ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 
@@ -38,6 +39,16 @@ public class MovieRealm extends RealmObject {
     private boolean watchlist;
     private boolean rated;
     private boolean mostPopular, latest, highestRated;
+
+    private RealmList<RealmReview> reviews;
+
+    public RealmList<RealmReview> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(RealmList<RealmReview> reviews) {
+        this.reviews = reviews;
+    }
 
     public byte[] getImage() {
         return image;

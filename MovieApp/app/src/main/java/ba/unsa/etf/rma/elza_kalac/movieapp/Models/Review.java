@@ -3,9 +3,8 @@ package ba.unsa.etf.rma.elza_kalac.movieapp.Models;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-/**
- * Created by Laptop on 28.09.2016..
- */
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.RealmReview;
+
 public class Review {
 
     @SerializedName("id")
@@ -20,13 +19,6 @@ public class Review {
     @SerializedName("url")
     @Expose
     private String url;
-
-    public Review(String id, String author, String content, String url) {
-        this.id = id;
-        this.author = author;
-        this.content = content;
-        this.url = url;
-    }
 
     public String getId() {
         return id;
@@ -58,5 +50,21 @@ public class Review {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public RealmReview getRealmReview()
+    {
+        RealmReview review = new RealmReview();
+        review.setAuthor(this.author);
+        review.setContent(this.content);
+        return review;
+    }
+    public Review getReview(RealmReview review)
+    {
+        Review review1 = new Review();
+        review1.setContent(review.getContent());
+        review1.setAuthor(review.getAuthor());
+        return review1;
+
     }
 }

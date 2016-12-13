@@ -3,9 +3,6 @@ package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -48,9 +45,11 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.GaleryAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.ReviewListAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Image;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Review;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.MovieRealm;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.RealmReview;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
 import io.fabric.sdk.android.Fabric;
@@ -72,10 +71,6 @@ public class MoviesDetailsActivity extends AppCompatActivity {
     ShareDialog shareDialog;
     String link;
 
-    Drawable favorite_active;
-    Drawable favorite;
-    Drawable watchlist_active;
-    Drawable watchlist;
 
     Realm realm;
 
@@ -230,9 +225,6 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         }
 
 
-
-      //  setIcons();
-
         if (!isNetworkAvailable())
         {
             realm.beginTransaction();
@@ -253,6 +245,15 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             }
             votes.setText(String.valueOf(movie.getVoteAverage()));
             about.setText(movie.getOverview());
+            List<Review> temp1 = new ArrayList<>();
+            if (movie.getReviews()!=null)
+            for (RealmReview r:movie.getReviews())
+            temp1.add(new Review().getReview(r));
+
+            ReviewListAdapter reviewListAdapter = new ReviewListAdapter(temp1);
+            RecyclerView.LayoutManager reviewLayoutManager = new LinearLayoutManager(getApplicationContext());
+            review.setLayoutManager(reviewLayoutManager);
+            review.setAdapter(reviewListAdapter);
 
 
         }
@@ -263,6 +264,8 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 movie = response.body();
+                realm.beginTransaction();
+                MovieRealm realmMovie = realm.where(MovieRealm.class).equalTo("id", movieID).findFirst();
                 link = "https://www.themoviedb.org/movie/" + String.valueOf(movieID) + "-" + movie.getTitle().replace(" ", "-");
                 movieId.setText(movie.getTitle());
                 rate.setOnClickListener(new View.OnClickListener() {
@@ -355,6 +358,15 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 RecyclerView.LayoutManager reviewLayoutManager = new LinearLayoutManager(getApplicationContext());
                 review.setLayoutManager(reviewLayoutManager);
                 review.setAdapter(reviewListAdapter);
+
+                if (movie.getReviews()!=null)
+                {
+                    for (Review r : movie.getReviews().getResults())
+                    {
+                        realmMovie.getReviews().add(r.getRealmReview());
+                    }
+                }
+                realm.commitTransaction();
                 ImageView moviesImage = (ImageView) findViewById(R.id.movies_detalis_image);
                 if (movie.getVideos().getResults().size() != 0)
                     moviesImage.setOnClickListener(new View.OnClickListener() {
@@ -396,77 +408,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
                 break;
-        /*    case R.id.watchlist:
-                if (mApp.getAccount() == null) Alert();
-                else {
-                    PostBody post;
-                    if (item.getIcon().getConstantState().equals(watchlist.getConstantState()))
-                        post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
-                    else post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
-                    Call<PostResponse> call = apiService.MarkWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), post);
-                    call.enqueue(new Callback<PostResponse>() {
-                        @Override
-                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                            if (response.body().getStatusCode() == 1)
-                                item.setIcon(watchlist_active);
-                            else if (response.body().getStatusCode() == 13)
-                                item.setIcon(watchlist);
-                            Call<MoviesListResponse> call1 = apiService.getMoviesWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
-                            call1.enqueue(new Callback<MoviesListResponse>() {
-                                @Override
-                                public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                                    mApp.getAccount().setWatchListMovies(response.body().getResults());
-                                }
 
-                                @Override
-                                public void onFailure(Call<MoviesListResponse> call, Throwable t) {
-
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onFailure(Call<PostResponse> call, Throwable t) {
-                        }
-                    });
-                }
-                break;
-            case R.id.favorite:
-                if (mApp.getAccount() == null) Alert();
-                else {
-                    PostBody post;
-                    if (item.getIcon().getConstantState().equals(favorite.getConstantState()))
-                        post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
-                    else post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
-                    Call<PostResponse> call = apiService.PostFavorite(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), post);
-                    call.enqueue(new Callback<PostResponse>() {
-                        @Override
-                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                            if (response.body().getStatusCode() == 1) {
-                                item.setIcon(favorite_active);
-                            } else if (response.body().getStatusCode() == 13) {
-                                item.setIcon(favorite);
-                            }
-                            Call<MoviesListResponse> call1 = apiService.getFavoritesMovies(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
-                            call1.enqueue(new Callback<MoviesListResponse>() {
-                                @Override
-                                public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                                    mApp.getAccount().setFavoriteMovies(response.body().getResults());
-                                }
-
-                                @Override
-                                public void onFailure(Call<MoviesListResponse> call, Throwable t) {
-
-                                }
-                            });
-                        }
-
-                        @Override
-                        public void onFailure(Call<PostResponse> call, Throwable t) {
-                        }
-                    });
-                }
-                break; */
         }
         return super.onOptionsItemSelected(item);
     }
@@ -474,45 +416,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.icons, menu);
-       /* MenuItem ma0 = menu.getItem(0);
-        MenuItem ma1 = menu.getItem(1);
-
-        ma0.setIcon(watchlist);
-        ma1.setIcon(favorite);
-        if (mApp.getAccount() != null) {
-            List<Movie> movie = mApp.getAccount().getFavoriteMovies();
-            if (movie != null)
-                for (Movie m : mApp.getAccount().getFavoriteMovies())
-                    if (m.getId() == movieID) {
-                        ma1.setIcon(favorite_active);
-                    }
-            movie = mApp.getAccount().getWatchListMovies();
-            if (movie != null)
-                for (Movie m : movie)
-                    if (m.getId() == movieID) {
-                        ma0.setIcon(watchlist_active);
-                    }
-
-        } */
         return true;
-    }
-
-    public void setIcons() {
-        // Old icons
-        Drawable dr_favorite_active = getDrawable(R.drawable.favorite_active);
-        Drawable dr_favorite = getDrawable(R.drawable.favorite);
-        Drawable dr_watchlist_active = getDrawable(R.drawable.watchlist_active);
-        Drawable dr_watchlist = getDrawable(R.drawable.watchlist);
-        // Bitmaps
-        Bitmap bitmap_favorite_active = ((BitmapDrawable) dr_favorite_active).getBitmap();
-        Bitmap bitmap_favorite = ((BitmapDrawable) dr_favorite).getBitmap();
-        Bitmap bitmap_watchlist_active = ((BitmapDrawable) dr_watchlist_active).getBitmap();
-        Bitmap bitmap_watchlist = ((BitmapDrawable) dr_watchlist).getBitmap();
-        // Final drawables
-        favorite_active = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap_favorite_active, 70, 70, true));
-        favorite = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap_favorite, 70, 70, true));
-        watchlist_active = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap_watchlist_active, 70, 70, true));
-        watchlist = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap_watchlist, 70, 70, true));
     }
 
     private void Alert() {

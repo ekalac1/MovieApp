@@ -1,13 +1,14 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,7 @@ public class Gallery extends AppCompatActivity {
 
         images_url=new ArrayList<>();
         final GridView gallery=(GridView)findViewById(R.id.gallery);
+        final TextView movieName = (TextView) findViewById(R.id.movie_title);
         adapter = new GalleryGridAdapter(getApplicationContext(), R.layout.galery_image_element,images_url);
         gallery.setAdapter(adapter);
 
@@ -75,6 +77,7 @@ public class Gallery extends AppCompatActivity {
                     for (Image i: response.body().getGallery().getBackdrops()) {
                         images_url.add(i.getSmallFullPosterPath(getApplicationContext()));
                     }
+                    movieName.setText(response.body().getTitle().toUpperCase());
                     ((BaseAdapter)gallery.getAdapter()).notifyDataSetChanged();
                 }
 
@@ -92,6 +95,7 @@ public class Gallery extends AppCompatActivity {
                 public void onResponse(Call<TvShow> call, Response<TvShow> response) {
                     for (Image i: response.body().getGallery().getBackdrops()) {
                         images_url.add(i.getSmallFullPosterPath(getApplicationContext()));
+                        movieName.setText(response.body().getName().toUpperCase());
                     }
                     ((BaseAdapter)gallery.getAdapter()).notifyDataSetChanged();
                 }
