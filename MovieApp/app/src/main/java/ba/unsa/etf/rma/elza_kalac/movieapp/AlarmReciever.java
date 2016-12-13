@@ -76,14 +76,14 @@ public class AlarmReciever extends BroadcastReceiver {
                                                             .setSmallIcon(R.drawable.videocamera)
                                                             .setContentTitle(commonMovies.get(j).getTitle())
                                                             .setAutoCancel(true)
-                                                            .setContentText(commonMovies.get(j).getOverview());
-                                            // Creates an explicit intent for an Activity in your app
-                                            Intent resultIntent = new Intent(context, MoviesDetailsActivity.class);
-                                            resultIntent.putExtra("id", commonMovies.get(j).getId());
-                                            // The stack builder object will contain an artificial back stack for the
+                                                            .setContentText(commonMovies.get(j).getOverview());  // The stack builder object will contain an artificial back stack for the
                                             // started Activity.
                                             // This ensures that navigating backward from the Activity leads out of
                                             // your application to the Home screen.
+                                            // Creates an explicit intent for an Activity in your app
+                                            Intent resultIntent = new Intent(context, MoviesDetailsActivity.class);
+                                            resultIntent.putExtra("id", commonMovies.get(j).getId());
+
                                             TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
                                             // Adds the back stack for the Intent (but not the Intent itself)
                                             // Adds the Intent that starts the Activity to the top of the stack

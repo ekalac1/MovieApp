@@ -1,10 +1,13 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -17,10 +20,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +45,12 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Image;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.RealmTvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TvShowResponse;
+import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,11 +64,16 @@ public class TVShowDetails extends AppCompatActivity {
     ApiInterface apiService;
     MovieApplication mApp;
     List<String> images_url;
+    CallbackManager callbackManager;
+    ShareDialog shareDialog;
+    String link;
 
     Drawable favorite_active;
     Drawable favorite;
     Drawable watchlist_active;
     Drawable watchlist;
+
+    Realm realm;
 
 
     @Override
@@ -83,6 +101,15 @@ public class TVShowDetails extends AppCompatActivity {
 
         setIcons();
 
+        Realm.init(getApplicationContext());
+
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
+
+        realm = Realm.getDefaultInstance();
+
         final TextView movieId = (TextView) findViewById(R.id.tv_show_detalis_title);
         final TextView date = (TextView) findViewById(R.id.tv_show_detalis_release_date);
         final TextView temp = (TextView) findViewById(R.id.tv_show_detalis_genres);
@@ -98,6 +125,12 @@ public class TVShowDetails extends AppCompatActivity {
         final LinearLayout seeAll = (LinearLayout) findViewById(R.id.see_all);
         final TextView rate = (TextView) findViewById(R.id.rate_this_label);
         final TextView gallerySeeAll = (TextView)findViewById(R.id.see_all_galery);
+        final ImageView facebook = (ImageView) findViewById(R.id.watchlist);
+        final ImageView twitter = (ImageView) findViewById(R.id.favorite);
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
 
         yearsList.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,11 +155,31 @@ public class TVShowDetails extends AppCompatActivity {
 
         Call<TvShow> call = apiService.getTvShowDetails(tvshowID, ApiClient.API_KEY, "credits,images");
 
+        if (!isNetworkAvailable())
+        {
+            realm.beginTransaction();
+            RealmTvShow tvshow = realm.where(RealmTvShow.class).equalTo("id", tvshowID).findFirst();
+            realm.commitTransaction();
+            movieId.setText(tvshow.getName());
+            if (tvshow.getFirstAirDate() != null) {
+                String tempe = tvshow.getFirstAirDate().substring(0, 4);
+                int startYear = Integer.parseInt(tempe);
+                String m = "-";
+                String temp2 = "";
+                date.setText("Tv Series (" + tempe + m + temp2 + ")");
+            }
+            about.setText(tvshow.getOverview());
+            votes.setText(String.valueOf(tvshow.getVoteAverage()));
+
+        }
+
         call.enqueue(new Callback<TvShow>() {
             @Override
             public void onResponse(Call<TvShow> call, Response<TvShow> response) {
                 tvshow = response.body();
                 movieId.setText(tvshow.getName());
+                link = "https://www.themoviedb.org/tv/" + String.valueOf(tvshowID) + "-" + tvshow.getName().replace(" ", "-");
+
                 intent.putExtra("name", tvshow.getName());
                 rate.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -137,6 +190,31 @@ public class TVShowDetails extends AppCompatActivity {
                             intent.putExtra("movieName", tvshow.getName());
                             startActivity(intent);
                         } else Alert();
+                    }
+                });
+
+                facebook.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (ShareDialog.canShow(ShareLinkContent.class)) {
+                            final ShareLinkContent content = new ShareLinkContent.Builder()
+                                    .setContentUrl(Uri.parse(link))
+                                    .build();
+                            shareDialog.show(content);
+                        }
+                    }
+                });
+
+                twitter.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        TwitterAuthConfig authConfig = new TwitterAuthConfig("e8aY8o5kas7KV3U6xFCpZPad4", "7ERg55rzkhGzzUMTkadoEvFkjUu7wXDhnwcUzsinjH0Ux05n6b");
+                        Fabric.with(getApplicationContext(), new TwitterCore(authConfig), new TweetComposer());
+                        Intent intent = new TweetComposer.Builder(getApplicationContext())
+                                .text(link)
+                                .createIntent();
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(intent);
                     }
                 });
 
@@ -251,7 +329,6 @@ public class TVShowDetails extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<TvShow> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -262,6 +339,23 @@ public class TVShowDetails extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.facebook:
+                if (ShareDialog.canShow(ShareLinkContent.class)) {
+                    final ShareLinkContent content = new ShareLinkContent.Builder()
+                            .setContentUrl(Uri.parse(link))
+                            .build();
+                    shareDialog.show(content);
+                }
+                break;
+            case R.id.twitter:
+                TwitterAuthConfig authConfig = new TwitterAuthConfig(ApiClient.TWITTER_KEY, ApiClient.TWITTER_SECRET_KEY);
+                Fabric.with(getApplicationContext(), new TwitterCore(authConfig), new TweetComposer());
+                Intent intent = new TweetComposer.Builder(getApplicationContext())
+                        .text(link)
+                        .createIntent();
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                break;
             case R.id.watchlist:
                 if (mApp.getAccount() == null) Alert();
                 else {
@@ -342,10 +436,12 @@ public class TVShowDetails extends AppCompatActivity {
         ma0.setIcon(watchlist);
         ma1.setIcon(favorite);
         if (mApp.getAccount() != null) {
+            if (mApp.getAccount().getFavoriteTvShows()!=null)
             for (TvShow m : mApp.getAccount().getFavoriteTvShows())
                 if (m.getId() == tvshowID) {
                     ma1.setIcon(favorite_active);
                 }
+            if (mApp.getAccount().getWatchListTvShow()!=null)
             for (TvShow m : mApp.getAccount().getWatchListTvShow())
                 if (m.getId() == tvshowID) {
                     ma0.setIcon(watchlist_active);
@@ -387,5 +483,12 @@ public class TVShowDetails extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                     }
                 }).show();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 }

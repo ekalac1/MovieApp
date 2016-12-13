@@ -76,7 +76,7 @@ public class CastGridAdapter extends RecyclerView.Adapter<CastGridAdapter.MyView
         else holder.name.setText(cast.getTitle());
         holder.character.setText(cast.getCharacter_name());
         Glide.with(context)
-                .load(cast.getFullPosterPath(context))
+                .load(cast.getSmallFullPosterPath(context))
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(holder.cast_image);

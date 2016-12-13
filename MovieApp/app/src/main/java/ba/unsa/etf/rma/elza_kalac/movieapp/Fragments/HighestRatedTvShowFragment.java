@@ -1,29 +1,35 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
-import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TvShowResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.TVShowDetails;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.TvShowGridViewAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.EndlessScrollListener;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
+import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.RealmTvShow;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TvShowResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,18 +41,43 @@ public class HighestRatedTvShowFragment extends Fragment {
     MovieApplication mApp;
     GridView grid;
     TvShowGridViewAdapter adapter;
+    Realm realm;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.activity_highest_rated_tv_show_fragment, container, false);
+
+        Realm.init(getActivity().getApplicationContext());
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
 
         mApp = (MovieApplication)getActivity().getApplicationContext();
         apiService = mApp.getApiService();
 
         grid = (GridView) view.findViewById(R.id.highest_rated_tv_shows);
         tvShow=new ArrayList<>();
-        adapter = new TvShowGridViewAdapter(getActivity().getApplicationContext(), R.layout.tv_show_element, tvShow, mApp, (SignUpAlertListener) getContext()
-        );
+        adapter = new TvShowGridViewAdapter(getActivity().getApplicationContext(), R.layout.tv_show_element, tvShow, mApp, (SignUpAlertListener) getContext());
         grid.setAdapter(adapter);
+
+        realm = Realm.getDefaultInstance();
+        if (isNetworkAvailable()) {
+            realm.beginTransaction();
+            RealmResults<RealmTvShow> rows = realm.where(RealmTvShow.class).equalTo("highestRated", true).findAll();
+            rows.deleteAllFromRealm();
+            realm.commitTransaction();
+        }
+        else
+        {
+            realm.beginTransaction();
+            RealmResults<RealmTvShow> rows = realm.where(RealmTvShow.class).equalTo("highestRated", true).findAll();
+            realm.commitTransaction();
+            for (RealmTvShow t : rows)
+            {
+                tvShow.add(new TvShow().getTvShow(t));
+            }
+            ((BaseAdapter)grid.getAdapter()).notifyDataSetChanged();
+        }
 
 
 
@@ -56,11 +87,18 @@ public class HighestRatedTvShowFragment extends Fragment {
             public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
                 tvShow.addAll(response.body().getResults());
                 ((BaseAdapter)grid.getAdapter()).notifyDataSetChanged();
+                realm.beginTransaction();
+                for (TvShow t : response.body().getResults())
+                {
+                    RealmTvShow tvshow=t.getRealmTvShow(t);
+                    tvshow.setHighestRated(true);
+                    realm.copyToRealm(tvshow);
+                }
+                realm.commitTransaction();
             }
 
             @Override
             public void onFailure(Call<TvShowResponse> call, Throwable t) {
-                Toast.makeText(getActivity().getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -74,11 +112,18 @@ public class HighestRatedTvShowFragment extends Fragment {
                     public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
                         tvShow.addAll(response.body().getResults());
                         ((BaseAdapter)grid.getAdapter()).notifyDataSetChanged();
+                        realm.beginTransaction();
+                        for (TvShow t : response.body().getResults())
+                        {
+                            RealmTvShow tvshow=t.getRealmTvShow(t);
+                            tvshow.setHighestRated(true);
+                            realm.copyToRealm(tvshow);
+                        }
+                        realm.commitTransaction();
                     }
 
                     @Override
                     public void onFailure(Call<TvShowResponse> call, Throwable t) {
-                        Toast.makeText(getActivity().getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
                     }
                 });
                 return true;
@@ -99,5 +144,12 @@ public class HighestRatedTvShowFragment extends Fragment {
     public void onResume() {
         ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
         super.onResume();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 }

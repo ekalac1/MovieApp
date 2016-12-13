@@ -8,15 +8,15 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 import java.util.List;
 
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.MovieRealm;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.CreditsResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.GalleryResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.ReviewResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TrailerResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import io.realm.RealmObject;
 
-/**
- * Created by Laptop on 23.09.2016..
- */
+
 public class Movie {
     @SerializedName("backdrop_path")
     @Expose
@@ -214,6 +214,124 @@ public class Movie {
     public String getFullPosterPath(Context c) {;
         return c.getString(R.string.MovieImageBaseAdress)+c.getString(R.string.MovieImageWidth500) + getPosterPath();
     }
+    public String getSmallFullPosterPath(Context c) {;
+        return c.getString(R.string.MovieImageBaseAdress)+c.getString(R.string.MovieImageWidth342) + getPosterPath();
+    }
 
 
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
+    }
+
+    public void setBudget(int budget) {
+        this.budget = budget;
+    }
+
+    public void setHomepage(String homepage) {
+        this.homepage = homepage;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setImdbId(String imdbId) {
+        this.imdbId = imdbId;
+    }
+
+    public void setOriginalLanguage(String originalLanguage) {
+        this.originalLanguage = originalLanguage;
+    }
+
+    public void setOriginalTitle(String originalTitle) {
+        this.originalTitle = originalTitle;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setOverview(String overview) {
+        this.overview = overview;
+    }
+
+    public void setPopularity(double popularity) {
+        this.popularity = popularity;
+    }
+
+    public void setPosterPath(String posterPath) {
+        this.posterPath = posterPath;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
+    public void setFirstAirDate(String firstAirDate) {
+        this.firstAirDate = firstAirDate;
+    }
+
+    public void setRevenue(int revenue) {
+        this.revenue = revenue;
+    }
+
+    public void setRuntime(int runtime) {
+        this.runtime = runtime;
+    }
+
+    public void setEpisodeRuntime(List<Integer> episodeRuntime) {
+        this.episodeRuntime = episodeRuntime;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setTagline(String tagline) {
+        this.tagline = tagline;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setVoteAverage(double voteAverage) {
+        this.voteAverage = voteAverage;
+    }
+
+    public void setGenresList(List<Genre> genresList) {
+        this.genresList = genresList;
+    }
+
+    public void setVoteCount(int voteCount) {
+        this.voteCount = voteCount;
+    }
+
+    public void setGallery(GalleryResponse gallery) {
+        this.gallery = gallery;
+    }
+
+    public MovieRealm getMovieRealm (Movie m)
+    {
+        MovieRealm movie= new MovieRealm();
+        movie.setTitle(m.getTitle());
+        movie.setBudget(m.getBudget());
+        movie.setReleaseDate(m.getReleaseDate());
+        movie.setId(m.getId());
+        movie.setVoteAverage(m.getVoteAverage());
+        movie.setOverview(m.getOverview());
+        return movie;
+    }
+    public Movie getMovie (MovieRealm m)
+    {
+        Movie movie = new Movie();
+        movie.setTitle(m.getTitle());
+        movie.setTitle(m.getTitle());
+        movie.setBudget(m.getBudget());
+        movie.setReleaseDate(m.getReleaseDate());
+        movie.setId(m.getId());
+        movie.setVoteAverage(m.getVoteAverage());
+        movie.setOverview(m.getOverview());
+        return movie;
+    }
 }

@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MapsActivity;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Favorites;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Ratings;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Settings;
@@ -71,6 +72,9 @@ public class TVShows extends AppCompatActivity implements SignUpAlertListener {
             public boolean onNavigationItemSelected(MenuItem item) {
 
                 switch (item.getItemId()) {
+                    case R.id.maps:
+                        startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                        break;
                     case R.id.settings:
                         if (mApp.getAccount()==null) Alert();
                         else

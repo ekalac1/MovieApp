@@ -28,6 +28,7 @@ import com.crashlytics.android.Crashlytics;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MapsActivity;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Favorites;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Ratings;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Settings;
@@ -37,6 +38,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
 import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
 
 public class MovieActivity extends AppCompatActivity  implements SignUpAlertListener {
 
@@ -50,8 +52,6 @@ public class MovieActivity extends AppCompatActivity  implements SignUpAlertList
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
-
-
 
         mApp = (MovieApplication) getApplicationContext();
 
@@ -90,25 +90,36 @@ public class MovieActivity extends AppCompatActivity  implements SignUpAlertList
             public boolean onNavigationItemSelected(MenuItem item) {
 
                 switch (item.getItemId()) {
+                    case R.id.maps:
+                        startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                        break;
                     case R.id.settings:
                         if (mApp.getAccount() == null) Alert();
                         else
+                        {
                             startActivity(new Intent(getApplicationContext(), Settings.class));
+                        }
                         break;
                     case R.id.favorites:
                         if (mApp.getAccount() == null) Alert();
                         else
+                        {
                             startActivity(new Intent(getApplicationContext(), Favorites.class));
+                        }
                         break;
                     case R.id.watchlist:
                         if (mApp.getAccount() == null) Alert();
                         else
+                        {
                             startActivity(new Intent(getApplicationContext(), Watchlist.class));
+                        }
                         break;
                     case R.id.ratings:
                         if (mApp.getAccount() == null) Alert();
                         else
+                        {
                             startActivity(new Intent(getApplicationContext(), Ratings.class));
+                        }
                         break;
                     case R.id.logout:
                         if (mApp.getAccount() == null)
@@ -126,7 +137,6 @@ public class MovieActivity extends AppCompatActivity  implements SignUpAlertList
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         }
-
                         break;
                 }
                 return false;

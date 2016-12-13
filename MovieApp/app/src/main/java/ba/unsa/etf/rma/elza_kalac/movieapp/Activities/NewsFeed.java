@@ -29,6 +29,7 @@ import com.roughike.bottombar.OnTabSelectListener;
 import java.util.ArrayList;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.RssAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MapsActivity;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Favorites;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Ratings;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Settings;
@@ -85,6 +86,9 @@ public class NewsFeed extends AppCompatActivity {
             public boolean onNavigationItemSelected(MenuItem item) {
 
                 switch (item.getItemId()) {
+                    case R.id.maps:
+                        startActivity(new Intent(getApplicationContext(), MapsActivity.class));
+                        break;
                     case R.id.settings:
                         if (mApp.getAccount() == null) Alert();
                         else

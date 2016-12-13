@@ -12,4 +12,17 @@
         android:title="@string/action_settings"
         android:icon="@drawable/favorite"
         app:showAsAction="always" />
+    <item android:id="@+id/share"
+        android:title="Share"
+        android:icon="@android:drawable/ic_menu_share"
+        app:showAsAction="always">
+        <menu>
+            <item android:id="@+id/facebook"
+                android:title="@string/com_facebook_share_button_text"
+                android:icon="@drawable/facebook"/>
+            <item android:id="@+id/twitter"
+                android:title="Twitter"
+                android:icon="@drawable/twitter"/>
+        </menu>
+    </item>
 </menu>

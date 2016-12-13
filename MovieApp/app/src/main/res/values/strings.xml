@@ -26,6 +26,8 @@
     <string name="trailer_error">Trailer not available</string>
     <string name="MovieImageBaseAdress">http://image.tmdb.org/t/p/</string>
     <string name="MovieImageWidth500">w500</string>
+    <string name="MovieImageWidth342">w342</string>
+    <string name="MovieImageWidth92">w92</string>
     <string name="SeeAll">See all  </string>
     <string name="Seasons">Seasons: </string>
     <string name="Years">Years: </string>
@@ -65,6 +67,8 @@
     <string name="m_notificattion">Movies notification</string>
     <string name="settings">Settings</string>
     <string name="facebook_app_id">672699442907366</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="rate">Tap to rate</string>
 
 
 </resources>

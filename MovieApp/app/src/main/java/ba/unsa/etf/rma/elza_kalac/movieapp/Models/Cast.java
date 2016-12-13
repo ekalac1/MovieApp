@@ -106,5 +106,13 @@ public class Cast {
 
     }
 
+    public String getSmallFullPosterPath(Context c) {
+        if (getProfile_path() != null)
+            return c.getString(R.string.MovieImageBaseAdress) + c.getString(R.string.MovieImageWidth92) + getProfile_path();
+        else
+            return c.getString(R.string.MovieImageBaseAdress) + c.getString(R.string.MovieImageWidth92) + getPosterPath();
+
+    }
+
 
 }

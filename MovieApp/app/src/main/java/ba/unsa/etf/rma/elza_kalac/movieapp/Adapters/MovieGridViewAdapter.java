@@ -3,8 +3,11 @@ package ba.unsa.etf.rma.elza_kalac.movieapp.Adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,6 +84,8 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
         TextView voteAverage = (TextView) newView.findViewById(R.id.vote_average);
         final ImageView favourite = (ImageView) newView.findViewById(R.id.favorite_movie);
         final ImageView watchlist = (ImageView) newView.findViewById(R.id.watchlist_movie);
+
+
 
         if (mApp.getAccount() != null) {
             List<Movie> favorite = mApp.getAccount().getFavoriteMovies();
@@ -203,19 +208,28 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
         }
 
         voteAverage.setText(String.valueOf(movie.getVoteAverage()));
-        if (movie.getPosterPath() != null) {
+
             Glide.with(context)
-                    .load(movie.getFullPosterPath(getContext()))
+                    .load(movie.getSmallFullPosterPath(getContext()))
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .placeholder(R.drawable.movies)
                     .into((ImageView) newView.findViewById(R.id.imageView));
-        }
+
+        /*  Drawable d=((ImageView) newView.findViewById(R.id.imageView)).getDrawable();
+            Bitmap bmp = drawableToBitmap(d);
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            bmp.compress(Bitmap.CompressFormat.PNG, 100, stream);
+            byte[] byteArray = stream.toByteArray(); */
+          /*  Realm realm = Realm.getInstance(context);
+            realm.beginTransaction();
+            RealmResults<MovieRealm> m = realm.where(MovieRealm.class).equalTo("id", movie.getId()).findAll();
+            m.get(0).setImage(byteArray);
+            realm.commitTransaction(); */
         return newView;
     }
 
     private void Alert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(context.getApplicationContext(), android.R.style.Theme_Black);
-                /*(newView.getRootView().getContext()); */
         builder.setMessage(R.string.message)
                 .setTitle(R.string.Sign_in)
                 .setPositiveButton(R.string.sign, new DialogInterface.OnClickListener() {
@@ -230,4 +244,23 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
                     }
                 }).show();
     }
+    private static Bitmap drawableToBitmap (Drawable drawable) {
+        if (drawable instanceof BitmapDrawable) {
+            return ((BitmapDrawable)drawable).getBitmap();
+        }
+
+        int width = drawable.getIntrinsicWidth();
+        width = width > 0 ? width : 1;
+        int height = drawable.getIntrinsicHeight();
+        height = height > 0 ? height : 1;
+
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
 }
+
+

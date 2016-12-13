@@ -1,18 +1,13 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.API;
 
+
 import ba.unsa.etf.rma.elza_kalac.movieapp.BuildConfig;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ApiClient {
-
-
-
-    public static final String BASE_URL = "http://api.themoviedb.org/3/";
-    public static final String API_KEY = BuildConfig.API_KEY;
-    public static final String YOUTUBE_API_KEY = BuildConfig.YOUTUBE_API_KEY;
-    public static final String TWITTER_SECRET_KEY=BuildConfig.TWITTER_SECRET_KEY;
-    public static final String TWITTER_KEY=BuildConfig.TWITTER_KEY;
+public class PlacesApiClient {
+    public static final String BASE_PLACES_URL = "https://maps.googleapis.com/maps/api/place/nearbysearch/";
+    public static final String PLACES_API_KEY = BuildConfig.PLACES_API_KEY;
     private static Retrofit retrofit = null;
 
 
@@ -20,7 +15,7 @@ public class ApiClient {
     public static Retrofit getClient() {
         if (retrofit==null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
+                    .baseUrl(BASE_PLACES_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }

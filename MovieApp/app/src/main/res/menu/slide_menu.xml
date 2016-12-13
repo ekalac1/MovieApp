@@ -21,6 +21,10 @@
                 android:id="@+id/ratings"
                 android:icon="@drawable/ratings"
                 android:title="@string/ratings" />
+            <item
+                android:id="@+id/maps"
+                android:icon="@drawable/settings"
+                android:title="Maps" />
         </menu>
     </item>
 

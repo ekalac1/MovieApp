@@ -81,6 +81,7 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
         final ImageView watchlist = (ImageView) newView.findViewById(R.id.watchlist_movie);
         if (mApp.getAccount() != null) {
             boolean ind=true;
+            if (mApp.getAccount().getFavoriteTvShows()!=null)
             for (TvShow m : mApp.getAccount().getFavoriteTvShows())
                 if (m.getId() == tvShow.getId())
                 {
@@ -90,6 +91,7 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
             if (ind) favorite.setImageResource(R.drawable.favorite);
 
             ind=true;
+            if (mApp.getAccount().getWatchListTvShow()!=null)
             for (TvShow m : mApp.getAccount().getWatchListTvShow())
                 if (m.getId() == tvShow.getId())
                 {
@@ -202,7 +204,7 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
         if (tvShow.getPosterPath() != ("")) {
 
             Glide.with(getContext())
-                    .load(tvShow.getFullPosterPath(getContext()))
+                    .load(tvShow.getSmallFullPosterPath(getContext()))
                     .diskCacheStrategy(DiskCacheStrategy.RESULT)
                     .placeholder(R.drawable.movies)
                     .into((ImageView) newView.findViewById(R.id.tvShowImageView));

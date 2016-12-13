@@ -1,7 +1,10 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Fragments;
 
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -17,13 +20,15 @@ import java.util.List;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MoviesDetailsActivity;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.MovieGridViewAdapter;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Account;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.User;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.MovieRealm;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
-import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,6 +40,7 @@ public class RatedMovies extends Fragment {
     User a;
     GridView favoriteMovies;
     MovieGridViewAdapter adapter;
+    Realm realm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -43,10 +49,31 @@ public class RatedMovies extends Fragment {
         mApp = (MovieApplication)getActivity().getApplication();
         a=mApp.getAccount();
 
+        Realm.init(getActivity().getApplicationContext());
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
+
         movieList = new ArrayList<>();
         favoriteMovies = (GridView)newView.findViewById(R.id.rated_movies);
         adapter = new MovieGridViewAdapter(newView.getContext(), R.layout.movie_element, movieList, mApp);
         favoriteMovies.setAdapter(adapter);
+
+        realm = Realm.getDefaultInstance();
+
+        if (isNetworkAvailable()) {
+            realm.beginTransaction();
+            RealmResults<MovieRealm> rows = realm.where(MovieRealm.class).equalTo("rated", true).findAll();
+            rows.deleteAllFromRealm();
+            realm.commitTransaction();
+        } else {
+            RealmResults<MovieRealm> rows = realm.where(MovieRealm.class).equalTo("rated", true).findAll();
+            for (MovieRealm m : rows) {
+                movieList.add((new Movie()).getMovie(m));
+            }
+            ((BaseAdapter) favoriteMovies.getAdapter()).notifyDataSetChanged();
+        }
 
 
         Call<MoviesListResponse> call = mApp.getApiService().getMoviesRatings(a.getAccountId(), ApiClient.API_KEY, a.getSessionId(), mApp.order);
@@ -55,6 +82,14 @@ public class RatedMovies extends Fragment {
             public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
                 movieList.addAll(response.body().getResults());
                 ((BaseAdapter)favoriteMovies.getAdapter()).notifyDataSetChanged();
+                realm.beginTransaction();
+                for (Movie m : response.body().getResults())
+                {
+                    MovieRealm movie= m.getMovieRealm(m);
+                    movie.setRated(true);
+                    realm.copyToRealm(movie);
+                }
+                realm.commitTransaction();
             }
             @Override
             public void onFailure(Call<MoviesListResponse> call, Throwable t) {
@@ -75,7 +110,12 @@ public class RatedMovies extends Fragment {
     @Override
     public void onResume() {
         ((BaseAdapter)favoriteMovies.getAdapter()).notifyDataSetChanged();
-
         super.onResume();
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 }

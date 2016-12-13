@@ -1,8 +1,8 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.MenuItem;
@@ -31,7 +31,6 @@ import retrofit2.Response;
 public class EpisodeDetails extends AppCompatActivity {
 
     int tvShowId, seasonID, episodeID;
-    String tvShowTitle;
     ApiInterface apiService;
 
     @Override
@@ -43,9 +42,8 @@ public class EpisodeDetails extends AppCompatActivity {
         tvShowId = intent.getIntExtra("tvID", 0);
         seasonID = intent.getIntExtra("seasonID", 0);
         episodeID = intent.getIntExtra("episodeID", 0);
-        tvShowTitle = intent.getStringExtra("name");
 
-        getSupportActionBar().setTitle(tvShowTitle);
+        getSupportActionBar().setTitle(intent.getStringExtra("name"));
 
         final TextView episodeTitle = (TextView) findViewById(R.id.episode_title);
         final TextView episodeAirDate = (TextView) findViewById(R.id.episode_air_date);
@@ -53,7 +51,7 @@ public class EpisodeDetails extends AppCompatActivity {
         final TextView episodeOverview = (TextView) findViewById(R.id.episode_overview);
         final RecyclerView episodeCast = (RecyclerView) findViewById(R.id.episode_cast);
 
-        MovieApplication mApp = (MovieApplication)getApplicationContext();
+        MovieApplication mApp = (MovieApplication) getApplicationContext();
         apiService = mApp.getApiService();
         Call<Episode> call = apiService.getEpisode(tvShowId, seasonID, episodeID, ApiClient.API_KEY, "credits");
         call.enqueue(new Callback<Episode>() {
@@ -61,12 +59,11 @@ public class EpisodeDetails extends AppCompatActivity {
             public void onResponse(Call<Episode> call, Response<Episode> response) {
 
                 Episode episode = response.body();
-                if (episode.getAirDate()!=null)
-                {
-                    String year = episode.getAirDate().substring(0,4);
-                    episodeTitle.setText(episode.getName()+" ("+year+")");
+                if (episode.getAirDate() != null) {
+                    String year = episode.getAirDate().substring(0, 4);
+                    episodeTitle.setText(episode.getName() + " (" + year + ")");
                     DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-                    Date startDate=new Date();
+                    Date startDate = new Date();
                     try {
                         startDate = df.parse(episode.getAirDate());
                     } catch (ParseException e) {
@@ -74,7 +71,7 @@ public class EpisodeDetails extends AppCompatActivity {
                     }
                     episodeAirDate.setText((new SimpleDateFormat("dd. MMMM yyyy.")).format(startDate).toString());
                 }
-                episodeVote.setText(String.valueOf(episode.getVoteAverage())+"/10");
+                episodeVote.setText(String.valueOf(episode.getVoteAverage()) + "/10");
                 episodeOverview.setText(episode.getOverview());
 
                 Glide.with(getApplicationContext())

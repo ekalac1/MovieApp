@@ -87,12 +87,12 @@ public class SearchResults {
 
     public String getFullPosterPath(Context c) {
         String url =c.getString(R.string.MovieImageBaseAdress);
-        String url1=c.getString(R.string.MovieImageWidth500);
+        String url1=c.getString(R.string.MovieImageWidth92);
         return url+url1 + getPosterPath();
     }
     public String getFullProfilePath(Context c) {
         String url =c.getString(R.string.MovieImageBaseAdress);
-        String url1=c.getString(R.string.MovieImageWidth500);
+        String url1=c.getString(R.string.MovieImageWidth92);
         return url+url1 + getProfilePath();
     }
 

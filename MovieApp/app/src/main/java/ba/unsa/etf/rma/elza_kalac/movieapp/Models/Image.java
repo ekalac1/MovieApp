@@ -17,4 +17,7 @@ public class Image {
     public String getFullPosterPath(Context c) {;
         return c.getString(R.string.MovieImageBaseAdress)+c.getString(R.string.MovieImageWidth500) + getFilePath();
     }
+    public String getSmallFullPosterPath(Context c) {;
+        return c.getString(R.string.MovieImageBaseAdress)+c.getString(R.string.MovieImageWidth342) + getFilePath();
+    }
 }

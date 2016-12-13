@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.android.alarm.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:name=".MovieApplication"
@@ -115,7 +117,14 @@
             android:name=".Activities.UserPrivilegies.Rating"
             android:parentActivityName=".Activities.Details.MoviesDetailsActivity" />
         <activity android:name=".Activities.Details.Gallery" />
-        <activity android:name=".Activities.Details.ImageView"></activity>
+        <activity android:name=".Activities.Details.ImageView" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <activity
+            android:name=".Activities.Details.MapsActivity"
+            android:label="@string/title_activity_maps"></activity>
     </application>
 
 </manifest>

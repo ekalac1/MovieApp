@@ -22,7 +22,6 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.CastGridAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Cast;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import retrofit2.Call;
@@ -34,6 +33,7 @@ public class ActorDetails extends AppCompatActivity {
     ApiInterface apiService;
     MovieApplication mApp;
     CastGridAdapter mAdapter;
+    static int maxLines=50, minLines=5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,12 +57,12 @@ public class ActorDetails extends AppCompatActivity {
        actorBiography.setOnClickListener(new View.OnClickListener() {
            @Override
            public void onClick(View v) {
-               if (actorBiography.getMaxLines()==5) {
-                   actorBiography.setMaxLines(50);
+               if (actorBiography.getMaxLines()==minLines) {
+                   actorBiography.setMaxLines(maxLines);
                    actorReadMore.setText(R.string.Hide);
                }
                else {
-                   actorBiography.setMaxLines(5);
+                   actorBiography.setMaxLines(minLines);
                    actorReadMore.setText(R.string.Read_more);
                }
            }
@@ -70,12 +70,12 @@ public class ActorDetails extends AppCompatActivity {
         actorReadMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (actorBiography.getMaxLines()==5) {
-                    actorBiography.setMaxLines(50);
+                if (actorBiography.getMaxLines()==minLines) {
+                    actorBiography.setMaxLines(maxLines);
                     actorReadMore.setText(R.string.Hide);
                 }
                 else {
-                    actorBiography.setMaxLines(5);
+                    actorBiography.setMaxLines(minLines);
                     actorReadMore.setText(R.string.Read_more);
                 }
             }
@@ -104,7 +104,6 @@ public class ActorDetails extends AppCompatActivity {
                     actorBirth.setVisibility(View.GONE);
                     TextView temp= (TextView)findViewById(R.id.actor_date_label);
                     temp.setVisibility(View.GONE);
-
                 }
                 if (actor.getHomePage()==null || actor.getHomePage().equals(""))
                 {
@@ -112,7 +111,8 @@ public class ActorDetails extends AppCompatActivity {
                     temp.setVisibility(View.GONE);
                     actorWeb.setVisibility(View.GONE);
                 }
-                else {
+                else
+                {
                     actorWeb.setText(actor.getHomePage());
                     TextView temp = (TextView)findViewById(R.id.actor_web_label);
                     temp.setText(R.string.Website);

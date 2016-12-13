@@ -1,7 +1,9 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,26 +12,22 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.Toast;
-
-import com.facebook.share.model.ShareLinkContent;
-import com.facebook.share.widget.ShareButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MoviesDetailsActivity;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.TVShowDetails;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.MovieGridViewAdapter;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Account;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
-import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.User;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.MovieRealm;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
-import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,6 +41,7 @@ public class FavoritesMovies extends Fragment {
     User a;
     GridView favoriteMovies;
     MovieGridViewAdapter adapter;
+    Realm realm;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,10 +50,31 @@ public class FavoritesMovies extends Fragment {
         mApp = (MovieApplication) getActivity().getApplication();
         a = mApp.getAccount();
 
+        Realm.init(getActivity().getApplicationContext());
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
+
         movies = new ArrayList<>();
         adapter = new MovieGridViewAdapter(newView.getContext(), R.layout.movie_element, movies, mApp);
         favoriteMovies = (GridView) newView.findViewById(R.id.favorite_movies);
         favoriteMovies.setAdapter(adapter);
+
+        realm = Realm.getDefaultInstance();
+
+        if (isNetworkAvailable()) {
+            realm.beginTransaction();
+            RealmResults<MovieRealm> rows = realm.where(MovieRealm.class).equalTo("favorite", true).findAll();
+            rows.deleteAllFromRealm();
+            realm.commitTransaction();
+        } else {
+            RealmResults<MovieRealm> rows = realm.where(MovieRealm.class).equalTo("favorite", true).findAll();
+            for (MovieRealm m : rows) {
+                movies.add((new Movie()).getMovie(m));
+            }
+            ((BaseAdapter) favoriteMovies.getAdapter()).notifyDataSetChanged();
+        }
 
 
         Call<MoviesListResponse> call = mApp.getApiService().getFavoritesMovies(a.getAccountId(), ApiClient.API_KEY, a.getSessionId(), order);
@@ -63,6 +83,14 @@ public class FavoritesMovies extends Fragment {
             public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
                 movies.addAll(response.body().getResults());
                 ((BaseAdapter) favoriteMovies.getAdapter()).notifyDataSetChanged();
+                realm.beginTransaction();
+                for (Movie m : response.body().getResults())
+                {
+                    MovieRealm movie= m.getMovieRealm(m);
+                    movie.setFavorite(true);
+                    realm.copyToRealm(movie);
+                }
+                realm.commitTransaction();
             }
 
             @Override
@@ -73,9 +101,6 @@ public class FavoritesMovies extends Fragment {
         favoriteMovies.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-
-
                 Intent myIntent = new Intent(getActivity(), MoviesDetailsActivity.class);
                 myIntent.putExtra("id", movies.get(position).getId());
                 startActivity(myIntent);
@@ -89,5 +114,11 @@ public class FavoritesMovies extends Fragment {
     public void onResume() {
         ((BaseAdapter) favoriteMovies.getAdapter()).notifyDataSetChanged();
         super.onResume();
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 }

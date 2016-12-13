@@ -1,5 +1,7 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.API;
 
+import android.content.Intent;
+
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Cast;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Episode;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
@@ -8,6 +10,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Account;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.AuthentificationResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PlacesResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.SearchResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TvShowResponse;
@@ -103,5 +106,7 @@ public interface ApiInterface {
 
     @GET("discover/movie")
     Call<MoviesListResponse> DiscoverMovies(@Query("api_key") String apiKey, @Query("sort_by") String sortBy, @Query("primary_release_date.gte") String primaryRelaseDate, @Query("primary_release_date.lte") String endDate);
+    @GET("{output}")
+    Call<PlacesResponse> SearchPlaces(@Path("output") String output, @Query("key") String api_key, @Query("location") String location, @Query("radius") int radius, @Query("type") String type);
 
 }

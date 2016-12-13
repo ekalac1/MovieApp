@@ -1,10 +1,13 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -17,10 +20,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookSdk;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
+import com.twitter.sdk.android.core.TwitterAuthConfig;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.tweetcomposer.TweetComposer;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -41,8 +50,12 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Image;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.MovieRealm;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
+import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,11 +68,16 @@ public class MoviesDetailsActivity extends AppCompatActivity {
     ApiInterface apiService;
     MovieApplication mApp;
     List<String> images_url;
+    CallbackManager callbackManager;
+    ShareDialog shareDialog;
+    String link;
 
     Drawable favorite_active;
     Drawable favorite;
     Drawable watchlist_active;
     Drawable watchlist;
+
+    Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +86,16 @@ public class MoviesDetailsActivity extends AppCompatActivity {
 
         mApp = (MovieApplication) getApplicationContext();
         apiService = mApp.getApiService();
-        images_url=new ArrayList<>();
+        images_url = new ArrayList<>();
+
+        Realm.init(getApplicationContext());
+
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
+
+        realm = Realm.getDefaultInstance();
 
         ActionBar actionBar = getSupportActionBar();
 
@@ -86,21 +113,107 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         final TextView votes = (TextView) findViewById(R.id.votes);
         final ImageView play = (ImageView) findViewById(R.id.play);
         final TextView rate = (TextView) findViewById(R.id.rate_this_label);
-        final RecyclerView gallery =(RecyclerView)findViewById(R.id.tv_gallery);
-        final TextView gallerySeeAll = (TextView)findViewById(R.id.see_all_galery);
-
+        final RecyclerView gallery = (RecyclerView) findViewById(R.id.tv_gallery);
+        final TextView gallerySeeAll = (TextView) findViewById(R.id.see_all_galery);
+        final  ImageView Watchlist = (ImageView) findViewById(R.id.watchlist);
+        final  ImageView Favorite = (ImageView) findViewById(R.id.favorite);
 
         movieID = getIntent().getIntExtra("id", 0);
 
-        if (movieID==0)
-        {
-            Uri data = getIntent().getData();
-            String a = String.valueOf(data);
-            a = a.replaceAll("\\D+","");
-            movieID=Integer.valueOf(a);
+        if (mApp.getAccount() != null) {
+            List<Movie> movie = mApp.getAccount().getFavoriteMovies();
+            if (movie != null)
+                for (Movie m : mApp.getAccount().getFavoriteMovies())
+                {
+                    if (m.getId() == movieID) {
+                        Favorite.setImageResource(R.drawable.favorite_active);
+                    }
+                }
+
+            movie = mApp.getAccount().getWatchListMovies();
+            if (movie != null)
+                for (Movie m : movie)
+                    if (m.getId() == movieID) {
+                        Watchlist.setImageResource(R.drawable.watchlist_active);
+                    }
+
         }
 
+        Favorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PostBody post;
+                if (Favorite.getDrawable().getConstantState().equals(getDrawable(R.drawable.favorite)))
+                    post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
+                else post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
+                Call<PostResponse> call = apiService.PostFavorite(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), post);
+                call.enqueue(new Callback<PostResponse>() {
+                    @Override
+                    public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                        if (response.body().getStatusCode() == 1) {
+                            Favorite.setImageResource(R.drawable.favorite_active);
+                        } else if (response.body().getStatusCode() == 13) {
+                            Favorite.setImageResource(R.drawable.favorite);
+                        }
+                        Call<MoviesListResponse> call1 = apiService.getFavoritesMovies(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
+                        call1.enqueue(new Callback<MoviesListResponse>() {
+                            @Override
+                            public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+                                mApp.getAccount().setFavoriteMovies(response.body().getResults());
+                            }
+
+                            @Override
+                            public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailure(Call<PostResponse> call, Throwable t) {
+                    }
+                });
+            }
+        });
+
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
+        shareDialog = new ShareDialog(this);
+
+        if (movieID == 0) {
+            Uri data = getIntent().getData();
+            String a = String.valueOf(data);
+            a = a.replaceAll("\\D+", "");
+            movieID = Integer.valueOf(a);
+        }
+
+
+
         setIcons();
+
+        if (!isNetworkAvailable())
+        {
+            realm.beginTransaction();
+            MovieRealm movie = realm.where(MovieRealm.class).equalTo("id", movieID).findFirst();
+            realm.commitTransaction();
+            movieId.setText(movie.getTitle());
+            if (movie.getReleaseDate() != null) {
+                DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+                Date startDate = new Date();
+                try {
+                    startDate = df.parse(movie.getReleaseDate());
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+                date.setText((new SimpleDateFormat("d. MMM yyyy.")).format(startDate).toString());
+            } else {
+                date.setText("");
+            }
+            votes.setText(String.valueOf(movie.getVoteAverage()));
+            about.setText(movie.getOverview());
+
+
+        }
 
         Call<Movie> call = apiService.getMovieDetails(movieID, ApiClient.API_KEY, "credits,reviews,videos,images");
 
@@ -108,6 +221,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Movie> call, Response<Movie> response) {
                 movie = response.body();
+                link = "https://www.themoviedb.org/movie/" + String.valueOf(movieID) + "-" + movie.getTitle().replace(" ", "-");
                 movieId.setText(movie.getTitle());
                 rate.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -123,7 +237,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                     }
                 });
 
-                for (Image i: response.body().getGallery().getBackdrops()) {
+                for (Image i : response.body().getGallery().getBackdrops()) {
                     images_url.add(i.getFullPosterPath(getApplicationContext()));
                 }
 
@@ -154,15 +268,13 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                     date.setText("");
                 }
 
-                if (movie.getReviews().getResults().size() == 0)
-                {
+                if (movie.getReviews().getResults().size() == 0) {
                     TextView r = (TextView) findViewById(R.id.review_label);
                     r.setVisibility(View.INVISIBLE);
                     View v = (View) findViewById(R.id.view___);
                     v.setVisibility(View.INVISIBLE);
                 }
-                if (movie.getVideos().getResults().size() != 0)
-                {
+                if (movie.getVideos().getResults().size() != 0) {
                     play.setVisibility(View.VISIBLE);
                 }
                 temp.setText(movie.getGenres());
@@ -172,25 +284,19 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         .diskCacheStrategy(DiskCacheStrategy.RESULT)
                         .into((ImageView) findViewById(R.id.movies_detalis_image));
 
-                if (movie.getCredits().getDirectors().equals(""))
-                {
+                if (movie.getCredits().getDirectors().equals("")) {
                     TextView temp = (TextView) findViewById(R.id.directors_label);
                     temp.setVisibility(View.INVISIBLE);
-                }
-                else
-                {
+                } else {
                     directors.setText(movie.getCredits().getDirectors());
                     TextView temp = (TextView) findViewById(R.id.directors_label);
                     temp.setText(R.string.directors);
                 }
-                if (movie.getCredits().getWriters().equals(""))
-                {
+                if (movie.getCredits().getWriters().equals("")) {
                     writers.setVisibility(View.GONE);
                     TextView temp = (TextView) findViewById(R.id.writers_label);
                     temp.setVisibility(View.GONE);
-                }
-                else
-                {
+                } else {
                     writers.setText(movie.getCredits().getWriters());
                     TextView temp = (TextView) findViewById(R.id.writers_label);
                     temp.setText(R.string.writers);
@@ -221,7 +327,6 @@ public class MoviesDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Movie> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -232,6 +337,23 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 return true;
+            case R.id.facebook:
+                if (ShareDialog.canShow(ShareLinkContent.class)) {
+                    final ShareLinkContent content = new ShareLinkContent.Builder()
+                            .setContentUrl(Uri.parse(link))
+                            .build();
+                    shareDialog.show(content);
+                }
+                break;
+            case R.id.twitter:
+                TwitterAuthConfig authConfig = new TwitterAuthConfig(ApiClient.TWITTER_KEY, ApiClient.TWITTER_SECRET_KEY);
+                Fabric.with(getApplicationContext(), new TwitterCore(authConfig), new TweetComposer());
+                Intent intent = new TweetComposer.Builder(getApplicationContext())
+                        .text(link)
+                        .createIntent();
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+                break;
             case R.id.watchlist:
                 if (mApp.getAccount() == null) Alert();
                 else {
@@ -332,6 +454,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         }
         return true;
     }
+
     public void setIcons() {
         // Old icons
         Drawable dr_favorite_active = getDrawable(R.drawable.favorite_active);
@@ -365,5 +488,12 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int id) {
                     }
                 }).show();
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 }
