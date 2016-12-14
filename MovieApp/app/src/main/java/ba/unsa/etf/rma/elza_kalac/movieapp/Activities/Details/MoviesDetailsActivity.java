@@ -43,6 +43,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Rating;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.CastGridAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.GaleryAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.ReviewListAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Cast;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Image;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Review;
@@ -50,6 +51,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.Action;
 import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.MovieRealm;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.RealmCast;
 import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.RealmReview;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
@@ -310,6 +312,17 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             review.setLayoutManager(reviewLayoutManager);
             review.setAdapter(reviewListAdapter);
 
+            List<Cast> tempCast = new ArrayList<>();
+            if (movie.getCast()!=null)
+                for (RealmCast c : movie.getCast())
+                tempCast.add(new Cast().getCast(c));
+
+
+            CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), tempCast, "movie");
+            LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+            recyclerView.setLayoutManager(mLayoutManager);
+            recyclerView.setAdapter(mAdapter);
+
 
         }
 
@@ -405,6 +418,15 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 about.setText(movie.getOverview());
                 stars.setText(movie.getCredits().getStars());
                 votes.setText(String.valueOf(movie.getVoteAverage()));
+
+                if (movie.getCredits().getCast() != null)
+                {
+                    for (Cast c : movie.getCredits().getCast())
+                    {
+                        realmMovie.getCast().add(c.getRealCast());
+                    }
+                }
+
                 CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), movie.getCredits().getCast(), "movie");
                 LinearLayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
                 recyclerView.setLayoutManager(mLayoutManager);

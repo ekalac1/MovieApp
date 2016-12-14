@@ -42,6 +42,16 @@ public class MovieRealm extends RealmObject {
 
     private RealmList<RealmReview> reviews;
 
+    private RealmList<RealmCast> cast;
+
+    public RealmList<RealmCast> getCast() {
+        return cast;
+    }
+
+    public void setCast(RealmList<RealmCast> cast) {
+        this.cast = cast;
+    }
+
     public RealmList<RealmReview> getReviews() {
         return reviews;
     }

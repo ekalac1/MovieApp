@@ -38,11 +38,13 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Login;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Rating;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.CastGridAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.GaleryAdapter;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Cast;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Image;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.Action;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.RealmCast;
 import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.RealmTvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TvShowResponse;
@@ -186,6 +188,19 @@ public class TVShowDetails extends AppCompatActivity {
             }
             stars.setText(tvshow.getStars());
             about.setText(tvshow.getOverview());
+
+            List<Cast> castTemp = new ArrayList<>();
+
+            if (tvshow.getCast()!=null)
+            {
+                for (RealmCast c : tvshow.getCast())
+                    castTemp.add(new Cast().getCast(c));
+            }
+
+            CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), castTemp, "tv");
+            LinearLayoutManager LayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
+            cast.setLayoutManager(LayoutManager);
+            cast.setAdapter(mAdapter);
 
 
         }
@@ -441,6 +456,12 @@ public class TVShowDetails extends AppCompatActivity {
                     temp.setText(R.string.stars);
                     stars.setText(tvshow.getCredits().getStars());
                     rtvshow.setStars(tvshow.getCredits().getStars());
+
+                    if (tvshow.getCredits().getCast()!=null)
+                    {
+                        for ( Cast c : tvshow.getCredits().getCast())
+                            rtvshow.getCast().add(c.getRealCast());
+                    }
                     CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), tvshow.getCredits().getCast(), "tv");
                     LinearLayoutManager LayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
                     cast.setLayoutManager(LayoutManager);

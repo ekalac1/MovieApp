@@ -1,8 +1,9 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels;
 
 
-
 import com.google.gson.annotations.SerializedName;
+
+import io.realm.RealmList;
 import io.realm.RealmObject;
 
 
@@ -28,6 +29,15 @@ public class RealmTvShow extends RealmObject {
     private String originalName;
     private String lastAirDate;
     private String stars;
+    private RealmList<RealmCast> cast;
+
+    public RealmList<RealmCast> getCast() {
+        return cast;
+    }
+
+    public void setCast(RealmList<RealmCast> cast) {
+        this.cast = cast;
+    }
 
     public String getStars() {
         return stars;

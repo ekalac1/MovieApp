@@ -23,8 +23,8 @@
                 android:title="@string/ratings" />
             <item
                 android:id="@+id/maps"
-                android:icon="@drawable/settings"
-                android:title="Maps" />
+                android:icon="@drawable/cinema"
+                android:title="@string/maps" />
         </menu>
     </item>
 
