@@ -68,7 +68,9 @@ public class FavoritesMovies extends Fragment {
             RealmResults<MovieRealm> rows = realm.where(MovieRealm.class).equalTo("favorite", true).findAll();
             rows.deleteAllFromRealm();
             realm.commitTransaction();
-        } else {
+        }
+        else
+        {
             RealmResults<MovieRealm> rows = realm.where(MovieRealm.class).equalTo("favorite", true).findAll();
             for (MovieRealm m : rows) {
                 movies.add((new Movie()).getMovie(m));
@@ -82,6 +84,7 @@ public class FavoritesMovies extends Fragment {
             @Override
             public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
                 movies.addAll(response.body().getResults());
+              //  mApp.getAccount().setFavoriteMovies(response.body().getResults());
                 ((BaseAdapter) favoriteMovies.getAdapter()).notifyDataSetChanged();
                 realm.beginTransaction();
                 for (Movie m : response.body().getResults())

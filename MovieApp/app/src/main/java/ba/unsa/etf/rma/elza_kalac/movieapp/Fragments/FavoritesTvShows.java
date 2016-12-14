@@ -85,6 +85,7 @@ public class FavoritesTvShows extends Fragment {
             @Override
             public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
                 tvShow.addAll(response.body().getResults());
+                mApp.getAccount().setFavoriteTvShows(response.body().getResults());
                 ((BaseAdapter)favoriteMovies.getAdapter()).notifyDataSetChanged();
                 realm.beginTransaction();
                 for (TvShow t : response.body().getResults())

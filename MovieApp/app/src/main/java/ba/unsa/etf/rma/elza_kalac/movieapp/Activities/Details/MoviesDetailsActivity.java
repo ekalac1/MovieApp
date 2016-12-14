@@ -56,6 +56,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
 import io.fabric.sdk.android.Fabric;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -111,16 +112,15 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         final TextView rate = (TextView) findViewById(R.id.rate_this_label);
         final RecyclerView gallery = (RecyclerView) findViewById(R.id.tv_gallery);
         final TextView gallerySeeAll = (TextView) findViewById(R.id.see_all_galery);
-        final  ImageView Watchlist = (ImageView) findViewById(R.id.watchlist);
-        final  ImageView Favorite = (ImageView) findViewById(R.id.favorite);
+        final ImageView Watchlist = (ImageView) findViewById(R.id.watchlist);
+        final ImageView Favorite = (ImageView) findViewById(R.id.favorite);
 
         movieID = getIntent().getIntExtra("id", 0);
 
         if (mApp.getAccount() != null) {
             List<Movie> movie = mApp.getAccount().getFavoriteMovies();
             if (movie != null)
-                for (Movie m : mApp.getAccount().getFavoriteMovies())
-                {
+                for (Movie m : mApp.getAccount().getFavoriteMovies()) {
                     if (m.getId() == movieID) {
                         Favorite.setImageResource(R.drawable.favorite_active);
                     }
@@ -138,58 +138,68 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         Favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isNetworkAvailable())
-                {
-                PostBody post;
-                if (Favorite.getDrawable().getConstantState().equals(getDrawable(R.drawable.favorite).getConstantState()))
-                    post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
-                else post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
-                Call<PostResponse> call = apiService.PostFavorite(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), post);
-                call.enqueue(new Callback<PostResponse>() {
-                    @Override
-                    public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                        if (response.body().getStatusCode() == 1) {
-                            Favorite.setImageResource(R.drawable.favorite_active);
-                        } else if (response.body().getStatusCode() == 13) {
-                            Favorite.setImageResource(R.drawable.favorite);
-                        }
-                        Call<MoviesListResponse> call1 = apiService.getFavoritesMovies(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
-                        call1.enqueue(new Callback<MoviesListResponse>() {
+                if (isNetworkAvailable()) {
+                    if (mApp.getAccount() == null) Alert();
+                    else {
+                        PostBody post;
+                        if (Favorite.getDrawable().getConstantState().equals(getDrawable(R.drawable.favorite).getConstantState()))
+                            post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
+                        else post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
+                        Call<PostResponse> call = apiService.PostFavorite(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), post);
+                        call.enqueue(new Callback<PostResponse>() {
                             @Override
-                            public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                                mApp.getAccount().setFavoriteMovies(response.body().getResults());
+                            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                                if (response.body().getStatusCode() == 1) {
+                                    Favorite.setImageResource(R.drawable.favorite_active);
+                                } else if (response.body().getStatusCode() == 13) {
+                                    Favorite.setImageResource(R.drawable.favorite);
+                                }
+                                Call<MoviesListResponse> call1 = apiService.getFavoritesMovies(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
+                                call1.enqueue(new Callback<MoviesListResponse>() {
+                                    @Override
+                                    public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+                                        mApp.getAccount().setFavoriteMovies(response.body().getResults());
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+
+                                    }
+                                });
                             }
 
                             @Override
-                            public void onFailure(Call<MoviesListResponse> call, Throwable t) {
-
+                            public void onFailure(Call<PostResponse> call, Throwable t) {
                             }
                         });
                     }
-
-                    @Override
-                    public void onFailure(Call<PostResponse> call, Throwable t) {
-                    }
-                }); }
-                else {
-                    realm.beginTransaction();
-                    MovieRealm movie = realm.where(MovieRealm.class).equalTo("id", movieID).findFirst();
-                    Action post = new Action();
-                    post.setId(movie.getId());
-
-                    post.setMediaType("movie");
-                    if (Favorite.getDrawable().getConstantState().equals(getDrawable(R.drawable.favorite).getConstantState()))
+                } else {
+                    if (mApp.getAccount()!=null)
                     {
-                        Favorite.setImageResource(R.drawable.favorite_active);
-                        post.setActionType("favorite");
-                    }
-                    else
-                    {
-                        Favorite.setImageResource(R.drawable.favorite);
-                        post.setActionType("removefavorite");
-                    }
-                    realm.copyToRealm(post);
-                    realm.commitTransaction();
+                        realm.beginTransaction();
+                        MovieRealm movie = realm.where(MovieRealm.class).equalTo("id", movieID).findFirst();
+                        Action post = new Action();
+                        post.setId(movie.getId());
+
+                        post.setMediaType("movie");
+                        if (Favorite.getDrawable().getConstantState().equals(getDrawable(R.drawable.favorite).getConstantState())) {
+                            Favorite.setImageResource(R.drawable.favorite_active);
+                            post.setActionType("favorite");
+                            movie.setFavorite(true);
+                            mApp.getAccount().getFavoriteMovies().add(new Movie().getMovie(movie));
+
+                        } else {
+                            Favorite.setImageResource(R.drawable.favorite);
+                            post.setActionType("removefavorite");
+                            movie.setFavorite(false);
+                            RealmResults<MovieRealm> movies = realm.where(MovieRealm.class).equalTo("id", movie.getId()).findAll();
+                            for ( MovieRealm r : movies)
+                                r.setFavorite(false);
+                        }
+                        realm.copyToRealm(post);
+                        realm.commitTransaction();
+                    } else Alert();
+
                 }
             }
         });
@@ -198,64 +208,65 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (mApp.getAccount() == null) Alert();
-                else { if (isNetworkAvailable()) {
-                    PostBody post;
-                    if (Watchlist.getDrawable().getConstantState().equals(getDrawable(R.drawable.watchlist).getConstantState()))
-                        post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
-                    else post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
-                    Call<PostResponse> call = apiService.MarkWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), post);
-                    call.enqueue(new Callback<PostResponse>() {
-                        @Override
-                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                            if (response.body().getStatusCode() == 1)
-                               Watchlist.setImageResource(R.drawable.watchlist_active);
-                            else if (response.body().getStatusCode() == 13)
-                                Watchlist.setImageResource(R.drawable.watchlist);
-                            Call<MoviesListResponse> call1 = apiService.getMoviesWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
-                            call1.enqueue(new Callback<MoviesListResponse>() {
-                                @Override
-                                public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
-                                    mApp.getAccount().setWatchListMovies(response.body().getResults());
-                                }
+                else {
+                    if (isNetworkAvailable()) {
+                        PostBody post;
+                        if (Watchlist.getDrawable().getConstantState().equals(getDrawable(R.drawable.watchlist).getConstantState()))
+                            post = new PostBody(mApp.movie, movieID, mApp.watchlist, mApp);
+                        else post = new PostBody(mApp.movie, movieID, mApp.favorite, mApp);
+                        Call<PostResponse> call = apiService.MarkWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), post);
+                        call.enqueue(new Callback<PostResponse>() {
+                            @Override
+                            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                                if (response.body().getStatusCode() == 1)
+                                    Watchlist.setImageResource(R.drawable.watchlist_active);
+                                else if (response.body().getStatusCode() == 13)
+                                    Watchlist.setImageResource(R.drawable.watchlist);
+                                Call<MoviesListResponse> call1 = apiService.getMoviesWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
+                                call1.enqueue(new Callback<MoviesListResponse>() {
+                                    @Override
+                                    public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+                                        mApp.getAccount().setWatchListMovies(response.body().getResults());
+                                    }
 
-                                @Override
-                                public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+                                    @Override
+                                    public void onFailure(Call<MoviesListResponse> call, Throwable t) {
 
-                                }
-                            });
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onFailure(Call<PostResponse> call, Throwable t) {
+                            }
+                        });
+                    } else {
+                        realm.beginTransaction();
+                        MovieRealm movie = realm.where(MovieRealm.class).equalTo("id", movieID).findFirst();
+                        Action post = new Action();
+                        post.setId(movie.getId());
+
+                        post.setMediaType("movie");
+                        if (Watchlist.getDrawable().getConstantState().equals(getDrawable(R.drawable.watchlist).getConstantState())) {
+                            Watchlist.setImageResource(R.drawable.watchlist_active);
+                            post.setActionType("watchlist");
+                            movie.setWatchlist(true);
+                            mApp.getAccount().getWatchListMovies().add(new Movie().getMovie(movie));
+                        } else {
+                            Watchlist.setImageResource(R.drawable.watchlist);
+                            post.setActionType("removewatchlist");
+                            RealmResults<MovieRealm> movies = realm.where(MovieRealm.class).equalTo("id", movie.getId()).findAll();
+                            for ( MovieRealm r : movies)
+                                r.setWatchlist(false);
                         }
-
-                        @Override
-                        public void onFailure(Call<PostResponse> call, Throwable t) {
-                        }
-                    });
+                        realm.copyToRealm(post);
+                        realm.commitTransaction();
+                    }
                 }
-                else
-                {
-                    realm.beginTransaction();
-                    MovieRealm movie = realm.where(MovieRealm.class).equalTo("id", movieID).findFirst();
-                    Action post = new Action();
-                    post.setId(movie.getId());
-
-                    post.setMediaType("movie");
-                    if (Watchlist.getDrawable().getConstantState().equals(getDrawable(R.drawable.watchlist).getConstantState()))
-                    {
-                        Watchlist.setImageResource(R.drawable.watchlist_active);
-                        post.setActionType("watchlist");
-                    }
-                    else
-                    {
-                        Favorite.setImageResource(R.drawable.watchlist);
-                        post.setActionType("removewatchlist");
-                    }
-                    realm.copyToRealm(post);
-                    realm.commitTransaction();
-                }}
 
 
             }
         });
-
 
 
         FacebookSdk.sdkInitialize(getApplicationContext());
@@ -270,8 +281,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
         }
 
 
-        if (!isNetworkAvailable())
-        {
+        if (!isNetworkAvailable()) {
             realm.beginTransaction();
             MovieRealm movie = realm.where(MovieRealm.class).equalTo("id", movieID).findFirst();
             realm.commitTransaction();
@@ -291,9 +301,9 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             votes.setText(String.valueOf(movie.getVoteAverage()));
             about.setText(movie.getOverview());
             List<Review> temp1 = new ArrayList<>();
-            if (movie.getReviews()!=null)
-            for (RealmReview r:movie.getReviews())
-            temp1.add(new Review().getReview(r));
+            if (movie.getReviews() != null)
+                for (RealmReview r : movie.getReviews())
+                    temp1.add(new Review().getReview(r));
 
             ReviewListAdapter reviewListAdapter = new ReviewListAdapter(temp1);
             RecyclerView.LayoutManager reviewLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -404,10 +414,8 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 review.setLayoutManager(reviewLayoutManager);
                 review.setAdapter(reviewListAdapter);
 
-                if (movie.getReviews()!=null)
-                {
-                    for (Review r : movie.getReviews().getResults())
-                    {
+                if (movie.getReviews() != null) {
+                    for (Review r : movie.getReviews().getResults()) {
                         realmMovie.getReviews().add(r.getRealmReview());
                     }
                 }

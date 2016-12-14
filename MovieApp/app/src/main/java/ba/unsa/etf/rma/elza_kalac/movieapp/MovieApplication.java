@@ -20,13 +20,16 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.PlacesApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.PlacesApiInterface;
+import ba.unsa.etf.rma.elza_kalac.movieapp.API.PostBody;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Account;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.User;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.Action;
 import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.MovieRealm;
 import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.RealmTvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.MoviesListResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.TvShowResponse;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -74,6 +77,10 @@ public class MovieApplication extends Application {
             loadAccInfo();
         } else
             setAccount(null);
+
+        if (isNetworkAvailable() & account != null) {
+            SyncActions();
+        }
     }
 
     public ApiInterface getApiService() {
@@ -141,6 +148,22 @@ public class MovieApplication extends Application {
         }
     }
 
+    private void loadRatedMoviesFromRealm() {
+        if (isNetworkAvailable()) {
+            realm.beginTransaction();
+            RealmResults<MovieRealm> rows = realm.where(MovieRealm.class).equalTo("rated", true).findAll();
+            rows.deleteAllFromRealm();
+            realm.commitTransaction();
+        } else {
+            RealmResults<MovieRealm> rows = realm.where(MovieRealm.class).equalTo("rated", true).findAll();
+            List<Movie> temp = new ArrayList<>();
+            for (MovieRealm m : rows) {
+                temp.add((new Movie()).getMovie(m));
+            }
+            account.setRatedMovies(temp);
+        }
+    }
+
     private void loadWatchlistMoviesFromRealm() {
         if (isNetworkAvailable()) {
             realm.beginTransaction();
@@ -153,10 +176,10 @@ public class MovieApplication extends Application {
             for (MovieRealm m : rows) {
                 temp.add((new Movie()).getMovie(m));
             }
-            account.setFavoriteMovies(temp);
+            account.setWatchListMovies(temp);
         }
-
     }
+
     private void loadWatchlistTvShowsFromRealm() {
         if (isNetworkAvailable()) {
             realm.beginTransaction();
@@ -172,6 +195,39 @@ public class MovieApplication extends Application {
             account.setWatchListTvShow(temp);
         }
     }
+
+    private void loadFavoriteTvShowsFromRealm() {
+        if (isNetworkAvailable()) {
+            realm.beginTransaction();
+            RealmResults<RealmTvShow> rows = realm.where(RealmTvShow.class).equalTo("favorite", true).findAll();
+            rows.deleteAllFromRealm();
+            realm.commitTransaction();
+        } else {
+            RealmResults<RealmTvShow> rows = realm.where(RealmTvShow.class).equalTo("favorite", true).findAll();
+            List<TvShow> temp = new ArrayList<>();
+            for (RealmTvShow m : rows) {
+                temp.add(new TvShow().getTvShow(m));
+            }
+            account.setFavoriteTvShows(temp);
+        }
+    }
+
+    private void loadRatedTvShowsFromRealm() {
+        if (isNetworkAvailable()) {
+            realm.beginTransaction();
+            RealmResults<RealmTvShow> rows = realm.where(RealmTvShow.class).equalTo("rated", true).findAll();
+            rows.deleteAllFromRealm();
+            realm.commitTransaction();
+        } else {
+            RealmResults<RealmTvShow> rows = realm.where(RealmTvShow.class).equalTo("rated", true).findAll();
+            List<TvShow> temp = new ArrayList<>();
+            for (RealmTvShow m : rows) {
+                temp.add(new TvShow().getTvShow(m));
+            }
+            account.setRatedTvShow(temp);
+        }
+    }
+
     private void loadAccInfo() {
         final Account a = new Account();
         a.setUsername(settings.getString("accUserName", null));
@@ -184,6 +240,9 @@ public class MovieApplication extends Application {
         loadFavoriteMoviesFromRealm();
         loadWatchlistMoviesFromRealm();
         loadWatchlistTvShowsFromRealm();
+        loadFavoriteTvShowsFromRealm();
+        loadRatedMoviesFromRealm();
+        loadRatedTvShowsFromRealm();
 
         Call<MoviesListResponse> call = apiService.getFavoritesMovies(a.getAccountId(), ApiClient.API_KEY, a.getSessionId(), order);
         call.enqueue(new Callback<MoviesListResponse>() {
@@ -222,7 +281,7 @@ public class MovieApplication extends Application {
 
             }
         });
-        Call<MoviesListResponse> ratedMovies =apiService.getMoviesRatings(a.getAccountId(), ApiClient.API_KEY, a.getSessionId(), order);
+        Call<MoviesListResponse> ratedMovies = apiService.getMoviesRatings(a.getAccountId(), ApiClient.API_KEY, a.getSessionId(), order);
         ratedMovies.enqueue(new Callback<MoviesListResponse>() {
             @Override
             public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
@@ -281,7 +340,7 @@ public class MovieApplication extends Application {
             }
         });
 
-        Call<TvShowResponse> ratedTvShow=apiService.getTvShowRatings(a.getAccountId(), ApiClient.API_KEY, a.getSessionId(), order);
+        Call<TvShowResponse> ratedTvShow = apiService.getTvShowRatings(a.getAccountId(), ApiClient.API_KEY, a.getSessionId(), order);
         ratedTvShow.enqueue(new Callback<TvShowResponse>() {
             @Override
             public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
@@ -289,7 +348,7 @@ public class MovieApplication extends Application {
                 realm.beginTransaction();
                 for (TvShow m : response.body().getResults()) {
                     RealmTvShow movie = m.getRealmTvShow(m);
-                    movie.setWatchlist(true);
+                    movie.setRated(true);
                     realm.copyToRealm(movie);
                 }
                 realm.commitTransaction();
@@ -305,15 +364,14 @@ public class MovieApplication extends Application {
     private void setAlarmForPushNotifications() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTimeInMillis(System.currentTimeMillis());
-        //  calendar.set(Calendar.HOUR_OF_DAY, 13);
-        // calendar.set(Calendar.MINUTE, 42);
+        calendar.set(Calendar.HOUR_OF_DAY, 12);
+        calendar.set(Calendar.MINUTE, 0);
         Intent intentAlarm = new Intent(this, AlarmReciever.class);
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis() + 1000, AlarmManager.INTERVAL_DAY, PendingIntent.getBroadcast(this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, PendingIntent.getBroadcast(this, 1, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
-    private void setRealmInstance()
-    {
+    private void setRealmInstance() {
         Realm.init(getApplicationContext());
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
@@ -322,4 +380,301 @@ public class MovieApplication extends Application {
         realm = Realm.getDefaultInstance();
     }
 
+    private void SyncActions() {
+        SyncFavoriteMovies();
+        SyncUnFavoriteMovies();
+        SyncFavoriteTvShow();
+        SyncUnFavoriteTvShow();
+        SyncWatchlistMovie();
+        SyncUnWatchlistMovie();
+        SyncWatchlistTvShow();
+        SyncUnWatchlistTvShow();
+    }
+
+    private void SyncFavoriteMovies() {
+        final RealmResults<Action> movieFavorite = realm.where(Action.class).equalTo("actionType", "favorite").equalTo("mediaType", "movie").findAll();
+        for (final Action a : movieFavorite) {
+            PostBody postMovie;
+            postMovie = new PostBody(movie, a.getId(), favorite, this);
+            Call<PostResponse> call = getApiService().PostFavorite(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), postMovie);
+            call.enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                    if (response.body().getStatusCode() == 1) {
+                        realm.beginTransaction();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        movie.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                    Call<MoviesListResponse> call1 = getApiService().getFavoritesMovies(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), order);
+                    call1.enqueue(new Callback<MoviesListResponse>() {
+                        @Override
+                        public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+                            getAccount().setFavoriteMovies(response.body().getResults());
+                        }
+
+                        @Override
+                        public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+                }
+            });
+        }
+    }
+
+    private void SyncUnFavoriteMovies() {
+        final RealmResults<Action> movieFavorite = realm.where(Action.class).equalTo("actionType", "removefavorite").equalTo("mediaType", "movie").findAll();
+        for (final Action a : movieFavorite) {
+            PostBody postMovie;
+            postMovie = new PostBody(movie, a.getId(), watchlist, this);
+            Call<PostResponse> call = getApiService().PostFavorite(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), postMovie);
+            call.enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                    //    Toast.makeText(getApplicationContext(), String.valueOf(response.body().getStatusCode()), Toast.LENGTH_LONG).show();
+                    if (response.body().getStatusCode() == 13) {
+                        realm.beginTransaction();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        movie.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                    Call<MoviesListResponse> call1 = getApiService().getFavoritesMovies(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), order);
+                    call1.enqueue(new Callback<MoviesListResponse>() {
+                        @Override
+                        public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+                            getAccount().setFavoriteMovies(response.body().getResults());
+                        }
+
+                        @Override
+                        public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+                }
+            });
+        }
+    }
+
+    private void SyncFavoriteTvShow() {
+        final RealmResults<Action> tvFavorite = realm.where(Action.class).equalTo("actionType", "favorite").equalTo("mediaType", "tv").findAll();
+        for (final Action a : tvFavorite) {
+            PostBody postMovie;
+            postMovie = new PostBody(tvShow, a.getId(), favorite, this);
+            Call<PostResponse> call = getApiService().PostFavorite(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), postMovie);
+            call.enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                    if (response.body().getStatusCode() == 1) {
+                        realm.beginTransaction();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        movie.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                    Call<TvShowResponse> call1 = getApiService().getFavoritesTvShows(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), order);
+                    call1.enqueue(new Callback<TvShowResponse>() {
+                        @Override
+                        public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
+                            getAccount().setFavoriteTvShows(response.body().getResults());
+                        }
+
+                        @Override
+                        public void onFailure(Call<TvShowResponse> call, Throwable t) {
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+                }
+            });
+        }
+    }
+
+    private void SyncUnFavoriteTvShow() {
+        final RealmResults<Action> tvFavorite = realm.where(Action.class).equalTo("actionType", "removefavorite").equalTo("mediaType", "tv").findAll();
+        for (final Action a : tvFavorite) {
+            PostBody postMovie;
+            postMovie = new PostBody(tvShow, a.getId(), watchlist, this);
+            Call<PostResponse> call = getApiService().PostFavorite(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), postMovie);
+            call.enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                    if (response.body().getStatusCode() == 13) {
+                        realm.beginTransaction();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        movie.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                    Call<TvShowResponse> call1 = getApiService().getFavoritesTvShows(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), order);
+                    call1.enqueue(new Callback<TvShowResponse>() {
+                        @Override
+                        public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
+                            getAccount().setFavoriteTvShows(response.body().getResults());
+                        }
+
+                        @Override
+                        public void onFailure(Call<TvShowResponse> call, Throwable t) {
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+                }
+            });
+        }
+    }
+
+    private void SyncWatchlistMovie() {
+        final RealmResults<Action> movieFavorite = realm.where(Action.class).equalTo("actionType", "watchlist").equalTo("mediaType", "movie").findAll();
+        for (final Action a : movieFavorite) {
+            PostBody postMovie;
+            postMovie = new PostBody(movie, a.getId(), watchlist, this);
+            Call<PostResponse> call = getApiService().MarkWatchList(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), postMovie);
+            call.enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                    if (response.body().getStatusCode() == 1) {
+                        realm.beginTransaction();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        movie.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                    Call<MoviesListResponse> call1 = getApiService().getMoviesWatchList(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), order);
+                    call1.enqueue(new Callback<MoviesListResponse>() {
+                        @Override
+                        public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+                            getAccount().setWatchListMovies(response.body().getResults());
+                        }
+
+                        @Override
+                        public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+                }
+            });
+        }
+    }
+
+    private void SyncUnWatchlistMovie() {
+        final RealmResults<Action> movieFavorite = realm.where(Action.class).equalTo("actionType", "removewatchlist").equalTo("mediaType", "movie").findAll();
+        for (final Action a : movieFavorite) {
+            PostBody postMovie;
+            postMovie = new PostBody(movie, a.getId(), favorite, this);
+            Call<PostResponse> call = getApiService().MarkWatchList(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), postMovie);
+            call.enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                    if (response.body().getStatusCode() == 13) {
+                        realm.beginTransaction();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        movie.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                    Call<MoviesListResponse> call1 = getApiService().getMoviesWatchList(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), order);
+                    call1.enqueue(new Callback<MoviesListResponse>() {
+                        @Override
+                        public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
+                            getAccount().setWatchListMovies(response.body().getResults());
+                        }
+
+                        @Override
+                        public void onFailure(Call<MoviesListResponse> call, Throwable t) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+                }
+            });
+        }
+    }
+
+    private void SyncWatchlistTvShow() {
+        final RealmResults<Action> tvFavorite = realm.where(Action.class).equalTo("actionType", "watchlist").equalTo("mediaType", "tv").findAll();
+        for (final Action a : tvFavorite) {
+            PostBody postMovie;
+            postMovie = new PostBody(tvShow, a.getId(), watchlist, this);
+            Call<PostResponse> call = getApiService().MarkWatchList(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), postMovie);
+            call.enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                    if (response.body().getStatusCode() == 1) {
+                        realm.beginTransaction();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        movie.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                    Call<TvShowResponse> call1 = getApiService().getTvShowWatchList(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), order);
+                    call1.enqueue(new Callback<TvShowResponse>() {
+                        @Override
+                        public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
+                            getAccount().setWatchListTvShow(response.body().getResults());
+                        }
+
+                        @Override
+                        public void onFailure(Call<TvShowResponse> call, Throwable t) {
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+                }
+            });
+        }
+
+    }
+
+    private void SyncUnWatchlistTvShow() {
+        final RealmResults<Action> tvFavorite = realm.where(Action.class).equalTo("actionType", "removewatchlist").equalTo("mediaType", "tv").findAll();
+        for (final Action a : tvFavorite) {
+            PostBody postMovie;
+            postMovie = new PostBody(tvShow, a.getId(), favorite, this);
+            Call<PostResponse> call = getApiService().MarkWatchList(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), postMovie);
+            call.enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                    if (response.body().getStatusCode() == 13) {
+                        realm.beginTransaction();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        movie.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                    Call<TvShowResponse> call1 = getApiService().getTvShowWatchList(getAccount().getAccountId(), ApiClient.API_KEY, getAccount().getSessionId(), order);
+                    call1.enqueue(new Callback<TvShowResponse>() {
+                        @Override
+                        public void onResponse(Call<TvShowResponse> call, Response<TvShowResponse> response) {
+                            getAccount().setWatchListTvShow(response.body().getResults());
+                        }
+
+                        @Override
+                        public void onFailure(Call<TvShowResponse> call, Throwable t) {
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+                }
+            });
+        }
+
+    }
 }

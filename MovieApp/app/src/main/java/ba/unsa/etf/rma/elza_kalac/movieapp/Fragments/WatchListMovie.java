@@ -64,11 +64,11 @@ public class WatchListMovie extends Fragment {
 
         if (isNetworkAvailable()) {
             realm.beginTransaction();
-            RealmResults<MovieRealm> rows = realm.where(MovieRealm.class).equalTo("favorite", true).findAll();
+            RealmResults<MovieRealm> rows = realm.where(MovieRealm.class).equalTo("watchlist", true).findAll();
             rows.deleteAllFromRealm();
             realm.commitTransaction();
         } else {
-            RealmResults<MovieRealm> rows = realm.where(MovieRealm.class).equalTo("favorite", true).findAll();
+            RealmResults<MovieRealm> rows = realm.where(MovieRealm.class).equalTo("watchlist", true).findAll();
             for (MovieRealm m : rows) {
                 movies.add((new Movie()).getMovie(m));
             }

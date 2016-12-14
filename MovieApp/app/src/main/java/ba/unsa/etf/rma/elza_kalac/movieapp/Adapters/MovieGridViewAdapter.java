@@ -3,7 +3,6 @@ package ba.unsa.etf.rma.elza_kalac.movieapp.Adapters;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AlertDialog;
@@ -37,6 +36,7 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.SignUpAlertListener;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,7 +51,6 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
     private SignUpAlertListener listener;
     private LinearLayout newView;
     private List<Movie> movies;
-    private Bitmap theBitmap;
     Realm realm;
 
     public MovieGridViewAdapter(Context _context, int _resource, List<Movie> items, MovieApplication mApp) {
@@ -59,21 +58,27 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
         resource = _resource;
         context = _context;
         this.mApp = mApp;
-        this.movies=items;
-    }
-    public MovieGridViewAdapter(Context _context, int _resource, List<Movie> items, MovieApplication mApp, SignUpAlertListener listenet) {
-        super(_context, _resource, items);
-        resource = _resource;
-        context = _context;
-        this.mApp = mApp;
-        this.movies=items;
-        this.listener=listenet;
+        this.movies = items;
         Realm.init(context);
         RealmConfiguration config = new RealmConfiguration.Builder()
                 .deleteRealmIfMigrationNeeded()
                 .build();
         Realm.setDefaultConfiguration(config);
+        realm = Realm.getDefaultInstance();
+    }
 
+    public MovieGridViewAdapter(Context _context, int _resource, List<Movie> items, MovieApplication mApp, SignUpAlertListener listenet) {
+        super(_context, _resource, items);
+        resource = _resource;
+        context = _context;
+        this.mApp = mApp;
+        this.movies = items;
+        this.listener = listenet;
+        Realm.init(context);
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
         realm = Realm.getDefaultInstance();
     }
 
@@ -98,20 +103,20 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
         final ImageView watchlist = (ImageView) newView.findViewById(R.id.watchlist_movie);
 
 
-
         if (mApp.getAccount() != null) {
             List<Movie> favorite = mApp.getAccount().getFavoriteMovies();
             boolean ind = false;
-            if (favorite!=null) {for (Movie m : favorite)
-                if (m.getId() == movie.getId()) {
-                    favourite.setImageResource(R.drawable.favorite_active);
-                    ind = true;
-                }
+            if (favorite != null) {
+                for (Movie m : favorite)
+                    if (m.getId() == movie.getId()) {
+                        favourite.setImageResource(R.drawable.favorite_active);
+                        ind = true;
+                    }
                 if (!ind) favourite.setImageResource(R.drawable.favorite);
-                ind = false;}
+                ind = false;
+            }
             List<Movie> watchList = mApp.getAccount().getWatchListMovies();
-            if (watchList!=null)
-            {
+            if (watchList != null) {
                 for (Movie m : watchList)
                     if (m.getId() == movie.getId()) {
                         ind = true;
@@ -126,10 +131,10 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
             @Override
             public void onClick(View v) {
                 if (mApp.getAccount() == null) listener.Alert();
-                else {
+                else { if (isNetworkAvailable()) {
                     PostBody postMovie;
                     if (watchlist.getDrawable().getConstantState().equals(context.getDrawable(R.drawable.watchlist).getConstantState()))
-                    postMovie = new PostBody(mApp.movie, movie.getId(), mApp.watchlist, mApp);
+                        postMovie = new PostBody(mApp.movie, movie.getId(), mApp.watchlist, mApp);
                     else postMovie = new PostBody(mApp.movie, movie.getId(), mApp.favorite, mApp);
                     Call<PostResponse> call = mApp.getApiService().MarkWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), postMovie);
                     call.enqueue(new Callback<PostResponse>() {
@@ -139,7 +144,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
                                 watchlist.setImageResource(R.drawable.watchlist_active);
                             else if (response.body().getStatusCode() == 13)
                                 watchlist.setImageResource(R.drawable.watchlist);
-                            Call<MoviesListResponse> call1=mApp.getApiService().getMoviesWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
+                            Call<MoviesListResponse> call1 = mApp.getApiService().getMoviesWatchList(mApp.getAccount().getAccountId(), ApiClient.API_KEY, mApp.getAccount().getSessionId(), order);
                             call1.enqueue(new Callback<MoviesListResponse>() {
                                 @Override
                                 public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
@@ -158,6 +163,29 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
 
                         }
                     });
+                } else
+                {
+                    realm.beginTransaction();
+                    MovieRealm movie = realm.where(MovieRealm.class).equalTo("id", getItem(position).getId()).findFirst();
+                    Action post = new Action();
+                    post.setId(movie.getId());
+
+                    post.setMediaType("movie");
+                    if (watchlist.getDrawable().getConstantState().equals(context.getDrawable(R.drawable.watchlist).getConstantState())) {
+                        watchlist.setImageResource(R.drawable.watchlist_active);
+                        post.setActionType("watchlist");
+                        movie.setWatchlist(true);
+                        mApp.getAccount().getWatchListMovies().add(new Movie().getMovie(movie));
+                    } else {
+                        watchlist.setImageResource(R.drawable.watchlist);
+                        post.setActionType("removewatchlist");
+                        RealmResults<MovieRealm> movies = realm.where(MovieRealm.class).equalTo("id", movie.getId()).findAll();
+                        for ( MovieRealm r : movies)
+                            r.setWatchlist(false);
+                    }
+                    realm.copyToRealm(post);
+                    realm.commitTransaction();
+                }
                 }
             }
         });
@@ -202,14 +230,21 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
                     MovieRealm movie = realm.where(MovieRealm.class).equalTo("id", getItem(position).getId()).findFirst();
                     Action post = new Action();
                     post.setId(movie.getId());
-
                     post.setMediaType("movie");
                     if (favourite.getDrawable().getConstantState().equals(context.getDrawable(R.drawable.favorite).getConstantState())) {
                         favourite.setImageResource(R.drawable.favorite_active);
                         post.setActionType("favorite");
-                    } else {
+                        movie.setFavorite(true);
+                        mApp.getAccount().getFavoriteMovies().add(new Movie().getMovie(movie));
+                    } else
+                    {
+
                         favourite.setImageResource(R.drawable.favorite);
                         post.setActionType("removefavorite");
+                        RealmResults<MovieRealm> movies = realm.where(MovieRealm.class).equalTo("id", getItem(position).getId()).findAll();
+                        for ( MovieRealm r : movies)
+                        r.setFavorite(false);
+                        movie.setFavorite(false);
                     }
                     realm.copyToRealm(post);
                     realm.commitTransaction();
@@ -236,11 +271,11 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
 
         voteAverage.setText(String.valueOf(movie.getVoteAverage()));
 
-            Glide.with(context)
-                    .load(movie.getSmallFullPosterPath(getContext()))
-                    .diskCacheStrategy(DiskCacheStrategy.RESULT)
-                    .placeholder(R.drawable.movies)
-                    .into((ImageView) newView.findViewById(R.id.imageView));
+        Glide.with(context)
+                .load(movie.getSmallFullPosterPath(getContext()))
+                .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                .placeholder(R.drawable.movies)
+                .into((ImageView) newView.findViewById(R.id.imageView));
         return newView;
     }
 
@@ -260,6 +295,7 @@ public class MovieGridViewAdapter extends ArrayAdapter<Movie> {
                     }
                 }).show();
     }
+
     private boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
