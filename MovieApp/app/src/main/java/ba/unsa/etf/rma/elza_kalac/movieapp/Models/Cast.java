@@ -49,6 +49,14 @@ public class Cast {
     private String title;
     @SerializedName("poster_path")
     private String posterPath;
+ @SerializedName("media_type")
+ private String mediaType;
+
+
+
+    public String getMediaType(){return mediaType;}
+
+
 
     public CreditsResponse getCast() {
         return cast;
@@ -95,6 +103,14 @@ public class Cast {
             return c.getString(R.string.MovieImageBaseAdress) + c.getString(R.string.MovieImageWidth500) + getProfile_path();
         else
             return c.getString(R.string.MovieImageBaseAdress) + c.getString(R.string.MovieImageWidth500) + getPosterPath();
+
+    }
+
+    public String getSmallFullPosterPath(Context c) {
+        if (getProfile_path() != null)
+            return c.getString(R.string.MovieImageBaseAdress) + c.getString(R.string.MovieImageWidth92) + getProfile_path();
+        else
+            return c.getString(R.string.MovieImageBaseAdress) + c.getString(R.string.MovieImageWidth92) + getPosterPath();
 
     }
 

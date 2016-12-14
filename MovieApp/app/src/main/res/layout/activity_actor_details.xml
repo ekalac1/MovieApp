@@ -5,13 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
-    tools:context="ba.unsa.etf.rma.elza_kalac.movieapp.Activities.ActorDetails">
+    tools:context="ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.ActorDetails">
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context="ba.unsa.etf.rma.elza_kalac.movieapp.Activities.ActorDetails">
+        tools:context="ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.ActorDetails">
 
         <ImageView
             android:id="@+id/actor_detalis_image"
@@ -50,20 +50,19 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/actor_date"
+            android:id="@+id/actor_date_label"
             android:layout_below="@+id/actor_detalis_image"
             android:layout_marginEnd="16sp"
             android:layout_marginStart="16sp"
-            android:text="@string/birth_date"
             android:textSize="14sp"
             android:textColor="@color/white_dark"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/actor_birthday_date"
-            android:layout_alignTop="@+id/actor_date"
-            android:layout_toEndOf="@+id/actor_date"
+            android:id="@+id/actor_birthday"
+            android:layout_alignTop="@+id/actor_date_label"
+            android:layout_toEndOf="@+id/actor_date_label"
             android:layout_below="@+id/actor_detalis_image"
             android:layout_marginEnd="16sp"
             android:layout_marginStart="16sp"
@@ -73,11 +72,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/actor_web"
-            android:layout_below="@+id/actor_birthday_date"
+            android:id="@+id/actor_web_label"
+            android:layout_below="@+id/actor_birthday"
             android:layout_marginEnd="16sp"
             android:layout_marginStart="16sp"
-            android:text="@string/Website"
             android:textSize="14sp"
             android:textColor="@color/white_dark"/>
         <TextView
@@ -87,19 +85,18 @@
             android:textColor="@color/lightgrey"
             android:textSize="14sp"
             android:layout_marginEnd="16sp"
-            android:layout_below="@+id/actor_birthday_date"
-            android:layout_alignStart="@+id/actor_birthday_date"
-            android:layout_alignTop="@+id/actor_web"/>
+            android:layout_below="@+id/actor_birthday"
+            android:layout_alignStart="@+id/actor_birthday"
+            android:layout_alignTop="@+id/actor_web_label"/>
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/actor_biograpy_label"
             android:layout_alignWithParentIfMissing="true"
-            android:text="@string/Biography"
             android:textColor="@color/white_dark"
             android:textSize="14sp"
-            android:layout_below="@+id/actor_website"
+            android:layout_below="@+id/actor_web_label"
             android:layout_marginTop="25dp"
             android:layout_marginStart="16dp"/>
 
@@ -121,7 +118,6 @@
             android:layout_height="wrap_content"
             android:id="@+id/actor_read_more_label"
             android:layout_alignWithParentIfMissing="true"
-            android:text="@string/Read_more"
             android:textSize="14sp"
             android:textColor="@color/golden_transparent"
             android:layout_below="@+id/actor_biograpy"
@@ -137,7 +133,6 @@
             android:layout_below="@id/actor_read_more_label"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -168,8 +163,5 @@
             android:layout_alignStart="@+id/actor_cast_label"
             android:layout_marginTop="22dp"
             android:layout_marginBottom="22dp"/>
-
-
     </RelativeLayout>
-
 </ScrollView>

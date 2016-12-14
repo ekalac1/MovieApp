@@ -19,4 +19,7 @@
     <color name="trailer_bcg">#212121</color>
     <color name="season_list">#191919</color>
     <color name="black">#000000</color>
+    <color name="pressed">#826d12</color>
+    <color name="set">#27282a</color>
+    <color name="charcoal_grey">#403f41</color>
 </resources>

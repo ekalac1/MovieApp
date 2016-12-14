@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,6 +21,10 @@ import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.ActorDetails;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MoviesDetailsActivity;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.TVShowDetails;
+import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.SearchResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.SearchResultsAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.EndlessScrollListener;
@@ -32,9 +35,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SearchActivity extends AppCompatActivity {
-    public List<SearchResults> searchResult = new ArrayList<>();
-    public String query;
-
+    List<SearchResults> searchResult = new ArrayList<>();
+    String query;
+    ApiInterface apiService;
+    MovieApplication mApp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,17 +48,13 @@ public class SearchActivity extends AppCompatActivity {
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         query = sharedPref.getString("idSet", "");
         if (query != "") {
-            ApiInterface apiService = ApiClient.getClient().create(ApiInterface.class);
+            mApp = (MovieApplication)getApplicationContext();
+            apiService = mApp.getApiService();
             Call<SearchResponse> call = apiService.getSearchedItems(ApiClient.API_KEY, query, 1);
             call.enqueue(new Callback<SearchResponse>() {
                 @Override
                 public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
                     searchResult = response.body().getResults();
-                    for (int i = 0; i < searchResult.size(); i++) {
-
-                        if (searchResult.get(i).getMediaType().equals("person") || (searchResult.get(i).getMediaType().equals("tv") & searchResult.get(i).getPopularity()==1))
-                            searchResult.remove(i);
-                    }
                     final SearchResultsAdapter adapter = new SearchResultsAdapter(getApplicationContext(), R.layout.search_view_element, searchResult);
                     grid.setAdapter(adapter);
                 }
@@ -65,8 +65,6 @@ public class SearchActivity extends AppCompatActivity {
                 }
             });
         }
-
-
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -81,22 +79,24 @@ public class SearchActivity extends AppCompatActivity {
                     tvIntent.putExtra("id", searchResult.get(position).getId());
                     startActivity(tvIntent);
                 }
+                else if (searchResult.get(position).getMediaType().equals("person"))
+                {
+                    Intent tvIntent = new Intent(getApplicationContext(), ActorDetails.class);
+                    tvIntent.putExtra("id", searchResult.get(position).getId());
+                    startActivity(tvIntent);
+                }
             }
         });
         grid.setOnScrollListener(new EndlessScrollListener() {
             @Override
             public boolean onLoadMore(int page, int totalItemsCount) {
-                ApiInterface apiService =
-                        ApiClient.getClient().create(ApiInterface.class);
+
+                apiService = mApp.getApiService();
                 Call<SearchResponse> call = apiService.getSearchedItems(ApiClient.API_KEY, query, page);
                 call.enqueue(new Callback<SearchResponse>() {
                     @Override
                     public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
                         List<SearchResults> temp = response.body().getResults();
-                        for (int i = 0; i < temp.size(); i++) {
-                            if (temp.get(i).getMediaType().equals("person") || (temp.get(i).getMediaType().equals("tv") & temp.get(i).getPopularity()==1))
-                                temp.remove(i);
-                        }
                         searchResult.addAll(temp);
                         ((BaseAdapter) grid.getAdapter()).notifyDataSetChanged();
                     }
@@ -161,7 +161,14 @@ public class SearchActivity extends AppCompatActivity {
         editor.putString("idSet", query);
         editor.commit();
     }
-
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }
 

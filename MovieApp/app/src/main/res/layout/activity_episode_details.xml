@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
-        tools:context="ba.unsa.etf.rma.elza_kalac.movieapp.Activities.EpisodeDetails">
+        tools:context="ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.EpisodeDetails">
 
         <ImageView
             android:id="@+id/episode_image"

@@ -7,6 +7,13 @@
         <item name="colorPrimaryDark">#000123</item>
         <item name="android:textColor">@color/white</item>
         <item name="colorAccent">#f8ca00</item>
+        <item name="android:windowNoTitle">true</item>
         <item name="android:windowAnimationStyle">@null</item>
+        <item name="actionButtonStyle">@style/Base.AppTheme.Toolbar.ActionButton</item>
+    </style>
+    <style name="Base.AppTheme.Toolbar.ActionButton" parent="@style/Widget.AppCompat.ListView.Menu">
+        <item name="android:minWidth">20dip</item>
+        <item name="android:maxWidth">10dp</item>
+      <item name="android:padding">0dip</item>
     </style>
 </resources>

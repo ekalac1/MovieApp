@@ -14,7 +14,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
-import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.ActorDetails;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.ActorDetails;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MoviesDetailsActivity;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.TVShowDetails;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Cast;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Review;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
@@ -67,27 +69,39 @@ public class CastGridAdapter extends RecyclerView.Adapter<CastGridAdapter.MyView
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         final Cast cast = castsList.get(position);
         if (cast.getName() != null)
             holder.name.setText(cast.getName());
         else holder.name.setText(cast.getTitle());
         holder.character.setText(cast.getCharacter_name());
         Glide.with(context)
-                .load(cast.getFullPosterPath(context))
+                .load(cast.getSmallFullPosterPath(context))
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(holder.cast_image);
-        if (activity != "actor")
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (activity != "actor")
+                {
                     Intent myIntent = new Intent(context, ActorDetails.class);
                     myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     myIntent.putExtra("id", cast.getId());
                     context.startActivity(myIntent);
                 }
-            });
+                else
+                {
+                    Intent myIntent;
+                    if (cast.getMediaType().equals("movie"))
+                        myIntent=new Intent(context, MoviesDetailsActivity.class);
+                    else myIntent=new Intent(context, TVShowDetails.class);
+                    myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    myIntent.putExtra("id", cast.getId());
+                    context.startActivity(myIntent);
+                }
+            }
+        });
     }
 
     @Override

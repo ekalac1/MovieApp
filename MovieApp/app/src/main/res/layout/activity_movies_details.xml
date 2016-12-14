@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,9 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_gravity="top"
-        tools:context=".Activities.MoviesDetailsActivity">
-
-
+        tools:context=".Activities.Details.MoviesDetailsActivity">
             <ImageView
                 android:id="@+id/movies_detalis_image"
                 android:layout_width="match_parent"
@@ -26,28 +23,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:background="@drawable/gradient" />
-
-
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:orientation="vertical">
-
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight="0.55" />
-
                 <ImageView
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:id="@+id/star_vote"
+                    android:id="@+id/play"
                     android:layout_marginTop="80dp"
+                    android:visibility="invisible"
                     android:layout_marginStart="160dp"
                     android:src="@drawable/playvideo"
                     android:layout_marginBottom="60dp" />
-
                 <TextView
                     android:id="@+id/movies_detalis_title"
                     android:layout_width="wrap_content"
@@ -57,8 +50,6 @@
                     android:layout_marginEnd="16sp"
                     android:textColor="@color/white"
                     android:textSize="24sp" />
-
-
                 <TextView
                     android:id="@+id/movies_detalis_genres"
                     android:layout_width="wrap_content"
@@ -68,8 +59,6 @@
                     android:layout_marginEnd="16sp"
                     android:textColor="@color/lightgrey"
                     android:textSize="12sp" />
-
-
 
                 <TextView
                     android:id="@+id/movies_detalis_release_date"
@@ -81,87 +70,146 @@
                     android:textColor="@color/lightgrey"
                     android:layout_marginBottom="15dp"
                     android:textSize="12sp" />
+
+
+
+
+
             </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/icons"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal"
+            android:layout_gravity="bottom"
+            android:layout_below="@+id/movies_detalis_image">
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/watchlist"
+                android:src="@drawable/watchlist"
+                android:layout_marginEnd="5dp"/>
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:id="@+id/favorite"
+                android:src="@drawable/favorite"
+                android:layout_marginEnd="15dp"/>
+
+        </LinearLayout>
+
         <TextView
-            android:id="@+id/directors"
+            android:id="@+id/directors_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="27dp"
+            android:layout_marginTop="5dp"
             android:layout_marginStart="16dp"
-            android:text="@string/directors"
-            android:layout_below="@+id/movies_detalis_image"
+            android:layout_below="@+id/icons"
             android:textSize="14sp"
             android:textColor="@color/white_dark" />
         <TextView
-            android:id="@+id/directors_name"
+            android:id="@+id/directors"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textColor="@color/lightgrey"
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
-            android:layout_alignTop="@+id/directors"
-            android:layout_toEndOf="@+id/directors"/>
+            android:layout_alignTop="@+id/directors_label"
+            android:layout_toEndOf="@+id/directors_label"/>
+        <TextView
+            android:id="@+id/writers_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/directors"
+            android:layout_alignStart="@+id/directors_label"
+            android:textSize="14sp"
+            android:textColor="@color/white_dark"
+            android:layout_alignWithParentIfMissing="true"/>
         <TextView
             android:id="@+id/writers"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/directors_name"
-            android:text="@string/writers"
-            android:layout_alignStart="@+id/directors"
-            android:textSize="14sp"
-            android:textColor="@color/white_dark" />
-        <TextView
-            android:id="@+id/writers_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/directors_name"
+            android:layout_below="@+id/directors"
             android:textSize="14sp"
             android:textColor="@color/lightgrey"
-            android:layout_alignTop="@+id/writers"
-            android:layout_toEndOf="@+id/writers"
-            android:layout_alignStart="@+id/directors_name"
-            android:layout_marginEnd="16dp"/>
+            android:layout_alignTop="@+id/writers_label"
+            android:layout_toEndOf="@+id/writers_label"
+            android:layout_alignStart="@+id/directors"
+            android:layout_marginEnd="16dp"
+            android:layout_alignWithParentIfMissing="true"/>
+        <TextView
+            android:id="@+id/stars_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/stars"
+            android:layout_below="@+id/writers"
+            android:layout_marginStart="16dp"
+            android:textSize="14sp"
+            android:textColor="@color/white_dark"
+            android:layout_alignWithParentIfMissing="true"/>
         <TextView
             android:id="@+id/stars"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
-            android:text="@string/stars"
-            android:layout_below="@+id/writers_list"
-            android:layout_alignStart="@+id/directors"
-            android:textSize="14sp"
-            android:textColor="@color/white_dark" />
-        <TextView
-            android:id="@+id/stars_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
             android:textSize="14sp"
             android:textColor="@color/lightgrey"
-            android:layout_toEndOf="@+id/stars"
-            android:layout_alignTop="@+id/stars"
-            android:layout_alignStart="@+id/directors_name"
-            android:layout_marginEnd="16dp"/>
+            android:layout_toEndOf="@+id/stars_label"
+            android:layout_alignTop="@+id/stars_label"
+            android:layout_alignStart="@+id/directors"
+            android:layout_marginEnd="16dp"
+            android:layout_alignWithParentIfMissing="true"/>
 
         <ImageView
             android:layout_width="16sp"
             android:layout_height="16sp"
             android:id="@+id/vote_star"
-            android:layout_alignStart="@+id/directors"
             android:src="@drawable/star_filled"
-            android:layout_marginTop="25dp"
-            android:layout_below="@id/stars_list"/>
+            android:layout_marginTop="24dp"
+            android:layout_below="@+id/stars_label"
+            android:layout_alignStart="@+id/about" />
+
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/star_empty"
+            android:id="@+id/star_rate"
+            android:layout_toLeftOf="@+id/rate_this_label"
+            android:layout_alignTop="@+id/vote_star"
+             />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/vote_star"
             android:id="@+id/votes"
+            android:layout_below="@+id/stars"
             android:textSize="14sp"
             android:layout_marginStart="3dp"
             android:textColor="@color/white"
             android:layout_alignTop="@id/vote_star"/>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/rate_this_label"
+            android:layout_alignEnd="@+id/about"
+            android:layout_below="@+id/stars"
+            android:layout_alignTop="@id/vote_star"
+            android:textSize="14sp"
+            android:layout_alignParentEnd="true"
+            android:text="@string/rate_label"
+            android:layout_marginEnd="20dp"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/white"
+            />
 
         <TextView
             android:id="@+id/about"
@@ -169,18 +217,46 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_below="@+id/vote_star"
-            android:layout_alignStart="@+id/directors"
+            android:layout_alignStart="@+id/directors_label"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="28dp"
             android:textSize="14sp"
             android:textColor="@color/white_dark"/>
 
         <View
+            android:id="@+id/view1"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_below="@+id/about"
+            android:background="@color/view_grey" />
+
+        <TextView
+            android:id="@+id/see_all_galery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view1"
+            android:layout_alignEnd="@+id/about"
+            android:text="@string/SeeAll"
+            android:textColor="@color/golden"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/tv_gallery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view1"
+            android:layout_marginStart="16sp"
+            android:layout_marginBottom="30dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="30dp"
+            android:layout_alignWithParentIfMissing="true" />
+
+        <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:id="@+id/view__"
             android:background="@color/view_grey"
-            android:layout_below="@+id/about" />
+            android:layout_below="@+id/tv_gallery" />
 
 
         <android.support.v7.widget.RecyclerView
@@ -212,10 +288,10 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/reviewtext"
+            android:id="@+id/review_label"
             android:text="@string/Reviews"
             android:layout_below="@+id/view___"
-            android:layout_alignStart="@+id/directors"
+            android:layout_alignStart="@+id/directors_label"
             android:textColor="@color/golden"
             android:textSize="14sp"
             android:layout_marginTop="30dp"
@@ -225,9 +301,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/reviews"
-            android:layout_alignStart="@+id/reviewtext"
+            android:layout_alignStart="@+id/review_label"
             android:layout_marginBottom="20dp"
-            android:layout_below="@+id/reviewtext">
+            android:layout_below="@+id/review_label">
         </android.support.v7.widget.RecyclerView>
+
+
     </RelativeLayout>
 </ScrollView>

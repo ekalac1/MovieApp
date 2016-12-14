@@ -10,9 +10,6 @@ import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
 
-/**
- * Created by Laptop on 03.10.2016..
- */
 public class SearchResults {
 
     @SerializedName("budget")
@@ -76,17 +73,27 @@ public class SearchResults {
     private String name;
     @SerializedName("original_name")
     private String originalName;
+    @SerializedName("profile_path")
+    private String profilePath;
+
+    public String getProfilePath() {return profilePath;}
 
     @SerializedName("media_type")
     private String mediaType;
+
 
     public String getMediaType() {return mediaType;}
 
 
     public String getFullPosterPath(Context c) {
         String url =c.getString(R.string.MovieImageBaseAdress);
-        String url1=c.getString(R.string.MovieImageWidth500);
+        String url1=c.getString(R.string.MovieImageWidth92);
         return url+url1 + getPosterPath();
+    }
+    public String getFullProfilePath(Context c) {
+        String url =c.getString(R.string.MovieImageBaseAdress);
+        String url1=c.getString(R.string.MovieImageWidth92);
+        return url+url1 + getProfilePath();
     }
 
     public int getBudget() {

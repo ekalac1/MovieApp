@@ -51,7 +51,6 @@ public class SearchResultsAdapter extends ArrayAdapter<SearchResults> {
 
         voteAverage.setText(String.valueOf(movie.getVoteAverage()));
 
-
         if (movie.getMediaType().equals("movie"))
         {
             type.setText(R.string.movie);
@@ -80,6 +79,20 @@ public class SearchResultsAdapter extends ArrayAdapter<SearchResults> {
             } else
             {
                 titleText.setText(movie.getName());
+            }
+        }
+        else if (movie.getMediaType().equals("person"))
+        {
+            type.setText("Person");
+            titleText.setText(movie.getName());
+            if (movie.getProfilePath()!=null)
+            {
+                Glide.with(context)
+                        .load(movie.getFullProfilePath(getContext()))
+                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.RESULT)
+                        .placeholder(R.drawable.movies)
+                        .into((ImageView) newView.findViewById(R.id.imageView2));
             }
         }
         if (movie.getPosterPath()!=null)

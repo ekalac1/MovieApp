@@ -8,7 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.RealmTvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.CreditsResponse;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.GalleryResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.ReviewResponse;
 
 
@@ -50,6 +52,10 @@ public class TvShow {
     @SerializedName("status")
     private String status;
     public String getStatus() {return  status;}
+
+    @SerializedName("images")
+    private GalleryResponse gallery;
+    public GalleryResponse getGallery() {return gallery;}
 
     @SerializedName("seasons")
     private List<Season> seasons;
@@ -190,6 +196,30 @@ public class TvShow {
 
     public String getFullPosterPath(Context c)
     {
-        String imagePath=c.getString((R.string.MovieImageBaseAdress))+c.getString(R.string.MovieImageWidth500)+getPosterPath();
-        return imagePath;}
+        return c.getString((R.string.MovieImageBaseAdress))+c.getString(R.string.MovieImageWidth500)+getPosterPath();
+        }
+
+    public String getSmallFullPosterPath(Context c) {;
+        return c.getString(R.string.MovieImageBaseAdress)+c.getString(R.string.MovieImageWidth342) + getPosterPath();
+    }
+
+    public TvShow getTvShow (RealmTvShow t)
+    {
+        TvShow tvshow=new TvShow();
+        tvshow.setId(t.getId());
+        tvshow.setName(t.getName());
+        tvshow.setFirstAirDate(t.getFirstAirDate());
+        tvshow.setVoteAverage(t.getVoteAverage());
+        return tvshow;
+    }
+
+    public RealmTvShow getRealmTvShow(TvShow t)
+    {
+        RealmTvShow tvshow=new RealmTvShow();
+        tvshow.setId(t.getId());
+        tvshow.setName(t.getName());
+        tvshow.setFirstAirDate(t.getFirstAirDate());
+        tvshow.setVoteAverage(t.getVoteAverage());
+        return  tvshow;
+    }
 }

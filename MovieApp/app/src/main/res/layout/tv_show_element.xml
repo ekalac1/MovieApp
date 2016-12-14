@@ -1,72 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <ImageView
+        android:id="@+id/tvShowImageView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tvShowImageView"
-        android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
-        android:cropToPadding="false"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:adjustViewBounds="true"
+        android:cropToPadding="false"
+        android:scaleType="fitCenter" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/gradient"/>
+        android:background="@drawable/gradient" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
         android:orientation="vertical">
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="0.55"/>
+            android:layout_weight="0.55" />
+
         <TextView
             android:id="@+id/tvShowName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
             android:layout_gravity="bottom"
-            android:textSize="16sp"
-            android:layout_marginLeft="10dp"/>
+            android:layout_marginLeft="10dp"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+
         <TextView
             android:id="@+id/tvShowRelaseDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
             android:layout_gravity="bottom"
+            android:layout_marginLeft="10dp"
             android:textColor="@color/lightgrey"
-            android:layout_marginLeft="10dp" />
+            android:textSize="10sp" />
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
+            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
             android:background="@color/movie_separator"
-            android:layout_marginBottom="10dp"
-            android:paddingTop="10dp"/>
+            android:paddingTop="10dp" />
+
         <LinearLayout
-            android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:orientation="horizontal"
             android:paddingBottom="10dp">
+
             <ImageView
+                android:id="@+id/tvStarOne"
                 android:layout_width="13dp"
                 android:layout_height="13dp"
-                android:id="@+id/tvStarOne"
-                android:src="@drawable/star_filled"/>
+                android:layout_marginTop="4dp"
+                android:src="@drawable/star_filled" />
+
             <TextView
+                android:id="@+id/tvShowAverage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tvShowAverage"
-                android:textSize="10sp"
                 android:layout_marginStart="5dp"
-                android:textColor="@color/lightgrey"/>
+                android:layout_marginTop="4dp"
+                android:textColor="@color/lightgrey"
+                android:textSize="10sp" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/watchlist_movie"
+                android:layout_width="48dp"
+                android:layout_height="19dp"
+                android:paddingTop="1dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="2dp"
+                android:src="@drawable/watchlist" />
+
+            <ImageView
+                android:id="@+id/favorite_movie"
+                android:layout_width="31dp"
+                android:layout_height="19dp"
+                android:paddingLeft="1dp"
+                android:paddingTop="2dp"
+                android:paddingRight="10dp"
+                android:src="@drawable/favorite" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
