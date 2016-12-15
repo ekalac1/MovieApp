@@ -1,7 +1,10 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,7 +12,6 @@ import android.support.annotation.IdRes;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -19,7 +21,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnTabSelectListener;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.RssAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.MapsActivity;
@@ -36,8 +38,13 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Settings;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies.Watchlist;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Adapters.NewsListAdapter;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Feed;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.FeedItem;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.RealmFeedItem;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,10 +63,21 @@ public class NewsFeed extends AppCompatActivity {
     MovieApplication mApp;
     NewsListAdapter n;
 
+    Realm realm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_feed);
+
+        Realm.init(getApplicationContext());
+
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
+
+        realm = Realm.getDefaultInstance();
 
         mApp = (MovieApplication) getApplicationContext();
         slideMenu = (NavigationView) findViewById(R.id.navigationSlide);
@@ -91,41 +109,34 @@ public class NewsFeed extends AppCompatActivity {
                         break;
                     case R.id.settings:
                         if (mApp.getAccount() == null) Alert();
-                        else
-                        {
+                        else {
                             startActivity(new Intent(getApplicationContext(), Settings.class));
                         }
                         break;
                     case R.id.favorites:
                         if (mApp.getAccount() == null) Alert();
-                        else
-                        {
+                        else {
                             startActivity(new Intent(getApplicationContext(), Favorites.class));
                         }
                         break;
                     case R.id.watchlist:
                         if (mApp.getAccount() == null) Alert();
-                        else
-                        {
+                        else {
                             startActivity(new Intent(getApplicationContext(), Watchlist.class));
                         }
                         break;
                     case R.id.ratings:
                         if (mApp.getAccount() == null) Alert();
-                        else
-                        {
+                        else {
                             startActivity(new Intent(getApplicationContext(), Ratings.class));
                         }
                         break;
                     case R.id.logout:
-                        if (mApp.getAccount() == null)
-                        {
+                        if (mApp.getAccount() == null) {
                             Intent intent = new Intent(getApplicationContext(), Login.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                             startActivity(intent);
-                        }
-                        else
-                        {
+                        } else {
                             mApp.setAccount(null);
                             mDrawerLayout.closeDrawer(GravityCompat.START);
                             Toast.makeText(getApplicationContext(), R.string.logout_done, Toast.LENGTH_LONG).show();
@@ -174,6 +185,23 @@ public class NewsFeed extends AppCompatActivity {
             }
         });
 
+        if (isNetworkAvailable()) {
+            realm.beginTransaction();
+            RealmResults<RealmFeedItem> items = realm.where(RealmFeedItem.class).findAll();
+            items.deleteAllFromRealm();
+            realm.commitTransaction();
+
+        } else {
+            realm.beginTransaction();
+            RealmResults<RealmFeedItem> items = realm.where(RealmFeedItem.class).findAll();
+            List<FeedItem> temp = new ArrayList<>();
+            for (RealmFeedItem item : items) {
+                temp.add(new FeedItem().getFeedItem(item));
+            }
+            n = new NewsListAdapter(getApplicationContext(), R.layout.news_element, temp);
+            entrysList.setAdapter(n);
+        }
+
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://www.boxofficemojo.com")
                 .client(new OkHttpClient())
@@ -188,6 +216,18 @@ public class NewsFeed extends AppCompatActivity {
                 feed = response.body();
                 n = new NewsListAdapter(getApplicationContext(), R.layout.news_element, feed.getmChannel().getFeedItems());
                 entrysList.setAdapter(n);
+                entrysList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(feed.getmChannel().getFeedItems().get(position).getMlink()));
+                        startActivity(browserIntent);
+                    }
+                });
+                realm.beginTransaction();
+                for (FeedItem item : response.body().getmChannel().getFeedItems()) {
+                    realm.copyToRealm(item.getRealmFeedItem());
+                }
+                realm.commitTransaction();
             }
 
             @Override
@@ -195,13 +235,7 @@ public class NewsFeed extends AppCompatActivity {
             }
         });
 
-        entrysList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(feed.getmChannel().getFeedItems().get(position).getMlink()));
-                startActivity(browserIntent);
-            }
-        });
+
     }
 
 
@@ -280,5 +314,12 @@ public class NewsFeed extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search, menu);
         return true;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 }

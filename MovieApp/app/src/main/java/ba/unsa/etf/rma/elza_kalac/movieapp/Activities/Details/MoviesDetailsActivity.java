@@ -75,7 +75,6 @@ public class MoviesDetailsActivity extends AppCompatActivity {
     ShareDialog shareDialog;
     String link;
 
-
     Realm realm;
 
     @Override
