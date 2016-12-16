@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.widget.Toast;
 
 public class NetworkChangeReceiver extends BroadcastReceiver {
 
@@ -15,12 +14,7 @@ public class NetworkChangeReceiver extends BroadcastReceiver {
         final ConnectivityManager connMgr = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        final android.net.NetworkInfo wifi = connMgr
-                .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-
         if (isNetworkAvailable(context)) {
-            Toast.makeText(context, "evo interneta", Toast.LENGTH_LONG).show();
             MovieApplication mApp;
             mApp = (MovieApplication)context.getApplicationContext();
             mApp.SyncActions();

@@ -84,7 +84,6 @@ public class FavoritesMovies extends Fragment {
             @Override
             public void onResponse(Call<MoviesListResponse> call, Response<MoviesListResponse> response) {
                 movies.addAll(response.body().getResults());
-              //  mApp.getAccount().setFavoriteMovies(response.body().getResults());
                 ((BaseAdapter) favoriteMovies.getAdapter()).notifyDataSetChanged();
                 realm.beginTransaction();
                 for (Movie m : response.body().getResults())

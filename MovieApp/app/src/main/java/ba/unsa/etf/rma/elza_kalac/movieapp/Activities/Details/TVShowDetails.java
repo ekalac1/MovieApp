@@ -197,28 +197,22 @@ public class TVShowDetails extends AppCompatActivity {
                     }
                     yearsList.setText(list);
                 }
+                else {
+                    TextView temp1 = (TextView) findViewById(R.id.tv_show_seasons_label);
+                    temp1.setVisibility(View.GONE);
+                    TextView temp3 = (TextView) findViewById(R.id.tv_shows_years_label);
+                    temp3.setVisibility(View.GONE);
+                }
                 if (tvshow.getStatus() != null) {
                     if (tvshow.getStatus().equals("Returning Series"))
                         date.setText("Tv Series (" + tempe + m + " )");
                 } else date.setText("Tv Series (" + tempe + m + temp2 + ")");
             } else {
                 date.setText("");
-                {
-                    TextView temp1 = (TextView) findViewById(R.id.tv_show_seasons_label);
-                    temp1.setVisibility(View.GONE);
-                }
-                {
-                    TextView temp2 = (TextView) findViewById(R.id.tv_shows_years_label);
-                    temp2.setVisibility(View.GONE);
-                }
-                {
-                    LinearLayout temp2 = (LinearLayout) findViewById(R.id.see_all);
-                    temp2.setVisibility(View.GONE);
-                }
-                {
-                    View temp2 = findViewById(R.id.view_);
-                    temp2.setVisibility(View.GONE);
-                }
+                TextView temp1 = (TextView) findViewById(R.id.tv_show_seasons_label);
+                temp1.setVisibility(View.GONE);
+                TextView temp2 = (TextView) findViewById(R.id.tv_shows_years_label);
+                temp2.setVisibility(View.GONE);
             }
             View tempView = (View) findViewById(R.id.view_);
             tempView.setVisibility(View.INVISIBLE);
