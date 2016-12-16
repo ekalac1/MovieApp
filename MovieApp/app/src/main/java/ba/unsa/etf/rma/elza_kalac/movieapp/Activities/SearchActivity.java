@@ -4,6 +4,8 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -65,6 +67,14 @@ public class SearchActivity extends AppCompatActivity {
                 }
             });
         }
+
+        if (!isNetworkAvailable())
+        {
+            Toast.makeText(getApplicationContext(), R.string.no_network, Toast.LENGTH_LONG).show();
+            onBackPressed();
+        }
+
+
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -142,7 +152,6 @@ public class SearchActivity extends AppCompatActivity {
                         }
                         @Override
                         public void onFailure(Call<SearchResponse> call, Throwable t) {
-                            Toast.makeText(getApplicationContext(), R.string.on_failure, Toast.LENGTH_LONG).show();
                         }
                     });
                 }
@@ -169,6 +178,12 @@ public class SearchActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 }
 

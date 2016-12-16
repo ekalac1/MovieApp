@@ -13,10 +13,6 @@ import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.CreditsResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.GalleryResponse;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.ReviewResponse;
 
-
-/**
- * Created by Laptop on 01.10.2016..
- */
 public class TvShow {
 
     @SerializedName("poster_path")
@@ -203,6 +199,30 @@ public class TvShow {
         return c.getString(R.string.MovieImageBaseAdress)+c.getString(R.string.MovieImageWidth342) + getPosterPath();
     }
 
+    public void setLastAirDate(String lastAirDate) {
+        this.lastAirDate = lastAirDate;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setGallery(GalleryResponse gallery) {
+        this.gallery = gallery;
+    }
+
+    public void setSeasons(List<Season> seasons) {
+        this.seasons = seasons;
+    }
+
+    public List<Genre> getGenresList() {
+        return genresList;
+    }
+
+    public void setGenresList(List<Genre> genresList) {
+        this.genresList = genresList;
+    }
+
     public TvShow getTvShow (RealmTvShow t)
     {
         TvShow tvshow=new TvShow();
@@ -210,6 +230,7 @@ public class TvShow {
         tvshow.setName(t.getName());
         tvshow.setFirstAirDate(t.getFirstAirDate());
         tvshow.setVoteAverage(t.getVoteAverage());
+        tvshow.setStatus(t.getStatus());
         return tvshow;
     }
 
@@ -220,6 +241,8 @@ public class TvShow {
         tvshow.setName(t.getName());
         tvshow.setFirstAirDate(t.getFirstAirDate());
         tvshow.setVoteAverage(t.getVoteAverage());
+        tvshow.setStatus(t.getStatus());
         return  tvshow;
     }
+
 }

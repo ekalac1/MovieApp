@@ -80,6 +80,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mDrawerLayout.addDrawerListener(mToogle);
         mToogle.syncState();
 
+        getSupportActionBar().setTitle("Nearest cinemas");
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         slideMenu = (NavigationView) findViewById(R.id.navigationSlide);
@@ -164,7 +166,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onConnected(Bundle connectionHint) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(getApplicationContext(), "Enable location", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), R.string.enable_location, Toast.LENGTH_LONG).show();
             return;
         }
         Location mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);

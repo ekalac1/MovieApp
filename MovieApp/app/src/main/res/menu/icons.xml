@@ -2,17 +2,25 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/share"
-        android:title="Share"
+    <item
+        android:id="@+id/share"
         android:icon="@android:drawable/ic_menu_share"
+        android:title="@string/com_facebook_share_button_text"
         app:showAsAction="always">
         <menu>
-            <item android:id="@+id/facebook"
-                android:title="@string/com_facebook_share_button_text"
-                android:icon="@drawable/facebook"/>
-            <item android:id="@+id/twitter"
-                android:title="@string/tw__post_tweet"
-                android:icon="@drawable/twitter"/>
+
+            <item
+                android:id="@+id/facebook"
+                android:icon="@drawable/facebook"
+                android:title="@string/com_facebook_share_button_text" />
+            <group android:id="@+id/one">
+                <item
+                    android:id="@+id/twitter"
+                    android:icon="@drawable/twitter"
+                    android:title="@string/tw__post_tweet" />
+            </group>
+
+
         </menu>
     </item>
 </menu>

@@ -232,12 +232,15 @@ public class TvShowGridViewAdapter extends ArrayAdapter<TvShow> {
                         post.setId(tvshow.getId());
                         post.setMediaType("tv");
 
-                        if (watchlist.getDrawable().getConstantState().equals(context.getDrawable(R.drawable.watchlist).getConstantState())) {
+                        if (watchlist.getDrawable().getConstantState().equals(context.getDrawable(R.drawable.watchlist).getConstantState()))
+                        {
                             watchlist.setImageResource(R.drawable.watchlist_active);
                             post.setActionType("watchlist");
                             tvshow.setWatchlist(true);
                             mApp.getAccount().getFavoriteTvShows().add(new TvShow().getTvShow(tvshow));
-                        } else {
+                        }
+                        else
+                        {
 
                             watchlist.setImageResource(R.drawable.watchlist);
                             post.setActionType("removewatchlist");

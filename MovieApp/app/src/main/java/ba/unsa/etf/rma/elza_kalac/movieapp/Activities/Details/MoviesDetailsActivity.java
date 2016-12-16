@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -175,8 +176,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                         });
                     }
                 } else {
-                    if (mApp.getAccount()!=null)
-                    {
+                    if (mApp.getAccount() != null) {
                         realm.beginTransaction();
                         MovieRealm movie = realm.where(MovieRealm.class).equalTo("id", movieID).findFirst();
                         Action post = new Action();
@@ -194,7 +194,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                             post.setActionType("removefavorite");
                             movie.setFavorite(false);
                             RealmResults<MovieRealm> movies = realm.where(MovieRealm.class).equalTo("id", movie.getId()).findAll();
-                            for ( MovieRealm r : movies)
+                            for (MovieRealm r : movies)
                                 r.setFavorite(false);
                         }
                         realm.copyToRealm(post);
@@ -257,7 +257,7 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                             Watchlist.setImageResource(R.drawable.watchlist);
                             post.setActionType("removewatchlist");
                             RealmResults<MovieRealm> movies = realm.where(MovieRealm.class).equalTo("id", movie.getId()).findAll();
-                            for ( MovieRealm r : movies)
+                            for (MovieRealm r : movies)
                                 r.setWatchlist(false);
                         }
                         realm.copyToRealm(post);
@@ -281,11 +281,12 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             movieID = Integer.valueOf(a);
         }
 
-
         if (!isNetworkAvailable()) {
             realm.beginTransaction();
-            MovieRealm movie = realm.where(MovieRealm.class).equalTo("id", movieID).findFirst();
+            final MovieRealm movie = realm.where(MovieRealm.class).equalTo("id", movieID).findFirst();
             realm.commitTransaction();
+            TextView starsLabel = (TextView) findViewById(R.id.stars_label);
+            starsLabel.setVisibility(View.INVISIBLE);
             movieId.setText(movie.getTitle());
             if (movie.getReleaseDate() != null) {
                 DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
@@ -305,6 +306,16 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             if (movie.getReviews() != null)
                 for (RealmReview r : movie.getReviews())
                     temp1.add(new Review().getReview(r));
+            else if (movie.getReviews().size() == 0) {
+                TextView reviewLabel = (TextView) findViewById(R.id.review_label);
+                reviewLabel.setVisibility(View.INVISIBLE);
+                View tempView = (View) findViewById(R.id.view___);
+                tempView.setVisibility(View.GONE);
+            }
+
+            gallerySeeAll.setVisibility(View.INVISIBLE);
+            View tempView = (View) findViewById(R.id.view__);
+            tempView.setVisibility(View.INVISIBLE);
 
             ReviewListAdapter reviewListAdapter = new ReviewListAdapter(temp1);
             RecyclerView.LayoutManager reviewLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -312,9 +323,13 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             review.setAdapter(reviewListAdapter);
 
             List<Cast> tempCast = new ArrayList<>();
-            if (movie.getCast()!=null)
+            if (movie.getCast().size() != 0)
                 for (RealmCast c : movie.getCast())
-                tempCast.add(new Cast().getCast(c));
+                    tempCast.add(new Cast().getCast(c));
+            else {
+                ImageView castRight = (ImageView) findViewById(R.id.cast_right);
+                castRight.setVisibility(View.INVISIBLE);
+            }
 
 
             CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), tempCast, "movie");
@@ -322,8 +337,23 @@ public class MoviesDetailsActivity extends AppCompatActivity {
             recyclerView.setLayoutManager(mLayoutManager);
             recyclerView.setAdapter(mAdapter);
 
+            rate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mApp.getAccount() != null) {
+                        Intent intent = (new Intent(getApplicationContext(), Rating.class));
+                        intent.putExtra("movieID", movieID);
+                        intent.putExtra("movieName", movie.getTitle());
+                        startActivity(intent);
+                    } else {
+                        Alert();
+                    }
+                }
+            });
+
 
         }
+
 
         Call<Movie> call = apiService.getMovieDetails(movieID, ApiClient.API_KEY, "credits,reviews,videos,images");
 
@@ -333,6 +363,10 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 movie = response.body();
                 realm.beginTransaction();
                 MovieRealm realmMovie = realm.where(MovieRealm.class).equalTo("id", movieID).findFirst();
+                if (realmMovie == null) {
+                    realm.copyToRealm(movie.getMovieRealm(movie));
+                    realmMovie = realm.where(MovieRealm.class).equalTo("id", movieID).findFirst();
+                }
                 link = "https://www.themoviedb.org/movie/" + String.valueOf(movieID) + "-" + movie.getTitle().replace(" ", "-");
                 movieId.setText(movie.getTitle());
                 rate.setOnClickListener(new View.OnClickListener() {
@@ -357,6 +391,15 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 LinearLayoutManager LayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
                 gallery.setLayoutManager(LayoutManager);
                 gallery.setAdapter(gAdapter);
+
+                gallery.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent(getApplicationContext(), Gallery.class);
+                        intent.putExtra("movieID", movieID);
+                        startActivity(intent);
+                    }
+                });
 
                 gallerySeeAll.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -418,10 +461,8 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 stars.setText(movie.getCredits().getStars());
                 votes.setText(String.valueOf(movie.getVoteAverage()));
 
-                if (movie.getCredits().getCast() != null)
-                {
-                    for (Cast c : movie.getCredits().getCast())
-                    {
+                if (movie.getCredits().getCast() != null) {
+                    for (Cast c : movie.getCredits().getCast()) {
                         realmMovie.getCast().add(c.getRealCast());
                     }
                 }
@@ -466,21 +507,27 @@ public class MoviesDetailsActivity extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.facebook:
-                if (ShareDialog.canShow(ShareLinkContent.class)) {
-                    final ShareLinkContent content = new ShareLinkContent.Builder()
-                            .setContentUrl(Uri.parse(link))
-                            .build();
-                    shareDialog.show(content);
-                }
+                if (isNetworkAvailable()) {
+                    if (ShareDialog.canShow(ShareLinkContent.class)) {
+                        final ShareLinkContent content = new ShareLinkContent.Builder()
+                                .setContentUrl(Uri.parse(link))
+                                .build();
+                        shareDialog.show(content);
+                    }
+                } else
+                    Toast.makeText(getApplicationContext(), R.string.no_network, Toast.LENGTH_LONG).show();
                 break;
             case R.id.twitter:
-                TwitterAuthConfig authConfig = new TwitterAuthConfig(ApiClient.TWITTER_KEY, ApiClient.TWITTER_SECRET_KEY);
-                Fabric.with(getApplicationContext(), new TwitterCore(authConfig), new TweetComposer());
-                Intent intent = new TweetComposer.Builder(getApplicationContext())
-                        .text(link)
-                        .createIntent();
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                if (isNetworkAvailable()) {
+                    TwitterAuthConfig authConfig = new TwitterAuthConfig(ApiClient.TWITTER_KEY, ApiClient.TWITTER_SECRET_KEY);
+                    Fabric.with(getApplicationContext(), new TwitterCore(authConfig), new TweetComposer());
+                    Intent intent = new TweetComposer.Builder(getApplicationContext())
+                            .text(link)
+                            .createIntent();
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else
+                    Toast.makeText(getApplicationContext(), R.string.no_network, Toast.LENGTH_LONG).show();
                 break;
 
         }

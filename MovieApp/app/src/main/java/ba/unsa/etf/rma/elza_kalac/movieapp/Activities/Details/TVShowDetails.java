@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -128,21 +129,30 @@ public class TVShowDetails extends AppCompatActivity {
         yearsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(intent);
+                if (isNetworkAvailable())
+                    startActivity(intent);
+                else
+                    Toast.makeText(getApplicationContext(), R.string.no_network, Toast.LENGTH_LONG).show();
             }
         });
 
         seasonsList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(intent);
+                if (isNetworkAvailable())
+                    startActivity(intent);
+                else
+                    Toast.makeText(getApplicationContext(), R.string.no_network, Toast.LENGTH_LONG).show();
             }
         });
 
         seeAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(intent);
+                if (isNetworkAvailable())
+                    startActivity(intent);
+                else
+                    Toast.makeText(getApplicationContext(), R.string.no_network, Toast.LENGTH_LONG).show();
             }
         });
 
@@ -168,7 +178,7 @@ public class TVShowDetails extends AppCompatActivity {
 
         if (!isNetworkAvailable()) {
             realm.beginTransaction();
-            RealmTvShow tvshow = realm.where(RealmTvShow.class).equalTo("id", tvshowID).findFirst();
+            final RealmTvShow tvshow = realm.where(RealmTvShow.class).equalTo("id", tvshowID).findFirst();
             realm.commitTransaction();
             movieId.setText(tvshow.getName());
             if (tvshow.getFirstAirDate() != null) {
@@ -176,8 +186,44 @@ public class TVShowDetails extends AppCompatActivity {
                 int startYear = Integer.parseInt(tempe);
                 String m = "-";
                 String temp2 = "";
-                date.setText("Tv Series (" + tempe + m + temp2 + ")");
+                if (tvshow.getLastAirDate() != null) {
+                    temp2 = tvshow.getLastAirDate().substring(0, 4);
+                    int endYear = Integer.parseInt(temp2);
+                    List<Integer> yearList = new ArrayList<Integer>();
+                    String list = "";
+                    for (int i = endYear; i >= startYear; i--) {
+                        yearList.add(i);
+                        list = list + String.valueOf(i) + "  ";
+                    }
+                    yearsList.setText(list);
+                }
+                if (tvshow.getStatus() != null) {
+                    if (tvshow.getStatus().equals("Returning Series"))
+                        date.setText("Tv Series (" + tempe + m + " )");
+                } else date.setText("Tv Series (" + tempe + m + temp2 + ")");
+            } else {
+                date.setText("");
+                {
+                    TextView temp1 = (TextView) findViewById(R.id.tv_show_seasons_label);
+                    temp1.setVisibility(View.GONE);
+                }
+                {
+                    TextView temp2 = (TextView) findViewById(R.id.tv_shows_years_label);
+                    temp2.setVisibility(View.GONE);
+                }
+                {
+                    LinearLayout temp2 = (LinearLayout) findViewById(R.id.see_all);
+                    temp2.setVisibility(View.GONE);
+                }
+                {
+                    View temp2 = findViewById(R.id.view_);
+                    temp2.setVisibility(View.GONE);
+                }
             }
+            View tempView = (View) findViewById(R.id.view_);
+            tempView.setVisibility(View.INVISIBLE);
+            gallerySeeAll.setVisibility(View.INVISIBLE);
+            seeAll.setVisibility(View.INVISIBLE);
             about.setText(tvshow.getOverview());
             votes.setText(String.valueOf(tvshow.getVoteAverage()));
             seasonsList.setText(tvshow.getSeasons());
@@ -191,8 +237,7 @@ public class TVShowDetails extends AppCompatActivity {
 
             List<Cast> castTemp = new ArrayList<>();
 
-            if (tvshow.getCast()!=null)
-            {
+            if (tvshow.getCast() != null) {
                 for (RealmCast c : tvshow.getCast())
                     castTemp.add(new Cast().getCast(c));
             }
@@ -201,6 +246,18 @@ public class TVShowDetails extends AppCompatActivity {
             LinearLayoutManager LayoutManager = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.HORIZONTAL, false);
             cast.setLayoutManager(LayoutManager);
             cast.setAdapter(mAdapter);
+
+            rate.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mApp.getAccount() != null) {
+                        Intent intent = (new Intent(getApplicationContext(), Rating.class));
+                        intent.putExtra("tvID", tvshowID);
+                        intent.putExtra("movieName", tvshow.getName());
+                        startActivity(intent);
+                    } else Alert();
+                }
+            });
 
 
         }
@@ -343,6 +400,10 @@ public class TVShowDetails extends AppCompatActivity {
                 link = "https://www.themoviedb.org/tv/" + String.valueOf(tvshowID) + "-" + tvshow.getName().replace(" ", "-");
                 realm.beginTransaction();
                 RealmTvShow rtvshow = realm.where(RealmTvShow.class).equalTo("id", tvshowID).findFirst();
+                if (rtvshow == null) {
+                    realm.copyToRealm(tvshow.getRealmTvShow(tvshow));
+                    rtvshow = realm.where(RealmTvShow.class).equalTo("id", tvshowID).findFirst();
+                }
 
 
                 intent.putExtra("name", tvshow.getName());
@@ -385,6 +446,9 @@ public class TVShowDetails extends AppCompatActivity {
                     }
                 seasonsList.setText(seasonList);
                 rtvshow.setSeasons(seasonList);
+                rtvshow.setFirstAirDate(tvshow.getFirstAirDate());
+                rtvshow.setLastAirDate(tvshow.getLastAirDate());
+                rtvshow.setStatus(tvshow.getStatus());
                 if (tvshow.getFirstAirDate() != null) {
                     String tempe = tvshow.getFirstAirDate().substring(0, 4);
                     int startYear = Integer.parseInt(tempe);
@@ -457,9 +521,8 @@ public class TVShowDetails extends AppCompatActivity {
                     stars.setText(tvshow.getCredits().getStars());
                     rtvshow.setStars(tvshow.getCredits().getStars());
 
-                    if (tvshow.getCredits().getCast()!=null)
-                    {
-                        for ( Cast c : tvshow.getCredits().getCast())
+                    if (tvshow.getCredits().getCast() != null) {
+                        for (Cast c : tvshow.getCredits().getCast())
                             rtvshow.getCast().add(c.getRealCast());
                     }
                     CastGridAdapter mAdapter = new CastGridAdapter(getApplicationContext(), tvshow.getCredits().getCast(), "tv");
@@ -492,21 +555,27 @@ public class TVShowDetails extends AppCompatActivity {
                 finish();
                 return true;
             case R.id.facebook:
-                if (ShareDialog.canShow(ShareLinkContent.class)) {
-                    final ShareLinkContent content = new ShareLinkContent.Builder()
-                            .setContentUrl(Uri.parse(link))
-                            .build();
-                    shareDialog.show(content);
-                }
+                if (isNetworkAvailable()) {
+                    if (ShareDialog.canShow(ShareLinkContent.class)) {
+                        final ShareLinkContent content = new ShareLinkContent.Builder()
+                                .setContentUrl(Uri.parse(link))
+                                .build();
+                        shareDialog.show(content);
+                    }
+                } else
+                    Toast.makeText(getApplicationContext(), R.string.no_network, Toast.LENGTH_LONG).show();
                 break;
             case R.id.twitter:
-                TwitterAuthConfig authConfig = new TwitterAuthConfig(ApiClient.TWITTER_KEY, ApiClient.TWITTER_SECRET_KEY);
-                Fabric.with(getApplicationContext(), new TwitterCore(authConfig), new TweetComposer());
-                Intent intent = new TweetComposer.Builder(getApplicationContext())
-                        .text(link)
-                        .createIntent();
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+                if (isNetworkAvailable()) {
+                    TwitterAuthConfig authConfig = new TwitterAuthConfig(ApiClient.TWITTER_KEY, ApiClient.TWITTER_SECRET_KEY);
+                    Fabric.with(getApplicationContext(), new TwitterCore(authConfig), new TweetComposer());
+                    Intent intent = new TweetComposer.Builder(getApplicationContext())
+                            .text(link)
+                            .createIntent();
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                } else
+                    Toast.makeText(getApplicationContext(), R.string.no_network, Toast.LENGTH_LONG).show();
                 break;
 
         }

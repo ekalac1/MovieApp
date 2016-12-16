@@ -73,6 +73,7 @@ public class MostPopularTvShowsFragment extends Fragment {
         }
         else
         {
+            if (!realm.isInTransaction())
             realm.beginTransaction();
             RealmResults<RealmTvShow> rows = realm.where(RealmTvShow.class).equalTo("mostPopular", true).findAll();
             realm.commitTransaction();

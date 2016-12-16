@@ -1,5 +1,8 @@
 package ba.unsa.etf.rma.elza_kalac.movieapp.Activities.UserPrivilegies;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -13,9 +16,16 @@ import android.widget.Toast;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiClient;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.ApiInterface;
 import ba.unsa.etf.rma.elza_kalac.movieapp.API.PostBody;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.Movie;
+import ba.unsa.etf.rma.elza_kalac.movieapp.Models.TvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.MovieApplication;
 import ba.unsa.etf.rma.elza_kalac.movieapp.R;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.Action;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.MovieRealm;
+import ba.unsa.etf.rma.elza_kalac.movieapp.RealmModels.RealmTvShow;
 import ba.unsa.etf.rma.elza_kalac.movieapp.Responses.PostResponse;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -26,6 +36,8 @@ public class Rating extends AppCompatActivity {
     ApiInterface apiService;
     MovieApplication mApp;
 
+    Realm realm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +47,15 @@ public class Rating extends AppCompatActivity {
         tvShowID = getIntent().getIntExtra("tvID", 0);
         mApp = (MovieApplication) getApplicationContext();
         apiService = mApp.getApiService();
+
+        Realm.init(getApplicationContext());
+
+        RealmConfiguration config = new RealmConfiguration.Builder()
+                .deleteRealmIfMigrationNeeded()
+                .build();
+        Realm.setDefaultConfiguration(config);
+
+        realm = Realm.getDefaultInstance();
 
 
         ActionBar actionBar = getSupportActionBar();
@@ -217,56 +238,98 @@ public class Rating extends AppCompatActivity {
 
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.rate_icon, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==android.R.id.home)
-        {
+        if (item.getItemId() == android.R.id.home) {
             finish();
             return true;
         }
-        if (item.getItemId()==R.id.rate)
-        {
+        if (item.getItemId() == R.id.rate) {
             if (starNum == 0) {
                 Toast.makeText(getApplicationContext(), R.string.empty_rate, Toast.LENGTH_LONG).show();
             } else {
-                PostBody rate = new PostBody(starNum);
-                if (movieID != 0) {
-                    Call<PostResponse> call = apiService.RateMovie(movieID, ApiClient.API_KEY, mApp.getAccount().getSessionId(), rate);
-                    call.enqueue(new Callback<PostResponse>() {
-                        @Override
-                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                            if (response.body().getStatusCode() == 1 || response.body().getStatusCode()==12) {
-                                Toast.makeText(getApplicationContext(), R.string.sucess_rate, Toast.LENGTH_LONG).show();
-                                onBackPressed();
+                if (isNetworkAvailable()) {
+                    PostBody rate = new PostBody(starNum);
+                    if (movieID != 0) {
+                        Call<PostResponse> call = apiService.RateMovie(movieID, ApiClient.API_KEY, mApp.getAccount().getSessionId(), rate);
+                        call.enqueue(new Callback<PostResponse>() {
+                            @Override
+                            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                                if (response.body().getStatusCode() == 1 || response.body().getStatusCode() == 12) {
+                                    Toast.makeText(getApplicationContext(), R.string.sucess_rate, Toast.LENGTH_LONG).show();
+                                    onBackPressed();
+                                }
                             }
-                        }
-                        @Override
-                        public void onFailure(Call<PostResponse> call, Throwable t) {
-                        }
-                    });
-                } else if (tvShowID != 0) {
-                    Call<PostResponse> call = apiService.RateTvshow(tvShowID, ApiClient.API_KEY, mApp.getAccount().getSessionId(), rate);
-                    call.enqueue(new Callback<PostResponse>() {
-                        @Override
-                        public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                            if (response.body().getStatusCode() == 1 || response.body().getStatusCode()==12) {
-                                Toast.makeText(getApplicationContext(), R.string.sucess_rate, Toast.LENGTH_LONG).show();
-                                onBackPressed();
+
+                            @Override
+                            public void onFailure(Call<PostResponse> call, Throwable t) {
                             }
-                        }
-                        @Override
-                        public void onFailure(Call<PostResponse> call, Throwable t) {
-                        }
-                    });
+                        });
+                    } else if (tvShowID != 0) {
+                        Call<PostResponse> call = apiService.RateTvshow(tvShowID, ApiClient.API_KEY, mApp.getAccount().getSessionId(), rate);
+                        call.enqueue(new Callback<PostResponse>() {
+                            @Override
+                            public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                                if (response.body().getStatusCode() == 1 || response.body().getStatusCode() == 12) {
+                                    Toast.makeText(getApplicationContext(), R.string.sucess_rate, Toast.LENGTH_LONG).show();
+                                    onBackPressed();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<PostResponse> call, Throwable t) {
+                            }
+                        });
+                    }
+                } else {
+                    realm.beginTransaction();
+                    if (movieID!=0)
+                    {
+                        MovieRealm movie = realm.where(MovieRealm.class).equalTo("id", movieID).findFirst();
+                        Action post = new Action();
+                        post.setId(movie.getId());
+                        post.setMediaType("movie");
+                        post.setActionType("rate");
+                        post.setVote(starNum);
+                        movie.setRated(true);
+
+                        mApp.getAccount().getRatedMovies().add(new Movie().getMovie(movie));
+                        realm.copyToRealm(post);
+                    }
+                    else if (tvShowID!=0)
+                    {
+                        RealmTvShow movie = realm.where(RealmTvShow.class).equalTo("id", tvShowID).findFirst();
+                        Action post = new Action();
+                        post.setId(movie.getId());
+                        post.setMediaType("tv");
+                        post.setActionType("rate");
+                        post.setVote(starNum);
+                        movie.setRated(true);
+                        mApp.getAccount().getRatedTvShow().add(new TvShow().getTvShow(movie));
+                        realm.copyToRealm(post);
+                    }
+                    Toast.makeText(getApplicationContext(), R.string.sucess_rate, Toast.LENGTH_LONG).show();
+                    realm.commitTransaction();
+                    onBackPressed();
+
                 }
             }
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 }

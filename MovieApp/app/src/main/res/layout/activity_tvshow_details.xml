@@ -17,6 +17,7 @@
             android:id="@+id/tv_show_image"
             android:layout_width="match_parent"
             android:layout_height="300dp"
+            android:background="@drawable/movies"
             android:focusableInTouchMode="true"
             android:contentDescription="@string/app_name" />
 
@@ -46,6 +47,14 @@
                 android:textColor="@color/white"
                 android:textSize="24sp" />
 
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true">
+
             <TextView
                 android:id="@+id/tv_show_detalis_genres"
                 android:layout_width="wrap_content"
@@ -61,46 +70,40 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
+                android:layout_below="@id/tv_show_detalis_genres"
                 android:layout_marginBottom="15dp"
                 android:layout_marginEnd="16sp"
                 android:layout_marginStart="16sp"
                 android:textColor="@color/lightgrey"
                 android:textSize="12sp" />
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true">
+
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/watchlist"
+                    android:src="@drawable/watchlist"
+                    android:layout_marginEnd="5dp"/>
+                <ImageView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:id="@+id/favorite"
+                    android:layout_toRightOf="@id/watchlist"
+                    android:src="@drawable/favorite"
+                    android:layout_marginEnd="15dp"/>
+
+            </RelativeLayout>
+            </RelativeLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/icons"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal"
-            android:layout_gravity="bottom"
-            android:layout_below="@+id/tv_show_image">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/watchlist"
-                android:src="@drawable/watchlist"
-                android:layout_marginEnd="5dp"/>
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/favorite"
-                android:src="@drawable/favorite"
-                android:layout_marginEnd="15dp"/>
-
-        </LinearLayout>
-
-
         <TextView
             android:id="@+id/tv_show_directors_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/icons"
+            android:layout_below="@+id/tv_show_image"
             android:layout_marginStart="16sp"
             android:layout_marginTop="27dp"
             android:textColor="@color/white_dark"
@@ -111,7 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
-            android:layout_below="@+id/icons"
+            android:layout_below="@+id/tv_show_image"
             android:textColor="@color/lightgrey"
             android:textSize="14sp"
             android:layout_alignTop="@+id/tv_show_directors_label"

@@ -42,9 +42,10 @@ public class Gallery extends AppCompatActivity {
         apiService = mApp.getApiService();
 
         images_url=new ArrayList<>();
-        final GridView gallery=(GridView)findViewById(R.id.gallery);
+        final GridView gallery=(GridView) findViewById(R.id.gallery);
         final TextView movieName = (TextView) findViewById(R.id.movie_title);
-        adapter = new GalleryGridAdapter(getApplicationContext(), R.layout.galery_image_element,images_url);
+        final TextView imagesNumber = (TextView) findViewById(R.id.number);
+        adapter = new GalleryGridAdapter(getApplicationContext(), R.layout.grid_galery_image_element,images_url);
         gallery.setAdapter(adapter);
 
         movieID=getIntent().getIntExtra("movieID", 0);
@@ -77,7 +78,8 @@ public class Gallery extends AppCompatActivity {
                     for (Image i: response.body().getGallery().getBackdrops()) {
                         images_url.add(i.getSmallFullPosterPath(getApplicationContext()));
                     }
-                    movieName.setText(response.body().getTitle());
+                    movieName.setText("Image gallery : "+response.body().getTitle());
+                    imagesNumber.setText(String.valueOf(response.body().getGallery().getBackdrops().size())+" images");
                     ((BaseAdapter)gallery.getAdapter()).notifyDataSetChanged();
                 }
 
@@ -95,7 +97,8 @@ public class Gallery extends AppCompatActivity {
                 public void onResponse(Call<TvShow> call, Response<TvShow> response) {
                     for (Image i: response.body().getGallery().getBackdrops()) {
                         images_url.add(i.getSmallFullPosterPath(getApplicationContext()));
-                        movieName.setText(response.body().getName());
+                        movieName.setText("Image gallery : "+response.body().getName());
+                        imagesNumber.setText(String.valueOf(response.body().getGallery().getBackdrops().size())+" images");
                     }
                     ((BaseAdapter)gallery.getAdapter()).notifyDataSetChanged();
                 }

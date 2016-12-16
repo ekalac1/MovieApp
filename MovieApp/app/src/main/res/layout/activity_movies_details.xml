@@ -13,96 +13,100 @@
         android:orientation="vertical"
         android:layout_gravity="top"
         tools:context=".Activities.Details.MoviesDetailsActivity">
-            <ImageView
-                android:id="@+id/movies_detalis_image"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:focusableInTouchMode="true"/>
-            <View
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:background="@drawable/gradient" />
-            <LinearLayout
-                android:id="@+id/linearLayout"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:orientation="vertical">
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_weight="0.55" />
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:id="@+id/play"
-                    android:layout_marginTop="80dp"
-                    android:visibility="invisible"
-                    android:layout_marginStart="160dp"
-                    android:src="@drawable/playvideo"
-                    android:layout_marginBottom="60dp" />
-                <TextView
-                    android:id="@+id/movies_detalis_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginStart="16sp"
-                    android:layout_marginEnd="16sp"
-                    android:textColor="@color/white"
-                    android:textSize="24sp" />
-                <TextView
-                    android:id="@+id/movies_detalis_genres"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginStart="16sp"
-                    android:layout_marginEnd="16sp"
-                    android:textColor="@color/lightgrey"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/movies_detalis_release_date"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:layout_marginStart="16sp"
-                    android:layout_marginEnd="16sp"
-                    android:textColor="@color/lightgrey"
-                    android:layout_marginBottom="15dp"
-                    android:textSize="12sp" />
-
-
-
-
-
-            </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/icons"
+        <ImageView
+            android:id="@+id/movies_detalis_image"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:orientation="horizontal"
-            android:layout_gravity="bottom"
-            android:layout_below="@+id/movies_detalis_image">
-
+            android:layout_height="300dp"
+            android:background="@drawable/movies"
+            android:focusableInTouchMode="true"/>
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:background="@drawable/gradient" />
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:orientation="vertical">
             <View
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.55" />
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/play"
+                android:layout_marginTop="80dp"
+                android:visibility="invisible"
+                android:layout_marginStart="160dp"
+                android:src="@drawable/playvideo"
+                android:layout_marginBottom="60dp" />
+            <TextView
+                android:id="@+id/movies_detalis_title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"/>
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/watchlist"
-                android:src="@drawable/watchlist"
-                android:layout_marginEnd="5dp"/>
-            <ImageView
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:id="@+id/favorite"
-                android:src="@drawable/favorite"
-                android:layout_marginEnd="15dp"/>
+                android:layout_gravity="bottom"
+                android:layout_marginStart="16sp"
+                android:layout_marginEnd="16sp"
+                android:textColor="@color/white"
+                android:textSize="24sp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true">
+                    <TextView
+                        android:id="@+id/movies_detalis_genres"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginStart="16sp"
+                        android:layout_marginEnd="16sp"
+                        android:textColor="@color/lightgrey"
+                        android:textSize="12sp" />
+
+                    <TextView
+                        android:id="@+id/movies_detalis_release_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginStart="16sp"
+                        android:layout_marginEnd="16sp"
+                        android:layout_below="@id/movies_detalis_genres"
+                        android:textColor="@color/lightgrey"
+                        android:layout_marginBottom="15dp"
+                        android:textSize="12sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_alignParentRight="true">
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/watchlist"
+                        android:src="@drawable/watchlist"
+                        android:layout_marginEnd="5dp"/>
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:id="@+id/favorite"
+                        android:layout_toRightOf="@id/watchlist"
+                        android:src="@drawable/favorite"
+                        android:layout_marginEnd="15dp"/>
+
+                </RelativeLayout>
+
+            </RelativeLayout>
 
         </LinearLayout>
+
 
         <TextView
             android:id="@+id/directors_label"
@@ -110,7 +114,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:layout_marginStart="16dp"
-            android:layout_below="@+id/icons"
+            android:layout_below="@+id/movies_detalis_image"
             android:textSize="14sp"
             android:textColor="@color/white_dark" />
         <TextView
@@ -182,7 +186,7 @@
             android:id="@+id/star_rate"
             android:layout_toLeftOf="@+id/rate_this_label"
             android:layout_alignTop="@+id/vote_star"
-             />
+            />
 
         <TextView
             android:layout_width="wrap_content"
@@ -270,15 +274,16 @@
             android:layout_marginBottom="30dp"/>
 
         <ImageView
+            android:id="@+id/cast_right"
             android:layout_width="20dp"
             android:layout_height="wrap_content"
             android:src="@drawable/right"
             android:foregroundGravity="left"
             android:layout_below="@+id/about"
             android:layout_alignParentEnd="true"
-            android:layout_above="@+id/view___" />
+            android:layout_above="@+id/view__" />
 
-          <View
+        <View
             android:layout_width="fill_parent"
             android:layout_height="1dp"
             android:id="@+id/view___"

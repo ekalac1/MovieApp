@@ -4,18 +4,19 @@
     android:id="@+id/activity_gallery"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bb_darkBackgroundColor"
     tools:context="ba.unsa.etf.rma.elza_kalac.movieapp.Activities.Details.Gallery">
 
     <TextView
         android:id="@+id/movie_title"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@color/lightgrey"
+        android:layout_height="wrap_content"
+        android:background="@color/grey"
         android:padding="2.5dp"
         android:paddingStart="16dp"
-        android:textSize="15dp"
-        android:textColor="@color/white_dark"
-        android:text="NASLOV FILMA"/>
+        android:paddingEnd="16dp"
+        android:textSize="15sp"
+        android:textColor="@color/white_dark" />
     <TextView
         android:id="@+id/number"
         android:layout_below="@id/movie_title"
@@ -23,17 +24,16 @@
         android:layout_height="30dp"
         android:padding="2.5dp"
         android:paddingStart="16dp"
-        android:textSize="15dp"
-        android:textColor="@color/white_dark"
-        android:text="NASLOV FILMA"/>
+        android:paddingEnd="16dp"
+        android:textSize="15sp"
+        android:textColor="@color/white_dark" />
 
     <GridView
         android:layout_below="@id/number"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/gallery"
-        android:numColumns="3"
-        android:layout_margin="16dp">
+        android:numColumns="3">
     </GridView>
 
 </RelativeLayout>

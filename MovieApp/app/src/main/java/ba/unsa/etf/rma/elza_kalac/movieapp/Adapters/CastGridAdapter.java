@@ -2,12 +2,15 @@ package ba.unsa.etf.rma.elza_kalac.movieapp.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -77,31 +80,41 @@ public class CastGridAdapter extends RecyclerView.Adapter<CastGridAdapter.MyView
         holder.character.setText(cast.getCharacter_name());
         Glide.with(context)
                 .load(cast.getSmallFullPosterPath(context))
+                .placeholder(R.drawable.movies)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.RESULT)
                 .into(holder.cast_image);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (activity != "actor")
-                {
-                    Intent myIntent = new Intent(context, ActorDetails.class);
-                    myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    myIntent.putExtra("id", cast.getId());
-                    context.startActivity(myIntent);
+                if (!isNetworkAvailable()) {
+                    Toast.makeText(context, R.string.no_network, Toast.LENGTH_LONG).show();
+                } else {
+                    if (activity != "actor") {
+                        Intent myIntent = new Intent(context, ActorDetails.class);
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        myIntent.putExtra("id", cast.getId());
+                        context.startActivity(myIntent);
+                    } else {
+                        Intent myIntent;
+                        if (cast.getMediaType().equals("movie"))
+                            myIntent = new Intent(context, MoviesDetailsActivity.class);
+                        else myIntent = new Intent(context, TVShowDetails.class);
+                        myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        myIntent.putExtra("id", cast.getId());
+                        context.startActivity(myIntent);
+                    }
                 }
-                else
-                {
-                    Intent myIntent;
-                    if (cast.getMediaType().equals("movie"))
-                        myIntent=new Intent(context, MoviesDetailsActivity.class);
-                    else myIntent=new Intent(context, TVShowDetails.class);
-                    myIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    myIntent.putExtra("id", cast.getId());
-                    context.startActivity(myIntent);
-                }
+
             }
         });
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
     }
 
     @Override

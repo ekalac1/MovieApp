@@ -70,6 +70,8 @@
     <string name="title_activity_maps">Map</string>
     <string name="rate">Tap to rate</string>
     <string name="maps">Nearest cinemas</string>
+    <string name="no_network">Network is not available</string>
+    <string name="enable_location">You need to enable location to see nearest cinemas.</string>
 
 
 </resources>

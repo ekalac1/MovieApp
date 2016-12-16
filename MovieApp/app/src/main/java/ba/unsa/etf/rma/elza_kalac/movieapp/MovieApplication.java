@@ -79,32 +79,8 @@ public class MovieApplication extends Application {
             setAccount(null);
 
         if (isNetworkAvailable() & account != null) {
-            SyncActions();
+          //  SyncActions();
         }
-    }
-
-    public ApiInterface getApiService() {
-        return apiService;
-    }
-
-    public static MovieApplication getInstance() {
-        return singleton;
-    }
-
-    public PlacesApiInterface getPlacesApiInterface() {
-        return placesApiInterface;
-    }
-
-    public void setPlacesApiInterface(PlacesApiInterface placesApiInterface) {
-        this.placesApiInterface = placesApiInterface;
-    }
-
-    public Realm getRealm() {
-        return realm;
-    }
-
-    public void setRealm(Realm realm) {
-        this.realm = realm;
     }
 
 
@@ -121,16 +97,6 @@ public class MovieApplication extends Application {
         } else account = null;
     }
 
-    public User getAccount() {
-        return account;
-    }
-
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null;
-    }
 
     private void loadFavoriteMoviesFromRealm() {
         if (isNetworkAvailable()) {
@@ -226,6 +192,18 @@ public class MovieApplication extends Application {
             }
             account.setRatedTvShow(temp);
         }
+    }
+    public void SyncActions() {
+        SyncFavoriteMovies();
+        SyncUnFavoriteMovies();
+        SyncFavoriteTvShow();
+        SyncUnFavoriteTvShow();
+        SyncWatchlistMovie();
+        SyncUnWatchlistMovie();
+        SyncWatchlistTvShow();
+        SyncUnWatchlistTvShow();
+        SyncRatedMovies();
+        SyncRatedTvShows();
     }
 
     private void loadAccInfo() {
@@ -380,16 +358,7 @@ public class MovieApplication extends Application {
         realm = Realm.getDefaultInstance();
     }
 
-    private void SyncActions() {
-        SyncFavoriteMovies();
-        SyncUnFavoriteMovies();
-        SyncFavoriteTvShow();
-        SyncUnFavoriteTvShow();
-        SyncWatchlistMovie();
-        SyncUnWatchlistMovie();
-        SyncWatchlistTvShow();
-        SyncUnWatchlistTvShow();
-    }
+
 
     private void SyncFavoriteMovies() {
         final RealmResults<Action> movieFavorite = realm.where(Action.class).equalTo("actionType", "favorite").equalTo("mediaType", "movie").findAll();
@@ -402,7 +371,7 @@ public class MovieApplication extends Application {
                 public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                     if (response.body().getStatusCode() == 1) {
                         realm.beginTransaction();
-                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).equalTo("actionType", "favorite").findFirst();
                         movie.deleteFromRealm();
                         realm.commitTransaction();
                     }
@@ -436,10 +405,9 @@ public class MovieApplication extends Application {
             call.enqueue(new Callback<PostResponse>() {
                 @Override
                 public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
-                    //    Toast.makeText(getApplicationContext(), String.valueOf(response.body().getStatusCode()), Toast.LENGTH_LONG).show();
                     if (response.body().getStatusCode() == 13) {
                         realm.beginTransaction();
-                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).equalTo("actionType", "removefavorite").findFirst();
                         movie.deleteFromRealm();
                         realm.commitTransaction();
                     }
@@ -475,7 +443,7 @@ public class MovieApplication extends Application {
                 public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                     if (response.body().getStatusCode() == 1) {
                         realm.beginTransaction();
-                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).equalTo("actionType", "favorite").findFirst();
                         movie.deleteFromRealm();
                         realm.commitTransaction();
                     }
@@ -510,7 +478,7 @@ public class MovieApplication extends Application {
                 public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                     if (response.body().getStatusCode() == 13) {
                         realm.beginTransaction();
-                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).equalTo("actionType", "removefavorite").findFirst();
                         movie.deleteFromRealm();
                         realm.commitTransaction();
                     }
@@ -545,7 +513,7 @@ public class MovieApplication extends Application {
                 public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                     if (response.body().getStatusCode() == 1) {
                         realm.beginTransaction();
-                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).equalTo("actionType", "watchlist").findFirst();
                         movie.deleteFromRealm();
                         realm.commitTransaction();
                     }
@@ -581,7 +549,7 @@ public class MovieApplication extends Application {
                 public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                     if (response.body().getStatusCode() == 13) {
                         realm.beginTransaction();
-                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).equalTo("actionType", "removewatchlist").findFirst();
                         movie.deleteFromRealm();
                         realm.commitTransaction();
                     }
@@ -617,7 +585,7 @@ public class MovieApplication extends Application {
                 public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                     if (response.body().getStatusCode() == 1) {
                         realm.beginTransaction();
-                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).equalTo("actionType", "watchlist").findFirst();
                         movie.deleteFromRealm();
                         realm.commitTransaction();
                     }
@@ -640,6 +608,56 @@ public class MovieApplication extends Application {
             });
         }
 
+    }
+
+    private void SyncRatedMovies() {
+
+        final RealmResults<Action> movieRated = realm.where(Action.class).equalTo("actionType", "rate").equalTo("mediaType", "movie").findAll();
+
+        for (final Action a : movieRated) {
+            PostBody rate = new PostBody(a.getVote());
+            Call<PostResponse> call = apiService.RateMovie(a.getId(), ApiClient.API_KEY, getAccount().getSessionId(), rate);
+            call.enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                    if (response.body().getStatusCode() == 1 || response.body().getStatusCode() == 12) {
+                        realm.beginTransaction();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).equalTo("actionType", "rate").findFirst();
+                        movie.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+                }
+            });
+        }
+    }
+
+    public void SyncRatedTvShows()
+    {
+        final RealmResults<Action> movieRated = realm.where(Action.class).equalTo("actionType", "rate").equalTo("mediaType", "tv").findAll();
+
+        for (final Action a : movieRated) {
+            PostBody rate = new PostBody(a.getVote());
+            Call<PostResponse> call = apiService.RateTvshow(a.getId(), ApiClient.API_KEY, getAccount().getSessionId(), rate);
+            call.enqueue(new Callback<PostResponse>() {
+                @Override
+                public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
+                    if (response.body().getStatusCode() == 1 || response.body().getStatusCode() == 12) {
+                        realm.beginTransaction();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).equalTo("actionType", "rate").findFirst();
+                        movie.deleteFromRealm();
+                        realm.commitTransaction();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PostResponse> call, Throwable t) {
+                }
+            });
+        }
     }
 
     private void SyncUnWatchlistTvShow() {
@@ -653,7 +671,7 @@ public class MovieApplication extends Application {
                 public void onResponse(Call<PostResponse> call, Response<PostResponse> response) {
                     if (response.body().getStatusCode() == 13) {
                         realm.beginTransaction();
-                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).findFirst();
+                        Action movie = realm.where(Action.class).equalTo("id", a.getId()).equalTo("actionType", "removewatchlist").findFirst();
                         movie.deleteFromRealm();
                         realm.commitTransaction();
                     }
@@ -677,4 +695,40 @@ public class MovieApplication extends Application {
         }
 
     }
+
+    public ApiInterface getApiService() {
+        return apiService;
+    }
+
+    public static MovieApplication getInstance() {
+        return singleton;
+    }
+
+    public PlacesApiInterface getPlacesApiInterface() {
+        return placesApiInterface;
+    }
+
+    public void setPlacesApiInterface(PlacesApiInterface placesApiInterface) {
+        this.placesApiInterface = placesApiInterface;
+    }
+
+    public Realm getRealm() {
+        return realm;
+    }
+
+    public void setRealm(Realm realm) {
+        this.realm = realm;
+    }
+
+    public User getAccount() {
+        return account;
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null;
+    }
+
 }

@@ -27,6 +27,12 @@
 
         <receiver android:name=".AlarmReciever" />
 
+        <receiver android:name=".NetworkChangeReceiver" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+
         <activity android:name=".Activities.MovieActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
